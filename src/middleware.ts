@@ -1,6 +1,4 @@
 /**
- * https://clerk.com/docs/nextjs/middleware
- *
  * Allows us to have authentication when every
  * server request is made by embedding the auth
  * state inside of the request itself.
@@ -14,14 +12,25 @@
  * own servers.
  */
 
-import { authMiddleware } from "@clerk/nextjs";
-
-export default authMiddleware({
-  // https://clerk.com/docs/nextjs/middleware#execution-order-of-before-auth-public-routes-and-after-auth
-  //   afterAuth() {},
-  publicRoutes: ["/"],
-});
+import { withMiddlewareAuthRequired } from "@auth0/nextjs-auth0/edge";
+import { NextResponse } from "next/server";
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: [
+    /*
+     * Match request paths (filter Middleware to run on specific paths)
+     * except for the ones starting with:
+     * - _next
+     * - static (static files)
+     * - favicon.ico (favicon file)
+     *
+     * This includes images, and requests from TRPC.
+     */
+    "/(.*?trpc.*?|(?!static|.*\\..*|_next|favicon.ico).*)",
+  ],
 };
+
+export default withMiddlewareAuthRequired(async function middleware(req) {
+  const res = NextResponse.next();
+  return res;
+});

@@ -1,8 +1,12 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 export const frogsRouter = createTRPCRouter({
-  hello: publicProcedure
+  hello: privateProcedure
     .input(z.object({ text: z.string() }))
     .output(z.object({ greeting: z.string() }))
     .query(({ input }) => {

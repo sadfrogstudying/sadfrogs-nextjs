@@ -1,13 +1,12 @@
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import Head from "next/head";
 import { FormEvent, useState } from "react";
 import { api } from "~/utils/api";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function Home() {
   const [name, setName] = useState("");
   const [age, setAge] = useState<number>(1);
 
-  const user = useUser();
   const createFrog = api.frogs.create.useMutation();
 
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
@@ -21,6 +20,10 @@ export default function Home() {
 
   const frogs = api.frogs.getAll.useQuery();
 
+  const helloMessage = api.frogs.hello.useQuery({ text: "charlie" });
+
+  const { user, error, isLoading } = useUser();
+
   return (
     <>
       <Head>
@@ -32,8 +35,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main style={{ padding: `1rem` }}>
-        {!user.isSignedIn && <SignInButton />}
-        {!!user.isSignedIn && <SignOutButton />}
+        {/* {!user.isSignedIn && <SignInButton />}
+        {!!user.isSignedIn && <SignOutButton />} */}
+
+        {!user && !isLoading && <a href="/api/auth/login">Login</a>}
+        {!!user && <a href="/api/auth/logout">Logout</a>}
 
         <br />
         <br />
