@@ -18,8 +18,12 @@ import { authMiddleware } from "@clerk/nextjs";
 
 export default authMiddleware({
   // https://clerk.com/docs/nextjs/middleware#execution-order-of-before-auth-public-routes-and-after-auth
-  //   afterAuth() {},
-  publicRoutes: ["/"],
+  publicRoutes: [
+    "/",
+    "/api/frogs.hello",
+    "/api/frogs.getall",
+    "/api/frogs.create",
+  ],
 });
 
 export const config = {
