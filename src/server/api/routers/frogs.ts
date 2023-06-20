@@ -6,7 +6,7 @@ import {
 } from "~/server/api/trpc";
 
 export const frogsRouter = createTRPCRouter({
-  hello: privateProcedure
+  hello: publicProcedure
     .meta({ openapi: { method: "GET", path: "/frogs.hello" } })
     .input(z.object({ text: z.string() }))
     .output(z.object({ greeting: z.string() }))
@@ -33,7 +33,7 @@ export const frogsRouter = createTRPCRouter({
       const frogs = await ctx.prisma.frog.findMany();
       return frogs;
     }),
-  create: publicProcedure
+  create: privateProcedure
     .meta({ openapi: { method: "PUT", path: "/frogs.create" } })
     .input(
       z.object({
