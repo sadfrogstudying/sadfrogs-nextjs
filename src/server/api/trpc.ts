@@ -21,8 +21,6 @@ import { getSession } from "@auth0/nextjs-auth0";
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
 
-type CreateContextOptions = Record<string, never>;
-
 /**
  * This is the actual context you will use in your router. It will be used to process every request
  * that goes through your tRPC endpoint.
@@ -86,7 +84,14 @@ export const createTRPCRouter = t.router;
  */
 export const publicProcedure = t.procedure;
 
-const enforceUserIsAuthed = t.middleware(({ next, ctx }) => {
+/**
+ * Extending the public procedure with a new "middleware" (not the same as NextJS where it runs on an edge function -
+ * just a process that runs before your main request processing - good for attaching auth and ensuring user is
+ * authenticated)
+ *
+ * Since we already attached auth earlier, we can verify here simply
+ */
+const enforceUserIsAuthed = t.middleware(async ({ next, ctx }) => {
   if (!ctx.currentUser) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
@@ -98,4 +103,5 @@ const enforceUserIsAuthed = t.middleware(({ next, ctx }) => {
   });
 });
 
+/** When used, will ALWAYS have an authentication object */
 export const privateProcedure = t.procedure.use(enforceUserIsAuthed);

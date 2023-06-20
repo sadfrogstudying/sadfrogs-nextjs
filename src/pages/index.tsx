@@ -72,6 +72,12 @@ export default function Home() {
 
         <br />
         <div>
+          <h2>helloMessage</h2>
+          {helloMessage.data?.greeting}
+        </div>
+        <hr />
+        <div>
+          <h2>frogs</h2>
           {frogs.data?.map((frog) => (
             <div key={frog.id}>
               <div>age: {frog.age}</div>

@@ -6,7 +6,7 @@ import {
 } from "~/server/api/trpc";
 
 export const frogsRouter = createTRPCRouter({
-  hello: privateProcedure
+  hello: publicProcedure
     .input(z.object({ text: z.string() }))
     .output(z.object({ greeting: z.string() }))
     .query(({ input }) => {
