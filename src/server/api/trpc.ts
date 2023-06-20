@@ -9,7 +9,7 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import superjson from "superjson";
-import { OpenApiMeta } from "trpc-openapi";
+import type { OpenApiMeta } from "trpc-openapi";
 import { ZodError } from "zod";
 import { prisma } from "~/server/db";
 import { getSession } from "@auth0/nextjs-auth0";
