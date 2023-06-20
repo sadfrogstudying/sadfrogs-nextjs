@@ -19,7 +19,7 @@ export const config = {
   matcher: "/((?!api|_next/static|_next/image|favicon.ico).*)",
 };
 
-export default withMiddlewareAuthRequired(async function middleware() {
+export default withMiddlewareAuthRequired(function middleware() {
   const res = NextResponse.next();
   return res;
 });

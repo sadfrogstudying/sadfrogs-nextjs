@@ -1,7 +1,9 @@
 import Head from "next/head";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { api } from "~/utils/api";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import Link from "next/link";
 
 export default function Home() {
   const [name, setName] = useState("");
@@ -38,8 +40,8 @@ export default function Home() {
         {/* {!user.isSignedIn && <SignInButton />}
         {!!user.isSignedIn && <SignOutButton />} */}
 
-        {!user && !isLoading && <a href="/api/auth/login">Login</a>}
-        {!!user && <a href="/api/auth/logout">Logout</a>}
+        {!user && !isLoading && <Link href="/api/auth/login">Login</Link>}
+        {!!user && <Link href="/api/auth/logout">Logout</Link>}
 
         <br />
         <br />

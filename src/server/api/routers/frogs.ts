@@ -18,7 +18,7 @@ export const frogsRouter = createTRPCRouter({
     const frogs = await ctx.prisma.frog.findMany();
     return frogs;
   }),
-  create: publicProcedure
+  create: privateProcedure
     .input(
       z.object({
         name: z.string(),
