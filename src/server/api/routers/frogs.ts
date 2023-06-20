@@ -33,6 +33,24 @@ export const frogsRouter = createTRPCRouter({
       const frogs = await ctx.prisma.frog.findMany();
       return frogs;
     }),
+  getAllPrivate: privateProcedure
+    .meta({ openapi: { method: "GET", path: "/frogs.getallprivate" } })
+    .input(z.void())
+    .output(
+      z
+        .object({
+          id: z.string(),
+          createdAt: z.date(),
+          updatedAt: z.date(),
+          name: z.string(),
+          age: z.number().nullable(),
+        })
+        .array()
+    )
+    .query(async ({ ctx }) => {
+      const frogs = await ctx.prisma.frog.findMany();
+      return frogs;
+    }),
   create: privateProcedure
     .meta({ openapi: { method: "PUT", path: "/frogs.create" } })
     .input(
