@@ -52,10 +52,10 @@ export const studySpotsRouter = createTRPCRouter({
    *
    */
   createOne: publicProcedure
-    .meta({ openapi: { method: "PUT", path: "/studyspots.createone" } })
+    .meta({ openapi: { method: "POST", path: "/studyspots.createone" } })
     .input(
       z.object({
-        name: z.string(),
+        name: z.string().min(2),
         hasWifi: z.boolean(),
         location: z.object({
           lat: z.number(),

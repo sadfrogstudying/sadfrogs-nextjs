@@ -17,7 +17,7 @@ model StudySpot {
     id         Int      @id @default(autoincrement())
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
-    name       String
+    name       String   @unique
     hasWifi    Boolean
     location   Location @relation(fields: [locationId], references: [id])
     locationId Int      @unique
