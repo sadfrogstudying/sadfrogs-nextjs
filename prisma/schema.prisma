@@ -11,10 +11,21 @@ generator client {
     provider = "prisma-client-js"
 }
 
-model Frog {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    name      String
-    age       Int?     @default(1)
+// You cannot create a StudySpot without connecting or creating a Location
+// https://www.prisma.io/docs/concepts/components/prisma-schema/relations/one-to-one-relations#required-and-optional-1-1-relation-fields
+model StudySpot {
+    id         Int      @id @default(autoincrement())
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    name       String
+    hasWifi    Boolean
+    location   Location @relation(fields: [locationId], references: [id])
+    locationId Int      @unique
+}
+
+model Location {
+    id        Int        @id @default(autoincrement())
+    lat       Float
+    lng       Float
+    studySpot StudySpot?
 }
