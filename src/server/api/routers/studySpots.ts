@@ -2,6 +2,16 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+// Create a new ratelimiter, that allows 3 requests per 1 minute
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(3, "1 m"),
+  analytics: true,
+});
+
 export const studySpotsRouter = createTRPCRouter({
   /**
    *
@@ -68,6 +78,12 @@ export const studySpotsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const { success } = await ratelimit.limit(ctx.ip);
+      if (!success)
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+        });
+
       const newStudySpot = await ctx.prisma.studySpot.create({
         data: {
           name: input.name,
@@ -94,7 +110,7 @@ export const studySpotsRouter = createTRPCRouter({
    */
   getOne: publicProcedure
     .meta({ openapi: { method: "GET", path: "/studyspots.getone" } })
-    .input(z.number())
+    .input(z.object({ id: z.number() }))
     .output(
       z.object({
         id: z.number(),
@@ -112,7 +128,7 @@ export const studySpotsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const studySpot = await ctx.prisma.studySpot.findUnique({
         where: {
-          id: input,
+          id: input.id,
         },
         include: {
           location: true,
@@ -133,12 +149,12 @@ export const studySpotsRouter = createTRPCRouter({
    */
   deleteOne: publicProcedure
     .meta({ openapi: { method: "DELETE", path: "/studyspots.deleteone" } })
-    .input(z.number())
+    .input(z.object({ id: z.number() }))
     .output(z.boolean())
     .mutation(async ({ ctx, input }) => {
       const deletedStudySpot = await ctx.prisma.studySpot.delete({
         where: {
-          id: input,
+          id: input.id,
         },
       });
 

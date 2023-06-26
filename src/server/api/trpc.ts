@@ -13,6 +13,7 @@ import type { OpenApiMeta } from "trpc-openapi";
 import { ZodError } from "zod";
 import { prisma } from "~/server/db";
 import { getSession } from "@auth0/nextjs-auth0";
+import { NextApiRequest } from "next";
 
 /**
  * 1. CONTEXT
@@ -34,9 +35,16 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const session = await getSession(req, res);
   const user = session?.user;
 
+  const parseIp = (req: NextApiRequest) => {
+    const header = req.headers["x-forwarded-for"];
+    const ip = Array.isArray(header) ? header[0] : req.socket?.remoteAddress;
+    return ip || "";
+  };
+
   return {
     prisma,
     currentUser: user,
+    ip: parseIp(req),
   };
 };
 
