@@ -6,21 +6,25 @@
 
 Our package manager is yarn. Install instructions [here](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
 
-## ngrok (access development server on the internet)
-
-_Say if you're making local changes to the API routes, can we test the mobile app with http://localhost:3000/? If not the solution is below:_
-
-ngrok allows us to put localhost on the internet so we can test the mobile app against the **development** backend. Install instructions [here](https://ngrok.com/download)
+## Setup
 
 Run:
 
 ```shell
-ngrok http 3000
+git clone https://github.com/sadfrogstudying/sadfrogs-nextjs.git
 ```
 
-In the terminal, the URL should be under `Forwarding`.
+Run:
 
-You can now fire requests to: `https://8e3b-49-255-185-210.ngrok-free.app/` and `https://8e3b-49-255-185-210.ngrok-free.app/api/studyspots.getall`
+```shell
+cd sadfrogs-nextjs
+```
+
+To install the packages - while inside the folder run:
+
+```shell
+yarn
+```
 
 ## Extensions
 
@@ -75,3 +79,19 @@ If you want to run a script, possibly to seed data
 ```shell
 tsx prisma/some-script-to-seed-data.ts
 ```
+
+## ngrok (access development server on the internet)
+
+_Say if you're making local changes to the API routes, can we test the mobile app with http://localhost:3000/? If not the solution is below:_
+
+ngrok allows us to put localhost on the internet so we can test the mobile app against the **development** backend. Install instructions [here](https://ngrok.com/download)
+
+Run:
+
+```shell
+ngrok http 3000
+```
+
+In the terminal, the URL should be under `Forwarding`.
+
+You can now fire requests to: `https://8e3b-49-255-185-210.ngrok-free.app/` and `https://8e3b-49-255-185-210.ngrok-free.app/api/studyspots.getall`
