@@ -1,28 +1,77 @@
-# Create T3 App
+# Sad Frogs
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+![pepe](https://media.tenor.com/KvQWsHSsiMwAAAAM/sad-pepe.gif)
 
-## What's next? How do I make an app with this?
+## yarn (package manager)
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+Our package manager is yarn. Install instructions [here](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## ngrok (access development server on the internet)
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+_Say if you're making local changes to the API routes, can we test the mobile app with http://localhost:3000/? If not the solution is below:_
 
-## Learn More
+ngrok allows us to put localhost on the internet so we can test the mobile app against the **development** backend. Install instructions [here](https://ngrok.com/download)
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+Run:
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+```shell
+ngrok http 3000
+```
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+In the terminal, the URL should be under `Forwarding`.
 
-## How do I deploy this?
+You can now fire requests to: `https://8e3b-49-255-185-210.ngrok-free.app/` and `https://8e3b-49-255-185-210.ngrok-free.app/api/studyspots.getall`
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## Extensions
+
+Please install these. In the left pane there should be an extensions icon, click into it and search for these plugins to install:
+
+- [Prisma](https://marketplace.visualstudio.com/items?itemName=Prisma.prisma)
+- [Pretty TypeScript Errors](https://marketplace.visualstudio.com/items?itemName=yoavbls.pretty-ts-errors)
+- [vscode-styled-components](https://marketplace.visualstudio.com/items?itemName=styled-components.vscode-styled-components)
+  [Community Material Theme](https://marketplace.visualstudio.com/items?itemName=Equinusocio.vsc-community-material-theme)
+- [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme)
+- [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+
+## Auto Formatting
+
+Run `command + p` and type in `settings.json`. Ensure `"editor.formatOnSave": true,` is in the json object.
+
+## Scripts
+
+**Start** the project for local development on http://localhost:3000/:
+
+```shell
+yarn dev
+```
+
+**Production** - `build` and `start` a production site for local testing on http://localhost:3000/:
+
+```shell
+yarn build
+yarn start
+```
+
+After making changes to schema.prisma
+
+```shell
+npx prisma db push
+```
+
+Visual interface to manually make changes to the database
+
+```shell
+npx prisma studio
+```
+
+Put http://localhost:3000/ on the internet
+
+```shell
+ngrok http 3000
+```
+
+If you want to run a script, possibly to seed data
+
+```shell
+tsx prisma/some-script-to-seed-data.ts
+```
