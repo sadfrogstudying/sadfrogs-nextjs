@@ -33,9 +33,11 @@ export const s3Router = createTRPCRouter({
       Bucket: env.BUCKET_NAME,
     });
 
-    const allImages = listObjectsOutput.Contents?.map((object) => ({
-      key: object.Key,
-      url: `https://${env.BUCKET_NAME}.s3.${env.REGION}.amazonaws.com/${object.Key}`,
+    const allImages = listObjectsOutput.Contents?.map((object, i) => ({
+      key: object.Key || "",
+      url: `https://${env.BUCKET_NAME}.s3.${env.REGION}.amazonaws.com/${
+        object.Key || ""
+      }`,
     }));
 
     return allImages ?? [];
