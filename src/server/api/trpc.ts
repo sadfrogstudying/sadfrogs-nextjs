@@ -14,6 +14,7 @@ import { ZodError } from "zod";
 import { prisma } from "~/server/db";
 import { getSession } from "@auth0/nextjs-auth0";
 import { NextApiRequest } from "next";
+import { s3 } from "../aws/s3";
 
 /**
  * 1. CONTEXT
@@ -42,6 +43,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   };
 
   return {
+    s3,
     prisma,
     currentUser: user,
     ip: parseIp(req),

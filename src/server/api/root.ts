@@ -1,4 +1,5 @@
 import { studySpotsRouter } from "~/server/api/routers/studySpots";
+import { s3Router } from "~/server/api/routers/s3";
 import { createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -8,6 +9,7 @@ import { createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   studySpots: studySpotsRouter,
+  s3: s3Router,
 });
 
 // export type definition of API
