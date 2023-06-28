@@ -66,7 +66,7 @@ export const s3Router = createTRPCRouter({
       const { s3 } = ctx;
 
       const signedUrlPromises = input.files.map(async (file) => {
-        const fileExtension = extension(file.contentType);
+        const fileExtension = extension(file.contentType) || "";
 
         const putObjectCommand = new PutObjectCommand({
           Bucket: env.BUCKET_NAME,
