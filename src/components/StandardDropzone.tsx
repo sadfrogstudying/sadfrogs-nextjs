@@ -7,7 +7,7 @@ import { api } from "../utils/api";
 export const StandardDropzone = () => {
   const [presignedUrls, setPresignedUrls] = useState<string[]>([]);
   const { mutateAsync: fetchPresignedUrls, data: fetchedPresignedUrls } =
-    api.s3.getStandardUploadPresignedUrl.useMutation();
+    api.s3.getPresignedUrls.useMutation();
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const apiUtils = api.useContext();
 
@@ -16,11 +16,9 @@ export const StandardDropzone = () => {
       maxFiles: 8,
       maxSize: 4000000, // 4mb
       onDropAccepted: (files, _event) => {
-        const filesWithKey = files.map((file) => {
-          return { key: file.name };
-        });
+        const keys = files.map((file) => file.name);
 
-        fetchPresignedUrls(filesWithKey)
+        fetchPresignedUrls({ keys: keys })
           .then((urls) => {
             setPresignedUrls(urls);
             setSubmitDisabled(false);
