@@ -5,9 +5,30 @@ import axios from "axios";
 import { api } from "../utils/api";
 
 export const StandardDropzone = () => {
-  const [presignedUrls, setPresignedUrls] = useState<string[]>([]);
-  const { mutateAsync: fetchPresignedUrls } =
-    api.s3.getPresignedUrls.useMutation();
+  const { mutateAsync } = api.s3.getPresignedUrls.useMutation({
+    onSuccess: async (urls) => {
+      if (!urls.length) return;
+
+      const promises = urls.map(async (url, i) => {
+        try {
+          const res = await axios.put(url, acceptedFiles[i], {
+            headers: { "Content-Type": acceptedFiles[i]?.type },
+          });
+
+          console.log(res);
+          console.log("Successfully uploaded ", acceptedFiles[i]?.name);
+        } catch (error) {
+          console.log(error);
+        }
+      });
+
+      await Promise.all(promises);
+
+      setSubmitDisabled(true);
+      await apiUtils.s3.getObjects.invalidate();
+      await apiUtils.s3.getAllImages.invalidate();
+    },
+  });
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const apiUtils = api.useContext();
 
@@ -31,29 +52,7 @@ export const StandardDropzone = () => {
 
   const handleSubmit = useCallback(() => {
     const keys = acceptedFiles.map((file) => file.name);
-
-    fetchPresignedUrls({ keys: keys })
-      .then(async (urls) => {
-        if (acceptedFiles[0] && urls[0]) {
-          const promises = urls.map(async (url, i) => {
-            await axios
-              .put(url, acceptedFiles[i], {
-                headers: { "Content-Type": acceptedFiles[i]?.type },
-              })
-              .then((response) => {
-                console.log(response);
-                console.log("Successfully uploaded ", acceptedFiles[i]?.name);
-              })
-              .catch((err) => console.error(err));
-          });
-
-          await Promise.all(promises);
-
-          setSubmitDisabled(true);
-          await apiUtils.s3.getObjects.invalidate();
-        }
-      })
-      .catch((err) => console.error(err));
+    mutateAsync({ keys });
   }, [acceptedFiles, apiUtils.s3.getObjects]);
 
   return (
