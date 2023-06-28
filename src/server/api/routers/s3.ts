@@ -9,6 +9,8 @@ import { TRPCError } from "@trpc/server";
 import sharp from "sharp";
 import axios from "axios";
 import { rgbToHex } from "~/utils/helpers";
+import { v4 as uuidv4 } from "uuid";
+import { extension } from "mime-types";
 
 // https://blog.nickramkissoon.com/posts/t3-s3-presigned-urls
 
@@ -54,15 +56,22 @@ export const s3Router = createTRPCRouter({
    */
   getPresignedUrls: publicProcedure
     .meta({ openapi: { method: "POST", path: "/s3.getPresignedUrls" } })
-    .input(z.object({ keys: z.string().array() }))
+    .input(
+      z.object({
+        files: z.object({ contentType: z.string() }).array(),
+      })
+    )
     .output(z.string().array())
     .mutation(async ({ ctx, input }) => {
       const { s3 } = ctx;
 
-      const signedUrlPromises = input.keys.map(async (key) => {
+      const signedUrlPromises = input.files.map(async (file) => {
+        const fileExtension = extension(file.contentType);
+
         const putObjectCommand = new PutObjectCommand({
           Bucket: env.BUCKET_NAME,
-          Key: key,
+          Key: `${uuidv4()}.${fileExtension}`,
+          ContentType: file.contentType,
         });
 
         return await getSignedUrl(s3, putObjectCommand);

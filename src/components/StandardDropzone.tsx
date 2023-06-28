@@ -4,19 +4,6 @@ import axios from "axios";
 
 import { api } from "../utils/api";
 
-function makeid(length: number) {
-  let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
-  let counter = 0;
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    counter += 1;
-  }
-  return result;
-}
-
 export const StandardDropzone = () => {
   const { mutate: createImages } = api.s3.createImages.useMutation();
   const { mutate: getPresignedUrls } = api.s3.getPresignedUrls.useMutation({
@@ -25,9 +12,7 @@ export const StandardDropzone = () => {
 
       const promises = urls.map(async (url, i) => {
         try {
-          const res = await axios.put(url, acceptedFiles[i], {
-            headers: { "Content-Type": acceptedFiles[i]?.type },
-          });
+          const res = await axios.put(url, acceptedFiles[i]);
 
           console.log(res);
           console.log("Successfully uploaded ", acceptedFiles[i]?.name);
@@ -68,10 +53,13 @@ export const StandardDropzone = () => {
     return null;
   }, [acceptedFiles, submitDisabled]);
 
-  const handleSubmit = useCallback(() => {
-    const keys = acceptedFiles.map(() => makeid(10));
-    getPresignedUrls({ keys });
-  }, [acceptedFiles, apiUtils.s3.getObjects]);
+  const handleSubmit = () => {
+    const filesToSubmit = acceptedFiles.map((file) => ({
+      contentType: file.type,
+    }));
+
+    getPresignedUrls({ files: filesToSubmit });
+  };
 
   return (
     <section>
