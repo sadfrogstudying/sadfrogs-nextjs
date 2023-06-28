@@ -4,8 +4,23 @@ import axios from "axios";
 
 import { api } from "../utils/api";
 
+function makeid(length: number) {
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
+
 export const StandardDropzone = () => {
-  const { mutateAsync } = api.s3.getPresignedUrls.useMutation({
+  const { mutate: createImages, data: createImagesData } =
+    api.s3.createImages.useMutation();
+  const { mutate: getPresignedUrls } = api.s3.getPresignedUrls.useMutation({
     onSuccess: async (urls) => {
       if (!urls.length) return;
 
@@ -23,6 +38,10 @@ export const StandardDropzone = () => {
       });
 
       await Promise.all(promises);
+
+      const imageUrls = urls.map((url) => url.split("?")[0]!);
+
+      createImages({ urls: imageUrls });
 
       setSubmitDisabled(true);
       await apiUtils.s3.getObjects.invalidate();
@@ -50,9 +69,9 @@ export const StandardDropzone = () => {
     return null;
   }, [acceptedFiles, submitDisabled]);
 
-  const handleSubmit = useCallback(() => {
-    const keys = acceptedFiles.map((file) => file.name);
-    mutateAsync({ keys });
+  const handleSubmit = useCallback(async () => {
+    const keys = acceptedFiles.map(() => makeid(10));
+    getPresignedUrls({ keys });
   }, [acceptedFiles, apiUtils.s3.getObjects]);
 
   return (

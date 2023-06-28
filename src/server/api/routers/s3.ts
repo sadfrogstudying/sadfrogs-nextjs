@@ -2,9 +2,13 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { env } from "~/env.mjs";
-import { PutObjectCommand, UploadPartCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { TRPCError } from "@trpc/server";
+
+import sharp from "sharp";
+import axios from "axios";
+import { rgbToHex } from "~/utils/helpers";
 
 // https://blog.nickramkissoon.com/posts/t3-s3-presigned-urls
 
@@ -33,12 +37,13 @@ export const s3Router = createTRPCRouter({
       Bucket: env.BUCKET_NAME,
     });
 
-    const allImages = listObjectsOutput.Contents?.map((object, i) => ({
-      key: object.Key || "",
-      url: `https://${env.BUCKET_NAME}.s3.${env.REGION}.amazonaws.com/${
-        object.Key || ""
-      }`,
-    }));
+    const allImages =
+      listObjectsOutput.Contents?.map((object, i) => ({
+        key: object.Key || "",
+        url: `https://${env.BUCKET_NAME}.s3.${env.REGION}.amazonaws.com/${
+          object.Key || ""
+        }`,
+      })) || [];
 
     return allImages ?? [];
   }),
@@ -64,5 +69,68 @@ export const s3Router = createTRPCRouter({
       });
 
       return await Promise.all(signedUrlPromises);
+    }),
+  /**
+   * This should belong on another route
+   */
+  createImages: publicProcedure
+    .meta({ openapi: { method: "POST", path: "/s3.createImages" } })
+    .input(z.object({ urls: z.string().array() }))
+    .output(z.void())
+    .mutation(async ({ ctx, input }) => {
+      const allImagesWithMeta = input.urls.map(async (url) => {
+        // Download Image & use Buffer as Input
+        const input = (
+          await axios({
+            url,
+            responseType: "arraybuffer",
+          })
+        ).data as Buffer;
+
+        // Extract relevant metadata using sharp library
+        const sharpInput = sharp(input);
+        const { width, height } = await sharpInput.metadata();
+        const {
+          dominant: { r, g, b },
+        } = await sharpInput.stats();
+        const aspectRatio =
+          width && height && parseFloat((width / height).toFixed(8));
+
+        const metadata = {
+          dimensions: {
+            width: width,
+            height: height,
+            aspectRatio: aspectRatio,
+          },
+          dominantColour: rgbToHex(r, g, b),
+        };
+
+        return {
+          url,
+          metadata: metadata,
+        };
+      });
+
+      const newImages = await Promise.all(allImagesWithMeta);
+
+      newImages.forEach(async (image) => {
+        await ctx.prisma.image.create({
+          data: {
+            url: image.url,
+            metadata: {
+              create: {
+                dominantColor: image.metadata.dominantColour,
+                dimensions: {
+                  create: {
+                    width: image.metadata.dimensions.width,
+                    height: image.metadata.dimensions.height,
+                    aspectRatio: image.metadata.dimensions.aspectRatio,
+                  },
+                },
+              },
+            },
+          },
+        });
+      });
     }),
 });

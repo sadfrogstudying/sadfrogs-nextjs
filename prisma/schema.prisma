@@ -30,3 +30,26 @@ model Location {
     lng       Float
     studySpot StudySpot?
 }
+
+model Image {
+    id       Int            @id @default(autoincrement())
+    url      String
+    metadata ImageMetaData?
+}
+
+model ImageMetaData {
+    id            Int              @id @default(autoincrement())
+    dimensions    ImageDimensions?
+    dominantColor String?
+    image         Image            @relation(fields: [imageId], references: [id], onDelete: Cascade)
+    imageId       Int              @unique
+}
+
+model ImageDimensions {
+    id          Int           @id @default(autoincrement())
+    aspectRatio Float?
+    height      Int?
+    width       Int?
+    metadata    ImageMetaData @relation(fields: [metadataId], references: [id], onDelete: Cascade)
+    metadataId  Int           @unique
+}

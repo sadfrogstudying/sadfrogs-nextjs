@@ -35,13 +35,16 @@
     "@types/node": "^18.16.0",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
+    "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^5.59.6",
     "@typescript-eslint/parser": "^5.59.6",
     "@upstash/ratelimit": "^0.4.3",
     "eslint": "^8.40.0",
     "eslint-config-next": "^13.4.2",
     "prisma": "^4.14.0",
-    "typescript": "^5.0.4"
+    "sharp": "^0.32.1",
+    "typescript": "^5.0.4",
+    "uuid": "^9.0.0"
   },
   "ct3aMetadata": {
     "initVersion": "7.14.0"
