@@ -113,7 +113,7 @@ export const s3Router = createTRPCRouter({
 
       const newImages = await Promise.all(allImagesWithMeta);
 
-      newImages.forEach(async (image) => {
+      const createRecords = newImages.map(async (image) => {
         await ctx.prisma.image.create({
           data: {
             url: image.url,
@@ -132,5 +132,7 @@ export const s3Router = createTRPCRouter({
           },
         });
       });
+
+      await Promise.all(createRecords);
     }),
 });

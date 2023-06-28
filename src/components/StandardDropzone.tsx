@@ -18,8 +18,7 @@ function makeid(length: number) {
 }
 
 export const StandardDropzone = () => {
-  const { mutate: createImages, data: createImagesData } =
-    api.s3.createImages.useMutation();
+  const { mutate: createImages } = api.s3.createImages.useMutation();
   const { mutate: getPresignedUrls } = api.s3.getPresignedUrls.useMutation({
     onSuccess: async (urls) => {
       if (!urls.length) return;
@@ -69,7 +68,7 @@ export const StandardDropzone = () => {
     return null;
   }, [acceptedFiles, submitDisabled]);
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(() => {
     const keys = acceptedFiles.map(() => makeid(10));
     getPresignedUrls({ keys });
   }, [acceptedFiles, apiUtils.s3.getObjects]);
