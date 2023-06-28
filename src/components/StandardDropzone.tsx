@@ -6,7 +6,7 @@ import { api } from "../utils/api";
 
 export const StandardDropzone = () => {
   const [presignedUrls, setPresignedUrls] = useState<string[]>([]);
-  const { mutateAsync: fetchPresignedUrls, data: fetchedPresignedUrls } =
+  const { mutateAsync: fetchPresignedUrls } =
     api.s3.getPresignedUrls.useMutation();
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const apiUtils = api.useContext();
@@ -15,16 +15,7 @@ export const StandardDropzone = () => {
     useDropzone({
       maxFiles: 8,
       maxSize: 4000000, // 4mb
-      onDropAccepted: (files, _event) => {
-        const keys = files.map((file) => file.name);
-
-        fetchPresignedUrls({ keys: keys })
-          .then((urls) => {
-            setPresignedUrls(urls);
-            setSubmitDisabled(false);
-          })
-          .catch((err) => console.error(err));
-      },
+      onDropAccepted: () => setSubmitDisabled(false),
     });
 
   const files = useMemo(() => {
@@ -39,25 +30,31 @@ export const StandardDropzone = () => {
   }, [acceptedFiles, submitDisabled]);
 
   const handleSubmit = useCallback(async () => {
-    if (acceptedFiles[0] && presignedUrls[0]) {
-      const promises = presignedUrls.map(async (url, i) => {
-        await axios
-          .put(url, acceptedFiles[i], {
-            headers: { "Content-Type": acceptedFiles[i]?.type },
-          })
-          .then((response) => {
-            console.log(response);
-            console.log("Successfully uploaded ", acceptedFiles[i]?.name);
-          })
-          .catch((err) => console.error(err));
-      });
+    const keys = acceptedFiles.map((file) => file.name);
 
-      await Promise.all(promises);
+    fetchPresignedUrls({ keys: keys })
+      .then(async (urls) => {
+        if (acceptedFiles[0] && urls[0]) {
+          const promises = urls.map(async (url, i) => {
+            await axios
+              .put(url, acceptedFiles[i], {
+                headers: { "Content-Type": acceptedFiles[i]?.type },
+              })
+              .then((response) => {
+                console.log(response);
+                console.log("Successfully uploaded ", acceptedFiles[i]?.name);
+              })
+              .catch((err) => console.error(err));
+          });
 
-      setSubmitDisabled(true);
-      await apiUtils.s3.getObjects.invalidate();
-    }
-  }, [acceptedFiles, apiUtils.s3.getObjects, presignedUrls]);
+          await Promise.all(promises);
+
+          setSubmitDisabled(true);
+          await apiUtils.s3.getObjects.invalidate();
+        }
+      })
+      .catch((err) => console.error(err));
+  }, [acceptedFiles, apiUtils.s3.getObjects]);
 
   return (
     <section>
@@ -85,9 +82,7 @@ export const StandardDropzone = () => {
       </aside>
       <button
         onClick={() => void handleSubmit()}
-        disabled={
-          !presignedUrls.length || acceptedFiles.length === 0 || submitDisabled
-        }
+        disabled={acceptedFiles.length === 0 || submitDisabled}
         className="submit-button"
       >
         Upload
