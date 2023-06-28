@@ -47,17 +47,17 @@ export const s3Router = createTRPCRouter({
    * key to our S3 bucket. This will be used for regular uploads, where the
    * entire file is uploaded in a single request.
    */
-  getStandardUploadPresignedUrl: publicProcedure
-    .meta({ openapi: { method: "POST", path: "/s3.getPresignedUrl" } })
+  getPresignedUrls: publicProcedure
+    .meta({ openapi: { method: "POST", path: "/s3.getPresignedUrls" } })
     .input(z.object({ keys: z.string().array() }))
     .output(z.string().array())
     .mutation(async ({ ctx, input }) => {
       const { s3 } = ctx;
 
-      const signedUrlPromises = input.keys.map(async (keyObj) => {
+      const signedUrlPromises = input.keys.map(async (key) => {
         const putObjectCommand = new PutObjectCommand({
           Bucket: env.BUCKET_NAME,
-          Key: keyObj,
+          Key: key,
         });
 
         return await getSignedUrl(s3, putObjectCommand);
