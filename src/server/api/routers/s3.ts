@@ -4,11 +4,8 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { env } from "~/env.mjs";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { TRPCError } from "@trpc/server";
 
-import sharp from "sharp";
-import axios from "axios";
-import { rgbToHex } from "~/utils/helpers";
+import { getImagesMeta } from "~/utils/server-helpers";
 import { v4 as uuidv4 } from "uuid";
 import { extension } from "mime-types";
 
@@ -87,40 +84,7 @@ export const s3Router = createTRPCRouter({
     .input(z.object({ urls: z.string().array() }))
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
-      const allImagesWithMeta = input.urls.map(async (url) => {
-        // Download Image & use Buffer as Input
-        const input = (
-          await axios({
-            url,
-            responseType: "arraybuffer",
-          })
-        ).data as Buffer;
-
-        // Extract relevant metadata using sharp library
-        const sharpInput = sharp(input);
-        const { width, height } = await sharpInput.metadata();
-        const {
-          dominant: { r, g, b },
-        } = await sharpInput.stats();
-        const aspectRatio =
-          width && height && parseFloat((width / height).toFixed(8));
-
-        const metadata = {
-          dimensions: {
-            width: width,
-            height: height,
-            aspectRatio: aspectRatio,
-          },
-          dominantColour: rgbToHex(r, g, b),
-        };
-
-        return {
-          url,
-          metadata: metadata,
-        };
-      });
-
-      const newImages = await Promise.all(allImagesWithMeta);
+      const newImages = await getImagesMeta(input.urls);
 
       const createRecords = newImages.map(async (image) => {
         await ctx.prisma.image.create({

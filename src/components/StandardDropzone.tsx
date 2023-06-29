@@ -3,27 +3,18 @@ import { useDropzone } from "react-dropzone";
 import axios from "axios";
 
 import { api } from "../utils/api";
+import { uploadImagesToS3UsingPresignedUrls } from "~/utils/client-helpers";
 
 export const StandardDropzone = () => {
   const { mutate: createImages } = api.s3.createImages.useMutation();
   const { mutate: getPresignedUrls } = api.s3.getPresignedUrls.useMutation({
-    onSuccess: async (urls) => {
-      if (!urls.length) return;
+    onSuccess: async (presignedUrls) => {
+      if (!presignedUrls.length) return;
 
-      const promises = urls.map(async (url, i) => {
-        try {
-          const res = await axios.put(url, acceptedFiles[i]);
-
-          console.log(res);
-          console.log("Successfully uploaded ", acceptedFiles[i]?.name);
-        } catch (error) {
-          console.log(error);
-        }
+      const imageUrls = await uploadImagesToS3UsingPresignedUrls({
+        presignedUrls: presignedUrls,
+        acceptedFiles: acceptedFiles,
       });
-
-      await Promise.all(promises);
-
-      const imageUrls = urls.map((url) => url.split("?")[0]!);
 
       createImages({ urls: imageUrls });
 
