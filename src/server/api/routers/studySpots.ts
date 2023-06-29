@@ -29,6 +29,7 @@ export const studySpotsRouter = createTRPCRouter({
           updatedAt: z.date(),
           name: z.string(),
           hasWifi: z.boolean(),
+          isValidated: z.boolean(),
           location: z.object({
             id: z.number(),
             lat: z.number(),
@@ -39,6 +40,46 @@ export const studySpotsRouter = createTRPCRouter({
     )
     .query(async ({ ctx }) => {
       const studySpots = await ctx.prisma.studySpot.findMany({
+        where: {
+          isValidated: true,
+        },
+        include: {
+          location: true,
+        },
+      });
+
+      return studySpots;
+    }),
+  /**
+   *
+   * Get getUnvalidated
+   *
+   */
+  getUnvalidated: publicProcedure
+    .meta({ openapi: { method: "GET", path: "/studyspots.getUnvalidated" } })
+    .input(z.void())
+    .output(
+      z
+        .object({
+          id: z.number(),
+          createdAt: z.date(),
+          updatedAt: z.date(),
+          name: z.string(),
+          hasWifi: z.boolean(),
+          isValidated: z.boolean(),
+          location: z.object({
+            id: z.number(),
+            lat: z.number(),
+            lng: z.number(),
+          }),
+        })
+        .array()
+    )
+    .query(async ({ ctx }) => {
+      const studySpots = await ctx.prisma.studySpot.findMany({
+        where: {
+          isValidated: false,
+        },
         include: {
           location: true,
         },

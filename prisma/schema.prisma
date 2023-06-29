@@ -19,6 +19,7 @@ model StudySpot {
     updatedAt  DateTime @updatedAt
     name       String   @unique
     hasWifi    Boolean
+    isValidated Boolean @default(false)
     location   Location @relation(fields: [locationId], references: [id])
     locationId Int      @unique
 }
