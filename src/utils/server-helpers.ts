@@ -1,5 +1,6 @@
 import axios from "axios";
 import sharp from "sharp";
+import { env } from "~/env.mjs";
 
 const componentToHex = (c: number) => {
   const hex = c.toString(16);
@@ -11,44 +12,55 @@ const rgbToHex = (r: number, g: number, b: number) => {
 };
 
 /**
- *
  * @param input array of image urls
- * @returns
  */
 export const getImagesMeta = async (input: string[]) => {
-  const allImagesWithMeta = await Promise.all(
-    input.map(async (url) => {
-      // Download Image & use Buffer as Input
-      const response = await axios({
-        url,
-        responseType: "arraybuffer",
-      });
+  try {
+    const allImagesWithMeta = await Promise.all(
+      input.map(async (url) => {
+        // Download Image & use Buffer as Input
+        const response = await axios({
+          url,
+          responseType: "arraybuffer",
+        });
 
-      const input = response.data as Buffer;
+        const host = response.request.host as string;
+        if (host !== `${env.BUCKET_NAME}.s3.${env.REGION}.amazonaws.com`)
+          throw new Error("The URLs provided are not from the bucket");
 
-      // Extract relevant metadata using sharp library
-      const sharpInput = sharp(input);
-      const { width, height } = await sharpInput.metadata();
-      const { dominant } = await sharpInput.stats();
-      const { r, g, b } = dominant;
-      const aspectRatio =
-        width && height && parseFloat((width / height).toFixed(8));
+        const input = response.data as Buffer;
 
-      const metadata = {
-        dimensions: {
-          width: width,
-          height: height,
-          aspectRatio: aspectRatio,
-        },
-        dominantColour: rgbToHex(r, g, b),
-      };
+        // Extract relevant metadata using sharp library
+        const sharpInput = sharp(input);
+        const { width, height } = await sharpInput.metadata();
+        const { dominant } = await sharpInput.stats();
+        const { r, g, b } = dominant;
+        const aspectRatio =
+          width && height && parseFloat((width / height).toFixed(8));
 
-      return {
-        url,
-        metadata: metadata,
-      };
-    })
-  );
+        if (!width || !height || !aspectRatio)
+          throw new Error(
+            "Something went wrong getting width/height for image metadata"
+          );
 
-  return allImagesWithMeta;
+        const metadata = {
+          dimensions: {
+            width: width,
+            height: height,
+            aspectRatio: aspectRatio,
+          },
+          dominantColour: rgbToHex(r, g, b),
+        };
+
+        return {
+          url,
+          metadata: metadata,
+        };
+      })
+    );
+    return allImagesWithMeta;
+  } catch (error) {
+    if (error instanceof Error) throw new Error(error.message);
+    throw new Error("Something went wrong getting image metadata");
+  }
 };

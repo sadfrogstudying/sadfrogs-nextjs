@@ -1,6 +1,5 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import axios from "axios";
 
 import { api } from "../utils/api";
 import { uploadImagesToS3UsingPresignedUrls } from "~/utils/client-helpers";
@@ -45,11 +44,9 @@ export const StandardDropzone = () => {
   }, [acceptedFiles, submitDisabled]);
 
   const handleSubmit = () => {
-    const filesToSubmit = acceptedFiles.map((file) => ({
-      contentType: file.type,
-    }));
+    const filesToSubmit = acceptedFiles.map((file) => file.type);
 
-    getPresignedUrls({ files: filesToSubmit });
+    getPresignedUrls({ contentTypes: filesToSubmit });
   };
 
   return (
