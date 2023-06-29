@@ -4,6 +4,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { getImagesMeta } from "~/utils/server-helpers";
 
 // Create a new ratelimiter, that allows 3 requests per 1 minute
 const ratelimit = new Ratelimit({
@@ -35,6 +36,19 @@ export const studySpotsRouter = createTRPCRouter({
             lat: z.number(),
             lng: z.number(),
           }),
+          images: z
+            .object({
+              url: z.string(),
+              metadata: z.object({
+                dominantColour: z.string(),
+                dimensions: z.object({
+                  width: z.number(),
+                  height: z.number(),
+                  aspectRatio: z.number(),
+                }),
+              }),
+            })
+            .array(),
         })
         .array()
     )
@@ -45,6 +59,15 @@ export const studySpotsRouter = createTRPCRouter({
         },
         include: {
           location: true,
+          images: {
+            include: {
+              metadata: {
+                include: {
+                  dimensions: true,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -72,6 +95,19 @@ export const studySpotsRouter = createTRPCRouter({
             lat: z.number(),
             lng: z.number(),
           }),
+          images: z
+            .object({
+              url: z.string(),
+              metadata: z.object({
+                dominantColour: z.string(),
+                dimensions: z.object({
+                  width: z.number(),
+                  height: z.number(),
+                  aspectRatio: z.number(),
+                }),
+              }),
+            })
+            .array(),
         })
         .array()
     )
@@ -82,6 +118,15 @@ export const studySpotsRouter = createTRPCRouter({
         },
         include: {
           location: true,
+          images: {
+            include: {
+              metadata: {
+                include: {
+                  dimensions: true,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -102,6 +147,7 @@ export const studySpotsRouter = createTRPCRouter({
           lat: z.number(),
           lng: z.number(),
         }),
+        imageUrls: z.string().array(),
       })
     )
     .output(
@@ -120,21 +166,36 @@ export const studySpotsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { success } = await ratelimit.limit(ctx.ip);
-      if (!success)
-        throw new TRPCError({
-          code: "TOO_MANY_REQUESTS",
-        });
+      if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+
+      const newImages = await getImagesMeta(input.imageUrls);
 
       const newStudySpot = await ctx.prisma.studySpot.create({
         data: {
           name: input.name,
           hasWifi: input.hasWifi,
           location: {
-            // https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#nested-writes
             create: {
               lat: input.location.lat,
               lng: input.location.lng,
             },
+          },
+          images: {
+            create: newImages.map((img) => ({
+              url: img.url,
+              metadata: {
+                create: {
+                  dominantColour: img.metadata.dominantColour,
+                  dimensions: {
+                    create: {
+                      aspectRatio: img.metadata.dimensions.aspectRatio,
+                      width: img.metadata.dimensions.width,
+                      height: img.metadata.dimensions.height,
+                    },
+                  },
+                },
+              },
+            })),
           },
         },
         include: {
