@@ -29,7 +29,7 @@ export const StandardDropzone = () => {
     return null;
   }, [acceptedFiles, submitDisabled]);
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(() => {
     const keys = acceptedFiles.map((file) => file.name);
 
     fetchPresignedUrls({ keys: keys })
