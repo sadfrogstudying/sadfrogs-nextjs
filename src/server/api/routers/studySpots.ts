@@ -55,8 +55,8 @@ export const studySpotsRouter = createTRPCRouter({
    * Get getUnvalidated
    *
    */
-  getUnvalidated: publicProcedure
-    .meta({ openapi: { method: "GET", path: "/studyspots.getUnvalidated" } })
+  getNotValidated: publicProcedure
+    .meta({ openapi: { method: "GET", path: "/studyspots.getNotValidated" } })
     .input(z.void())
     .output(
       z
