@@ -14,14 +14,15 @@ generator client {
 // You cannot create a StudySpot without connecting or creating a Location
 // https://www.prisma.io/docs/concepts/components/prisma-schema/relations/one-to-one-relations#required-and-optional-1-1-relation-fields
 model StudySpot {
-    id         Int      @id @default(autoincrement())
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-    name       String   @unique
-    hasWifi    Boolean
-    isValidated Boolean @default(false)
-    location   Location @relation(fields: [locationId], references: [id])
-    locationId Int      @unique
+    id          Int      @id @default(autoincrement())
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    name        String   @unique
+    hasWifi     Boolean
+    isValidated Boolean  @default(false)
+    location    Location @relation(fields: [locationId], references: [id])
+    locationId  Int      @unique
+    images      Image[]
 }
 
 model Location {
@@ -32,24 +33,28 @@ model Location {
 }
 
 model Image {
-    id       Int            @id @default(autoincrement())
-    url      String
-    metadata ImageMetaData?
+    id          Int           @id @default(autoincrement())
+    url         String
+    metadata    ImageMetaData @relation(fields: [metadataId], references: [id], onDelete: Cascade)
+    metadataId  Int           @unique
+    studySpot   StudySpot?    @relation(fields: [studySpotId], references: [id], onDelete: Cascade)
+    studySpotId Int?
+
+    @@index([studySpotId])
 }
 
 model ImageMetaData {
-    id            Int              @id @default(autoincrement())
-    dimensions    ImageDimensions?
-    dominantColor String?
-    image         Image            @relation(fields: [imageId], references: [id], onDelete: Cascade)
-    imageId       Int              @unique
+    id             Int             @id @default(autoincrement())
+    dimensions     ImageDimensions @relation(fields: [dimensionsId], references: [id], onDelete: Cascade)
+    dimensionsId   Int             @unique
+    dominantColour String          @default("#fff")
+    image          Image?
 }
 
 model ImageDimensions {
-    id          Int           @id @default(autoincrement())
-    aspectRatio Float?
-    height      Int?
-    width       Int?
-    metadata    ImageMetaData @relation(fields: [metadataId], references: [id], onDelete: Cascade)
-    metadataId  Int           @unique
+    id          Int            @id @default(autoincrement())
+    aspectRatio Float
+    height      Int
+    width       Int
+    metadata    ImageMetaData?
 }
