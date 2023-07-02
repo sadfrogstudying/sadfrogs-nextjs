@@ -22,7 +22,7 @@ export const studySpotsRouter = createTRPCRouter({
    *
    */
   getAll: publicProcedure
-    .meta({ openapi: { method: "GET", path: "/studyspots.getall" } })
+    .meta({ openapi: { method: "GET", path: "/studyspots.getAll" } })
     .input(z.void())
     .output(
       z
@@ -116,7 +116,7 @@ export const studySpotsRouter = createTRPCRouter({
    *
    */
   createOne: publicProcedure
-    .meta({ openapi: { method: "POST", path: "/studyspots.createone" } })
+    .meta({ openapi: { method: "POST", path: "/studyspots.createOne" } })
     .input(
       z.object({
         name: z.string().min(2),
@@ -177,7 +177,7 @@ export const studySpotsRouter = createTRPCRouter({
    *
    */
   getOne: publicProcedure
-    .meta({ openapi: { method: "GET", path: "/studyspots.getone" } })
+    .meta({ openapi: { method: "GET", path: "/studyspots.getOne" } })
     .input(z.object({ id: z.number() }))
     .output(
       z.object({
@@ -216,7 +216,7 @@ export const studySpotsRouter = createTRPCRouter({
    *
    */
   deleteOne: publicProcedure
-    .meta({ openapi: { method: "DELETE", path: "/studyspots.deleteone" } })
+    .meta({ openapi: { method: "DELETE", path: "/studyspots.deleteOne" } })
     .input(z.object({ id: z.number() }))
     .output(z.boolean())
     .mutation(async ({ ctx, input }) => {
