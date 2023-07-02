@@ -15,20 +15,27 @@ const rgbToHex = (r: number, g: number, b: number) => {
  * @param input array of image urls
  */
 export const getImagesMeta = async (input: string[]) => {
+  interface Response {
+    request: {
+      host: string;
+    };
+    data: Buffer;
+  }
+
   try {
     const allImagesWithMeta = await Promise.all(
       input.map(async (url) => {
         // Download Image & use Buffer as Input
-        const response = await axios({
+        const response = await axios<Record<string, never>, Response>({
           url,
           responseType: "arraybuffer",
         });
 
-        const host = response.request.host as string;
+        const host = response.request.host;
         if (host !== `${env.BUCKET_NAME}.s3.${env.REGION}.amazonaws.com`)
           throw new Error("The URLs provided are not from the bucket");
 
-        const input = response.data as Buffer;
+        const input = response.data;
 
         // Extract relevant metadata using sharp library
         const sharpInput = sharp(input);
