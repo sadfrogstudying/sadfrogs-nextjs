@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { useDropzone } from "react-dropzone";
 import { api } from "~/utils/api";
-import { uploadImagesToS3UsingPresignedUrls } from "~/utils/client-helpers";
+import { uploadImagesToS3UsingPresignedUrls } from "~/utils/helpers";
 
 export default function Home() {
   const [name, setName] = useState("");
