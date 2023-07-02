@@ -4,8 +4,6 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { env } from "~/env.mjs";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-
-import { getImagesMeta } from "~/utils/server-helpers";
 import { v4 as uuidv4 } from "uuid";
 import { extension } from "mime-types";
 
@@ -77,37 +75,5 @@ export const s3Router = createTRPCRouter({
       });
 
       return await Promise.all(signedUrlPromises);
-    }),
-  /**
-   * This should belong on another route
-   */
-  createImages: publicProcedure
-    .meta({ openapi: { method: "POST", path: "/s3.createImages" } })
-    .input(z.object({ urls: z.string().array() }))
-    .output(z.void())
-    .mutation(async ({ ctx, input }) => {
-      const newImages = await getImagesMeta(input.urls);
-
-      const createRecords = newImages.map(async (image) => {
-        await ctx.prisma.image.create({
-          data: {
-            url: image.url,
-            metadata: {
-              create: {
-                dominantColour: image.metadata.dominantColour,
-                dimensions: {
-                  create: {
-                    width: image.metadata.dimensions.width,
-                    height: image.metadata.dimensions.height,
-                    aspectRatio: image.metadata.dimensions.aspectRatio,
-                  },
-                },
-              },
-            },
-          },
-        });
-      });
-
-      await Promise.all(createRecords);
     }),
 });

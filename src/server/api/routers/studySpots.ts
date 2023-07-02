@@ -5,6 +5,8 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { getImagesMeta } from "~/utils/server-helpers";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { env } from "~/env.mjs";
 
 // Create a new ratelimiter, that allows 3 requests per 1 minute
 const ratelimit = new Ratelimit({
@@ -39,14 +41,10 @@ export const studySpotsRouter = createTRPCRouter({
           images: z
             .object({
               url: z.string(),
-              metadata: z.object({
-                dominantColour: z.string(),
-                dimensions: z.object({
-                  width: z.number(),
-                  height: z.number(),
-                  aspectRatio: z.number(),
-                }),
-              }),
+              dominantColour: z.string(),
+              width: z.number(),
+              height: z.number(),
+              aspectRatio: z.number(),
             })
             .array(),
         })
@@ -59,15 +57,7 @@ export const studySpotsRouter = createTRPCRouter({
         },
         include: {
           location: true,
-          images: {
-            include: {
-              metadata: {
-                include: {
-                  dimensions: true,
-                },
-              },
-            },
-          },
+          images: true,
         },
       });
 
@@ -98,14 +88,10 @@ export const studySpotsRouter = createTRPCRouter({
           images: z
             .object({
               url: z.string(),
-              metadata: z.object({
-                dominantColour: z.string(),
-                dimensions: z.object({
-                  width: z.number(),
-                  height: z.number(),
-                  aspectRatio: z.number(),
-                }),
-              }),
+              dominantColour: z.string(),
+              width: z.number(),
+              height: z.number(),
+              aspectRatio: z.number(),
             })
             .array(),
         })
@@ -118,15 +104,7 @@ export const studySpotsRouter = createTRPCRouter({
         },
         include: {
           location: true,
-          images: {
-            include: {
-              metadata: {
-                include: {
-                  dimensions: true,
-                },
-              },
-            },
-          },
+          images: true,
         },
       });
 
@@ -181,21 +159,9 @@ export const studySpotsRouter = createTRPCRouter({
             },
           },
           images: {
-            create: newImages.map((img) => ({
-              url: img.url,
-              metadata: {
-                create: {
-                  dominantColour: img.metadata.dominantColour,
-                  dimensions: {
-                    create: {
-                      aspectRatio: img.metadata.dimensions.aspectRatio,
-                      width: img.metadata.dimensions.width,
-                      height: img.metadata.dimensions.height,
-                    },
-                  },
-                },
-              },
-            })),
+            createMany: {
+              data: newImages,
+            },
           },
         },
         include: {
@@ -258,12 +224,52 @@ export const studySpotsRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
+        include: {
+          images: {
+            select: {
+              url: true,
+            },
+          },
+        },
       });
 
       if (!deletedStudySpot)
         throw new TRPCError({
           code: "NOT_FOUND",
         });
+
+      // Delete associated location
+      await ctx.prisma.location.delete({
+        where: {
+          id: deletedStudySpot.locationId,
+        },
+      });
+
+      // Delete uploaded images in s3
+      const { s3 } = ctx;
+      try {
+        await Promise.all(
+          deletedStudySpot.images.map(async (image) => {
+            const key = image.url.split(".com/")[1]; // extract filename from s3 url, as long as not nested in folders
+            const bucketParams = { Bucket: env.BUCKET_NAME, Key: key };
+            const data = await s3.send(new DeleteObjectCommand(bucketParams));
+            console.log("Success. Object deleted.", data);
+            return data; // For unit tests.
+          })
+        );
+      } catch (err) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Error deleting image from bucket",
+        });
+      }
+
+      // Delete associated images
+      await ctx.prisma.image.deleteMany({
+        where: {
+          studySpotId: deletedStudySpot.id,
+        },
+      });
 
       return true;
     }),

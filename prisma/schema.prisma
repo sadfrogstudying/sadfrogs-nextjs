@@ -20,9 +20,9 @@ model StudySpot {
     name        String   @unique
     hasWifi     Boolean
     isValidated Boolean  @default(false)
-    location    Location @relation(fields: [locationId], references: [id])
+    location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
     locationId  Int      @unique
-    images      Image[]
+    images      Image[] // if StudySpot is deleted, all images are deleted (default behavior)
 }
 
 model Location {
@@ -33,28 +33,14 @@ model Location {
 }
 
 model Image {
-    id          Int           @id @default(autoincrement())
-    url         String
-    metadata    ImageMetadata @relation(fields: [metadataId], references: [id], onDelete: Cascade)
-    metadataId  Int           @unique
-    studySpot   StudySpot?    @relation(fields: [studySpotId], references: [id], onDelete: Cascade)
-    studySpotId Int?
+    id             Int        @id @default(autoincrement())
+    url            String
+    dominantColour String     @default("#fff")
+    aspectRatio    Float
+    height         Int
+    width          Int
+    studySpot      StudySpot? @relation(fields: [studySpotId], references: [id], onDelete: Cascade)
+    studySpotId    Int?
 
     @@index([studySpotId])
-}
-
-model ImageMetadata {
-    id             Int             @id @default(autoincrement())
-    dimensions     ImageDimensions @relation(fields: [dimensionsId], references: [id], onDelete: Cascade)
-    dimensionsId   Int             @unique
-    dominantColour String          @default("#fff")
-    image          Image?
-}
-
-model ImageDimensions {
-    id          Int            @id @default(autoincrement())
-    aspectRatio Float
-    height      Int
-    width       Int
-    metadata    ImageMetadata?
 }

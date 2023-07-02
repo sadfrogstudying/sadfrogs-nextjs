@@ -19,6 +19,13 @@ export default function Home() {
   const nameError = error?.data?.zodError?.fieldErrors.name;
   const errorMessage = error?.message;
 
+  const {
+    mutate: deleteStudyspot,
+    isLoading: isDeleting,
+    data: deletedData,
+  } = api.studySpots.deleteOne.useMutation({
+    onSuccess: () => apiUtils.studySpots.getNotValidated.invalidate(),
+  });
   const { mutate: getPresignedUrls } = api.s3.getPresignedUrls.useMutation({
     onSuccess: async (presignedUrls) => {
       if (!presignedUrls.length) return;
@@ -178,6 +185,9 @@ export default function Home() {
                     lat: {studySpot.location.lat}, long:{" "}
                     {studySpot.location.lng}
                   </div>
+                  <button onClick={() => deleteStudyspot({ id: studySpot.id })}>
+                    {!isDeleting ? "Delete" : "Deleting"}
+                  </button>
                 </div>
                 <div
                   style={{

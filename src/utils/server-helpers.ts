@@ -43,18 +43,12 @@ export const getImagesMeta = async (input: string[]) => {
             "Something went wrong getting width/height for image metadata"
           );
 
-        const metadata = {
-          dimensions: {
-            width: width,
-            height: height,
-            aspectRatio: aspectRatio,
-          },
-          dominantColour: rgbToHex(r, g, b),
-        };
-
         return {
           url,
-          metadata: metadata,
+          width: width,
+          height: height,
+          aspectRatio: aspectRatio,
+          dominantColour: rgbToHex(r, g, b),
         };
       })
     );
