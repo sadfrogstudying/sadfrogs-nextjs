@@ -74,10 +74,10 @@ Put http://localhost:3000/ on the internet
 ngrok http 3000
 ```
 
-If you want to run a script, possibly to seed data
+If you want to run the seed script
 
 ```shell
-tsx prisma/some-script-to-seed-data.ts
+yarn db-seed
 ```
 
 ## ngrok (access development server on the internet)
