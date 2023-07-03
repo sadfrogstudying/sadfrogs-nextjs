@@ -27,8 +27,8 @@ model StudySpot {
 
 model Location {
     id        Int        @id @default(autoincrement())
-    lat       Float
-    lng       Float
+    latitude  Float
+    longitude Float
     studySpot StudySpot?
 }
 

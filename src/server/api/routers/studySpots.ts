@@ -35,8 +35,8 @@ export const studySpotsRouter = createTRPCRouter({
           isValidated: z.boolean(),
           location: z.object({
             id: z.number(),
-            lat: z.number(),
-            lng: z.number(),
+            latitude: z.number(),
+            longitude: z.number(),
           }),
           images: z
             .object({
@@ -82,8 +82,8 @@ export const studySpotsRouter = createTRPCRouter({
           isValidated: z.boolean(),
           location: z.object({
             id: z.number(),
-            lat: z.number(),
-            lng: z.number(),
+            latitude: z.number(),
+            longitude: z.number(),
           }),
           images: z
             .object({
@@ -122,8 +122,8 @@ export const studySpotsRouter = createTRPCRouter({
         name: z.string().min(2),
         hasWifi: z.boolean(),
         location: z.object({
-          lat: z.number(),
-          lng: z.number(),
+          latitude: z.number(),
+          longitude: z.number(),
         }),
         imageUrls: z.string().array(),
       })
@@ -137,8 +137,8 @@ export const studySpotsRouter = createTRPCRouter({
         hasWifi: z.boolean(),
         location: z.object({
           id: z.number(),
-          lat: z.number(),
-          lng: z.number(),
+          latitude: z.number(),
+          longitude: z.number(),
         }),
       })
     )
@@ -154,8 +154,8 @@ export const studySpotsRouter = createTRPCRouter({
           hasWifi: input.hasWifi,
           location: {
             create: {
-              lat: input.location.lat,
-              lng: input.location.lng,
+              latitude: input.location.latitude,
+              longitude: input.location.longitude,
             },
           },
           images: {
@@ -188,8 +188,8 @@ export const studySpotsRouter = createTRPCRouter({
         hasWifi: z.boolean(),
         location: z.object({
           id: z.number(),
-          lat: z.number(),
-          lng: z.number(),
+          latitude: z.number(),
+          longitude: z.number(),
         }),
       })
     )

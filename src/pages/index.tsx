@@ -40,8 +40,8 @@ export default function Home() {
         hasWifi,
         imageUrls,
         location: {
-          lat,
-          lng,
+          latitude: lat,
+          longitude: lng,
         },
       });
     },
@@ -121,22 +121,6 @@ export default function Home() {
             </label>
           </div>
 
-          <div
-            {...getRootProps()}
-            className="dropzone-container"
-            style={{ width: `200px`, height: `200px`, background: `lightgray` }}
-          >
-            <input {...getInputProps()} />
-            {isDragActive ? (
-              <div className="flex h-full items-center justify-center font-semibold">
-                <p>Drop the file here...</p>
-              </div>
-            ) : (
-              <div className="flex h-full items-center justify-center font-semibold">
-                <p>Drag n drop file here, or click to select files</p>
-              </div>
-            )}
-          </div>
           <aside className="my-2">
             <h4 className="font-semibold text-zinc-400">
               Files pending upload:
@@ -182,8 +166,8 @@ export default function Home() {
                   </div>
                   <div>has wifi: {studySpot.hasWifi}</div>
                   <div>
-                    lat: {studySpot.location.lat}, long:{" "}
-                    {studySpot.location.lng}
+                    lat: {studySpot.location.latitude}, long:{" "}
+                    {studySpot.location.longitude}
                   </div>
                   <button onClick={() => deleteStudyspot({ id: studySpot.id })}>
                     {!isDeleting ? "Delete" : "Deleting"}
