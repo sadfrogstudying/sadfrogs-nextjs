@@ -9,7 +9,7 @@ import {
   FormField,
   FormLabel,
   Input,
-} from "~/components/ui/Form";
+} from "~/components/UI/Form";
 
 const FileUpload = ({
   control,

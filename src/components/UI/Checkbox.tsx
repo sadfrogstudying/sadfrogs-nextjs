@@ -5,7 +5,7 @@ import { CheckIcon } from "@radix-ui/react-icons";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 
 import { formTokens } from "~/tokens";
-import { inputHoverFocusStyles } from "~/components/ui/Form";
+import { inputHoverFocusStyles } from "~/components/UI/Form";
 
 const Checkbox = ({ name, ...props }: { name: string; [x: string]: any }) => (
   <Controller
