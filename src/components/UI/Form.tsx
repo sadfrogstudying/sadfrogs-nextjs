@@ -20,8 +20,11 @@ const FormRoot = styled(Form.Root)`
   width: 100%;
 `;
 const FormField = styled(Form.Field)`
-  display: grid;
   flex-grow: 1;
+`;
+const FormFieldGrid = styled(Form.Field)`
+  display: grid;
+  grid-template-columns: 2fr 7fr;
 `;
 const FormLabel = styled(Form.Label)`
   font-weight: 500;
@@ -108,6 +111,7 @@ export {
   inputHoverFocusStyles,
   FormRoot,
   FormField,
+  FormFieldGrid,
   FormLabel,
   FormMessage,
   Flex,

@@ -21,7 +21,7 @@ export const CardFooter = styled.div`
 `;
 export const Card = styled.div`
   margin: auto;
-  height: fit-content;
+  height: 100%;
   background-color: #fff;
   border: 1px solid ${formTokens.borderColor};
   border-radius: ${formTokens.borderRadius}rem;

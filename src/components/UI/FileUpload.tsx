@@ -38,8 +38,7 @@ const FileUpload = ({
   }, [acceptedFiles]);
 
   return (
-    <FormField name={name}>
-      <FormLabel>Images</FormLabel>
+    <>
       <Controller
         control={control}
         name={name}
@@ -72,7 +71,7 @@ const FileUpload = ({
           <DropzoneFilesPreview>{renderedFiles}</DropzoneFilesPreview>
         </aside>
       ) : null}
-    </FormField>
+    </>
   );
 };
 
