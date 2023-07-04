@@ -29,6 +29,17 @@ export const Card = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 40rem;
+
+  animation: fade-in 0.75s ease-in-out;
+  will-change: opacity;
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 `;
 export const CardTitle = styled.h3`
   font-size: 1.3rem;

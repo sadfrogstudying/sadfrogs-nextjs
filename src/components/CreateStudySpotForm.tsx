@@ -17,7 +17,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-} from "~/components/ui/Card";
+} from "~/components/UI/Card";
 import {
   Button,
   Flex,
@@ -26,9 +26,9 @@ import {
   FormMessage,
   FormRoot,
   Input,
-} from "~/components/ui/Form";
-import Checkbox from "~/components/ui/Checkbox";
-import FileUpload from "~/components/ui/FileUpload";
+} from "~/components/UI/Form";
+import Checkbox from "~/components/UI/Checkbox";
+import FileUpload from "~/components/UI/FileUpload";
 
 const CreateStudySpotForm = () => {
   interface FormInput {

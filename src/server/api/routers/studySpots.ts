@@ -80,6 +80,7 @@ export const studySpotsRouter = createTRPCRouter({
           name: z.string(),
           hasWifi: z.boolean(),
           isValidated: z.boolean(),
+          locationId: z.number(),
           location: z.object({
             id: z.number(),
             latitude: z.number(),
@@ -87,6 +88,8 @@ export const studySpotsRouter = createTRPCRouter({
           }),
           images: z
             .object({
+              id: z.number(),
+              studySpotId: z.number().nullable(),
               url: z.string(),
               dominantColour: z.string(),
               width: z.number(),

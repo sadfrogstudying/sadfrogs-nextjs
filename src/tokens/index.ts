@@ -6,4 +6,4 @@ export const formTokens = {
   labelSpacing: 0.5,
   inputBg: "#fff",
   borderColor: "#d8d8d8",
-};
+} as const;
