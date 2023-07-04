@@ -10,6 +10,8 @@ const StatusHandler = ({
   fetchStatus: FetchStatus;
   children: React.ReactNode;
 }) => {
+  console.log(fetchStatus);
+
   return (
     <>
       {status === "loading" ? (
@@ -27,12 +29,3 @@ const StatusHandler = ({
 };
 
 export default StatusHandler;
-
-const SadPepe = () => {
-  return (
-    <video autoPlay playsInline muted loop>
-      <source src="/sad-pepe.mp4" />
-      <meta itemProp="description" content="Sad Frog" />
-    </video>
-  );
-};

@@ -13,7 +13,7 @@ import type { OpenApiMeta } from "trpc-openapi";
 import { ZodError } from "zod";
 import { prisma } from "~/server/db";
 import { getSession } from "@auth0/nextjs-auth0";
-import { NextApiRequest } from "next";
+import type { NextApiRequest } from "next";
 import { s3 } from "../aws/s3";
 
 /**

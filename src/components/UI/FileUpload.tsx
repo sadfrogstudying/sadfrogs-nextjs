@@ -9,6 +9,7 @@ import {
   DropzoneRoot,
   Input,
 } from "~/components/UI/Form";
+import Image from "next/image";
 
 const FileUpload = <T extends FieldValues>({
   control,
@@ -16,7 +17,7 @@ const FileUpload = <T extends FieldValues>({
   setValue,
 }: {
   name: Path<T>;
-  control: Control<T, any>;
+  control: Control<T, unknown>;
   setValue: (file: File[]) => void;
 }) => {
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
@@ -36,7 +37,10 @@ const FileUpload = <T extends FieldValues>({
   const renderedFiles = useMemo(() => {
     return acceptedFiles.map((file) => (
       <li key={file.name}>
-        <img src={URL.createObjectURL(file)} />
+        <Image
+          src={URL.createObjectURL(file)}
+          alt="Photos waiting to be uploaded"
+        />
       </li>
     ));
   }, [acceptedFiles]);

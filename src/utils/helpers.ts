@@ -34,19 +34,23 @@ export const uploadImagesToS3UsingPresignedUrls = async ({
   return imageUrls;
 };
 
-export const parseClientError = (error: unknown) => {
-  const clientError =
-    error instanceof TRPCClientError && JSON.parse(error?.message);
+// export const parseClientError = <T>(error: T) => {
+//   type ClientError = {
+//     path: string[];
+//     message: string;
+//   }[];
 
-  const errorMessages: string[] | null = clientError
-    ? clientError.map(
-        (err: { path: string[]; message: string }) =>
-          `${err.path.slice(-1)} - ${err.message}}`
-      )
-    : null;
+//   const clientError =
+//     error instanceof TRPCClientError && JSON.parse(error.message);
 
-  return errorMessages;
-};
+//   const errorMessages: string[] | null = clientError
+//     ? clientError.map((err: { path: string[]; message: string }) => {
+//         return `${err.path.slice(-1)[0] || ""} - ${err.message}}`;
+//       })
+//     : null;
+
+//   return errorMessages;
+// };
 
 /*
  * Prevents props with "$" from being sent to the underlying DOM element

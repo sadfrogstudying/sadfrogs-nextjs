@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import StatusHandler from "../StatusHandler";
 
 const StudySpotGrid = () => {
-  const { data, status, failureReason, fetchStatus } =
+  const { data, status, fetchStatus } =
     api.studySpots.getNotValidated.useQuery();
 
   return (

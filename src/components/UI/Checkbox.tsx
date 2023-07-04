@@ -2,7 +2,7 @@ import React from "react";
 
 import styled from "@emotion/styled";
 
-import { CheckedState } from "@radix-ui/react-checkbox";
+import type { CheckedState } from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 
@@ -11,7 +11,7 @@ import { inputHoverFocusStyles } from "~/components/UI/Form";
 
 interface CheckboxProps {
   setValue: (checked: CheckedState) => void;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
@@ -25,6 +25,7 @@ const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
     );
   }
 );
+Checkbox.displayName = "Checkbox";
 
 export default Checkbox;
 

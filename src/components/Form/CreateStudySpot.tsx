@@ -1,12 +1,12 @@
 import React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { type SubmitHandler, useForm } from "react-hook-form";
 
 import * as Form from "@radix-ui/react-form";
-import { CheckedState } from "@radix-ui/react-checkbox";
+import { type CheckedState } from "@radix-ui/react-checkbox";
 
 import { api } from "~/utils/api";
 import {
-  parseClientError,
+  // parseClientError,
   uploadImagesToS3UsingPresignedUrls,
 } from "~/utils/helpers";
 
@@ -47,12 +47,12 @@ const CreateStudySpotForm = () => {
     isLoading: createIsLoading,
   } = api.studySpots.createOne.useMutation({
     onSuccess: () => {
-      apiUtils.studySpots.getNotValidated.invalidate();
       reset();
+      void apiUtils.studySpots.getNotValidated.invalidate();
     },
   });
 
-  const errorMessages = parseClientError(error);
+  // const errorMessages = parseClientError(error);
 
   const { mutate: getPresignedUrls, isLoading: presignedUrlsIsLoading } =
     api.s3.getPresignedUrls.useMutation({
@@ -78,13 +78,12 @@ const CreateStudySpotForm = () => {
     });
 
   const onSubmit: SubmitHandler<FormInput> = (data) => {
-    // const filesToSubmit = data.images.map((file) => file.type);
-    // getPresignedUrls({ contentTypes: filesToSubmit });
-    console.log(data);
+    const filesToSubmit = data.images.map((file) => file.type);
+    getPresignedUrls({ contentTypes: filesToSubmit });
   };
 
   return (
-    <FormRoot onSubmit={handleSubmit(onSubmit)}>
+    <FormRoot onSubmit={() => handleSubmit(onSubmit)}>
       <CardContent>
         <FormField name="name">
           <Flex>
@@ -151,13 +150,13 @@ const CreateStudySpotForm = () => {
         <Form.Submit asChild>
           <Button>Post question</Button>
         </Form.Submit>
-        {errorMessages && (
+        {/* {errorMessages && (
           <div style={{ textTransform: `capitalize` }}>
             {errorMessages.map((errMsg) => (
               <div key={errMsg}>{errMsg}</div>
             ))}
           </div>
-        )}
+        )} */}
         {createIsLoading || (presignedUrlsIsLoading && <div>Creating...</div>)}
       </CardFooter>
     </FormRoot>

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/UI/Card";
 import Image from "~/components/UI/Image";
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import styled from "@emotion/styled";
 
 const StudySpotGridItem = ({
