@@ -11,6 +11,7 @@ interface Props {
   alt: string;
   quality?: number;
   placeholder?: "blur" | "empty";
+  objectFit?: "contain" | "cover";
   onClick?: () => void;
 }
 
@@ -24,6 +25,7 @@ const Image = ({
   alt,
   quality,
   placeholder = "empty",
+  objectFit = "contain",
   onClick,
 }: Props) => {
   const { aspectRatio, dominantColour, height, url, width } = image;
@@ -48,6 +50,7 @@ const Image = ({
         height={height}
         onLoadingComplete={doFadeIn}
         $loaded={placeholder === "blur" ? true : imageLoaded}
+        $objectFit={objectFit}
         onClick={onClick}
         placeholder={placeholder}
         quality={quality || undefined}
@@ -65,10 +68,11 @@ const ImageContainer = styled.div`
 `;
 const FutureImageStyled = styled(FutureImage, transientOptions)<{
   $loaded: boolean;
+  $objectFit: "contain" | "cover";
 }>`
   opacity: ${({ $loaded }) => ($loaded ? 1 : 0)};
   transition: opacity 0.25s linear;
-  object-fit: contain;
+  object-fit: ${({ $objectFit }) => $objectFit};
   will-change: opacity;
   width: fit-content;
   height: 100%;
