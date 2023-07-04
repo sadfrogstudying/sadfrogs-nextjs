@@ -2,6 +2,7 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 import CreateStudySpotForm from "~/components/CreateStudySpotForm";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
+import Image from "~/components/ui/image";
 
 export default function Home() {
   return (
@@ -71,15 +72,15 @@ const StudySpotGrid = () => {
               }}
             >
               {studySpot.images.map((image) => (
-                <img
-                  src={image.url}
+                <Image
+                  image={{ ...image }}
                   key={image.url}
-                  alt="study spot"
-                  style={{
-                    maxWidth: `200px`,
-                    width: `100%`,
-                    alignSelf: "center",
-                  }}
+                  alt={`Image of ${studySpot.name}`}
+                  // style={{
+                  //   maxWidth: `200px`,
+                  //   width: `100%`,
+                  //   alignSelf: "center",
+                  // }}
                 />
               ))}
             </div>
