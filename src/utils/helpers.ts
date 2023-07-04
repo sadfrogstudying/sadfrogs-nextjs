@@ -1,3 +1,4 @@
+import { TRPCClientError } from "@trpc/client";
 import axios from "axios";
 
 /** Returns the urls of the uploaded images */
@@ -31,4 +32,18 @@ export const uploadImagesToS3UsingPresignedUrls = async ({
   });
 
   return imageUrls;
+};
+
+export const parseClientError = (error: unknown) => {
+  const clientError =
+    error instanceof TRPCClientError && JSON.parse(error?.message);
+
+  const errorMessages: string[] | null = clientError
+    ? clientError.map(
+        (err: { path: string[]; message: string }) =>
+          `${err.path.slice(-1)} - ${err.message}}`
+      )
+    : null;
+
+  return errorMessages;
 };

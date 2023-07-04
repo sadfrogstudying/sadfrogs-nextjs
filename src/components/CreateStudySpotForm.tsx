@@ -5,7 +5,10 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import * as Form from "@radix-ui/react-form";
 
 import { api } from "~/utils/api";
-import { uploadImagesToS3UsingPresignedUrls } from "~/utils/helpers";
+import {
+  parseClientError,
+  uploadImagesToS3UsingPresignedUrls,
+} from "~/utils/helpers";
 
 import {
   Card,
@@ -56,15 +59,7 @@ const CreateStudySpotForm = () => {
     },
   });
 
-  /** Error Handling */
-  const clientError =
-    error instanceof TRPCClientError && JSON.parse(error?.message);
-  const errorMessage: string[] | null = clientError
-    ? clientError.map(
-        (err: { path: string[]; message: string }) =>
-          `${err.path.slice(-1)} - ${err.message}}`
-      )
-    : null;
+  const errorMessages = parseClientError(error);
 
   const { mutate: getPresignedUrls, isLoading: presignedUrlsIsLoading } =
     api.s3.getPresignedUrls.useMutation({
@@ -164,9 +159,9 @@ const CreateStudySpotForm = () => {
           <Form.Submit asChild>
             <Button>Post question</Button>
           </Form.Submit>
-          {errorMessage && (
+          {errorMessages && (
             <div style={{ textTransform: `capitalize` }}>
-              {errorMessage.map((errMsg) => (
+              {errorMessages.map((errMsg) => (
                 <div key={errMsg}>{errMsg}</div>
               ))}
             </div>
