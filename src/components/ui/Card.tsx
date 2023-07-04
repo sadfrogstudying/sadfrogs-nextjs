@@ -26,6 +26,7 @@ export const Card = styled.div`
   border: 1px solid ${formTokens.borderColor};
   border-radius: ${formTokens.borderRadius}rem;
   display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 40rem;
 `;

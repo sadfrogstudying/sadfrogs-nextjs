@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { api } from "~/utils/api";
 import CreateStudySpotForm from "~/components/CreateStudySpotForm";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 
 export default function Home() {
   return (
@@ -33,49 +34,40 @@ const StudySpotGrid = () => {
   });
 
   return (
-    <div>
-      <h2>Study Spots</h2>
-      <div
-        style={{
-          display: `grid`,
-          gridTemplateColumns: `repeat(3,1fr)`,
-          gap: `1rem`,
-        }}
-      >
-        {studySpots.data?.map((studySpot) => (
-          <div
-            key={studySpot.id}
-            style={{
-              outline: `1px solid #333`,
-              background: `#f8f8f8`,
-            }}
-          >
-            <div style={{ padding: `1rem` }}>
-              <div
-                style={{
-                  fontSize: `3rem`,
-                  fontWeight: 600,
-                  fontFamily: "fantasy",
-                  letterSpacing: "-0.04em",
-                }}
-              >
-                {studySpot.name}
-              </div>
-              <div>has wifi: {studySpot.hasWifi}</div>
-              <div>
-                lat: {studySpot.location.latitude}, long:{" "}
-                {studySpot.location.longitude}
-              </div>
-              <button onClick={() => deleteStudyspot({ id: studySpot.id })}>
-                {!isDeleting ? "Delete" : "Deleting"}
-              </button>
+    <div
+      style={{
+        display: `grid`,
+        gridTemplateColumns: `repeat(3,1fr)`,
+        gap: `1rem`,
+      }}
+    >
+      {studySpots.data?.map((studySpot) => (
+        <Card key={studySpot.id}>
+          <CardHeader style={{ padding: `1rem` }}>
+            <CardTitle
+              style={{
+                fontSize: `3rem`,
+                fontWeight: 400,
+                fontFamily: "serif",
+                letterSpacing: "-0.04em",
+              }}
+            >
+              {studySpot.name}
+            </CardTitle>
+            <div>has wifi: {studySpot.hasWifi ? "True" : "False"}</div>
+            <div>
+              lat: {studySpot.location.latitude}, long:{" "}
+              {studySpot.location.longitude}
             </div>
+            <button onClick={() => deleteStudyspot({ id: studySpot.id })}>
+              {!isDeleting ? "Delete" : "Deleting"}
+            </button>
+          </CardHeader>
+          <CardContent>
             <div
               style={{
-                display: `flex`,
-                flexWrap: `wrap`,
-                borderTop: `1px dashed black`,
-                padding: `1rem`,
+                display: `grid`,
+                gridTemplateColumns: `repeat(auto-fill, minmax(100px, 1fr))`,
               }}
             >
               {studySpot.images.map((image) => (
@@ -91,9 +83,9 @@ const StudySpotGrid = () => {
                 />
               ))}
             </div>
-          </div>
-        ))}
-      </div>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 };

@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 
 import * as Form from "@radix-ui/react-form";
-import * as Checkbox from "@radix-ui/react-checkbox";
 
 import { formTokens } from "~/tokens";
 
@@ -16,27 +15,27 @@ const inputHoverFocusStyles = css`
     border: 1px solid blue;
   }
 `;
-export const FormRoot = styled(Form.Root)`
+const FormRoot = styled(Form.Root)`
   margin: auto;
   width: 100%;
 `;
-export const FormField = styled(Form.Field)`
+const FormField = styled(Form.Field)`
   display: grid;
   flex-grow: 1;
 `;
-export const FormLabel = styled(Form.Label)`
+const FormLabel = styled(Form.Label)`
   font-weight: 500;
   line-height: ${formTokens.lineHeight}rem;
   margin-bottom: ${formTokens.labelSpacing}rem;
 `;
-export const FormMessage = styled(Form.Message)`
+const FormMessage = styled(Form.Message)`
   color: red;
   opacity: 0.8;
   font-size: 0.8rem;
   line-height: ${formTokens.lineHeight}rem;
   margin-bottom: ${formTokens.labelSpacing}rem;
 `;
-export const Flex = styled("div")`
+const Flex = styled("div")`
   display: flex;
   gap: 1rem;
   align-items: start;
@@ -57,7 +56,7 @@ const inputStyles = css`
     background-color: chartreuse;
   }
 `;
-export const Input = styled.input`
+const Input = styled.input`
   ${inputStyles};
   height: ${formTokens.height}rem;
   line-height: 1;
@@ -70,7 +69,7 @@ export const Input = styled.input`
     border: 1px solid #8acb49;
   }
 `;
-export const Button = styled.button`
+const Button = styled.button`
   all: unset;
   box-sizing: border-box;
   display: inline-flex;
@@ -87,22 +86,7 @@ export const Button = styled.button`
   ${inputHoverFocusStyles}
 `;
 
-export const CheckboxRoot = styled(Checkbox.Root)`
-  background-color: white;
-  width: ${formTokens.height}rem;
-  height: ${formTokens.height}rem;
-  border-radius: ${formTokens.borderRadius}rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  ${inputHoverFocusStyles};
-`;
-
-export const CheckboxIndicator = styled(Checkbox.Indicator)`
-  color: #000;
-`;
-
-export const DropzoneRoot = styled.div`
+const DropzoneRoot = styled.div`
   width: 100%;
   padding: ${formTokens.inputSpacing}px;
   border-radius: ${formTokens.borderRadius}rem;
@@ -114,8 +98,23 @@ export const DropzoneRoot = styled.div`
 
   ${inputHoverFocusStyles}
 `;
-export const DropzoneFilesPreview = styled.ul`
+const DropzoneFilesPreview = styled.ul`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 `;
-export const FormError = styled.div``;
+const FormError = styled.div``;
+
+export {
+  inputHoverFocusStyles,
+  FormRoot,
+  FormField,
+  FormLabel,
+  FormMessage,
+  Flex,
+  inputStyles,
+  Input,
+  Button,
+  DropzoneRoot,
+  DropzoneFilesPreview,
+  FormError,
+};
