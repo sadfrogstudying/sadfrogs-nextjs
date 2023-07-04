@@ -2,6 +2,7 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import * as Form from "@radix-ui/react-form";
+import { CheckedState } from "@radix-ui/react-checkbox";
 
 import { api } from "~/utils/api";
 import {
@@ -19,8 +20,8 @@ import {
   FormRoot,
   Input,
 } from "~/components/UI/Form";
-import Checkbox from "~/components/UI/Checkbox";
 import FileUpload from "~/components/UI/FileUpload";
+import Checkbox from "~/components/UI/Checkbox";
 
 const CreateStudySpotForm = () => {
   interface FormInput {
@@ -77,8 +78,9 @@ const CreateStudySpotForm = () => {
     });
 
   const onSubmit: SubmitHandler<FormInput> = (data) => {
-    const filesToSubmit = data.images.map((file) => file.type);
-    getPresignedUrls({ contentTypes: filesToSubmit });
+    // const filesToSubmit = data.images.map((file) => file.type);
+    // getPresignedUrls({ contentTypes: filesToSubmit });
+    console.log(data);
   };
 
   return (
@@ -98,7 +100,10 @@ const CreateStudySpotForm = () => {
           <Flex>
             <FormLabel htmlFor="hasWifi">Has WiFi</FormLabel>
           </Flex>
-          <Checkbox name="hasWifi" control={control} />
+          <Checkbox
+            {...register("hasWifi")}
+            setValue={(v: CheckedState) => setValue("hasWifi", !!v)}
+          />
         </FormField>
 
         <FormField name="latitude">
@@ -134,7 +139,11 @@ const CreateStudySpotForm = () => {
 
         <FormField name="images">
           <FormLabel>Images</FormLabel>
-          <FileUpload control={control} name="images" setValue={setValue} />
+          <FileUpload
+            control={control}
+            name="images"
+            setValue={(file: File[]) => setValue("images", file)}
+          />
         </FormField>
       </CardContent>
 

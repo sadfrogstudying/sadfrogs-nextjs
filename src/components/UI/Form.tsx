@@ -88,7 +88,6 @@ const Button = styled.button`
   color: #fff;
   ${inputHoverFocusStyles}
 `;
-
 const DropzoneRoot = styled.div`
   width: 100%;
   padding: ${formTokens.inputSpacing}px;

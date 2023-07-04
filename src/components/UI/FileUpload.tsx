@@ -1,31 +1,35 @@
 import React, { useMemo } from "react";
 import { Controller } from "react-hook-form";
+import type { Control, FieldValues, Path } from "react-hook-form";
 
 import { useDropzone } from "react-dropzone";
 
 import {
   DropzoneFilesPreview,
   DropzoneRoot,
-  FormField,
-  FormLabel,
   Input,
 } from "~/components/UI/Form";
 
-const FileUpload = ({
+const FileUpload = <T extends FieldValues>({
   control,
   name,
   setValue,
 }: {
-  name: string;
-  control: any;
-  setValue: any;
+  name: Path<T>;
+  control: Control<T, any>;
+  setValue: (file: File[]) => void;
 }) => {
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
     useDropzone({
       maxFiles: 8,
       maxSize: 4000000, // 4mb
+      accept: {
+        "image/png": [".png"],
+        "image/jpeg": [".jpeg", ".jpg"],
+        "image/webp": [".webp"],
+      },
       onDrop: (acceptedFiles) => {
-        setValue(name, acceptedFiles);
+        setValue(acceptedFiles);
       },
     });
 
@@ -42,7 +46,7 @@ const FileUpload = ({
       <Controller
         control={control}
         name={name}
-        render={({ field: { onChange, onBlur, value } }) => (
+        render={({ field: { onChange, onBlur } }) => (
           <DropzoneRoot
             style={{
               backgroundColor: isDragActive ? `#e5e5e5` : "#f5f5f5",
