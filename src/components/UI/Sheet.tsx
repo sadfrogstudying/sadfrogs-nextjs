@@ -5,6 +5,23 @@ import { formTokens } from "~/tokens";
 const SheetRoot = styled(SheetPrimitive.Root)``;
 const SheetTrigger = styled(SheetPrimitive.Trigger)`
   all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-radius: ${formTokens.borderRadius}rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: pink;
+  }
+  &:focus {
+    border: 2px solid violet;
+  }
+
+  height: ${formTokens.height}rem;
+  width: 8rem;
   font-family: "Times New Roman", Times, serif;
   font-weight: 400;
   letter-spacing: -0.01rem;
@@ -31,18 +48,6 @@ const SheetContent = styled(SheetPrimitive.Content)`
   width: 100%;
   max-width: 400px;
   height: 100%;
-  /* animation: contentShow 500ms cubic-bezier(0.16, 1, 0.3, 1);
-
-  @keyframes contentShow {
-    from {
-      opacity: 0;
-      right: -100%;
-    }
-    to {
-      opacity: 1;
-      right: 0;
-    }
-  } */
 `;
 const SheetHeader = styled.div`
   padding: 1.75rem;
@@ -54,6 +59,29 @@ const SheetTitle = styled(SheetPrimitive.Title)`
   font-size: 1.3rem;
 `;
 const SheetDescription = styled(SheetPrimitive.Description)``;
+const SheetClose = styled(SheetPrimitive.Close)`
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-radius: ${formTokens.borderRadius}rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: pink;
+  }
+  &:focus {
+    border: 2px solid violet;
+  }
+
+  height: ${formTokens.height}rem;
+  width: ${formTokens.height}rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  position: absolute;
+`;
 
 export {
   SheetRoot,
@@ -64,4 +92,5 @@ export {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose,
 };
