@@ -39,9 +39,14 @@ const AlertDialogAction = styled(AlertDialogPrimitive.Action)``;
 const AlertDialogCancel = styled(AlertDialogPrimitive.Cancel)``;
 const AlertDialogPortal = styled(AlertDialogPrimitive.Portal)``;
 const AlertDialogOverlay = styled(AlertDialogPrimitive.Overlay)`
-  background-color: var(--black-a9);
-  position: fixed;
   inset: 0;
+  position: fixed;
+
+  background: #fffbd5; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #b20a2c, #fffbd5);
+  background: linear-gradient(to right, #b20a2c, #fffbd5);
+
+  opacity: 0.8;
 `;
 
 export {

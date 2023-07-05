@@ -31,9 +31,10 @@ const SheetOverlay = styled(SheetPrimitive.Overlay)`
   position: fixed;
   inset: 0;
 
-  background: #fffbd5; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #b20a2c, #fffbd5);
-  background: linear-gradient(to right, #b20a2c, #fffbd5);
+  background: #dce35b; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #45b649, #dce35b);
+  background: linear-gradient(to right, #45b649, #dce35b);
+  opacity: 0.8;
 
   opacity: 0.8;
 `;

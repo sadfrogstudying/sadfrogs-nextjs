@@ -23,7 +23,7 @@ import {
 import FileUpload from "~/components/UI/FileUpload";
 import Checkbox from "~/components/UI/Checkbox";
 
-const CreateStudySpotForm = () => {
+const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   interface FormInput {
     name: string;
     hasWifi: boolean;
@@ -50,6 +50,7 @@ const CreateStudySpotForm = () => {
     onSuccess: () => {
       reset();
       void apiUtils.studySpots.getNotValidated.invalidate();
+      onSuccess?.();
     },
   });
 
@@ -82,6 +83,8 @@ const CreateStudySpotForm = () => {
     const filesToSubmit = data.images.map((file) => file.type);
     getPresignedUrls({ contentTypes: filesToSubmit });
   });
+
+  const isLoading = createIsLoading || presignedUrlsIsLoading;
 
   return (
     <FormRoot
@@ -156,7 +159,9 @@ const CreateStudySpotForm = () => {
 
       <CardFooter>
         <Form.Submit asChild>
-          <FormButton>Post question</FormButton>
+          <FormButton disabled={watch("images").length === 0}>
+            {isLoading ? "Creating..." : "Post question"}
+          </FormButton>
         </Form.Submit>
         {errorMessages && (
           <div style={{ textTransform: `capitalize` }}>
@@ -165,7 +170,6 @@ const CreateStudySpotForm = () => {
             ))}
           </div>
         )}
-        {createIsLoading || (presignedUrlsIsLoading && <div>Creating...</div>)}
       </CardFooter>
     </FormRoot>
   );

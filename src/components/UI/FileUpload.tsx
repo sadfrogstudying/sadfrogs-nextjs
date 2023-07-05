@@ -68,6 +68,7 @@ const FileUpload = <T extends FieldValues>({
             style={{
               backgroundColor: isDragActive ? `#e5e5e5` : "#f5f5f5",
               height: "100px",
+              cursor: "pointer",
             }}
             {...getRootProps()}
           >

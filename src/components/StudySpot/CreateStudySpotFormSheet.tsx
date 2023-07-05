@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import {
   SheetContent,
@@ -14,10 +14,11 @@ import {
 import CreateStudySpotForm from "~/components/Form/CreateStudySpot";
 
 const CreateStudySpotFormSheet = () => {
-  return (
-    <SheetRoot>
-      <SheetTrigger>Create New Spot</SheetTrigger>
+  const [open, setOpen] = useState(false);
 
+  return (
+    <SheetRoot open={open} onOpenChange={setOpen}>
+      <SheetTrigger>Create New Spot</SheetTrigger>
       <SheetPortal>
         <SheetOverlay />
         <SheetContent>
@@ -27,7 +28,7 @@ const CreateStudySpotFormSheet = () => {
               Add a new study spot to SadFrogs ✍️.
             </SheetDescription>
           </SheetHeader>
-          <CreateStudySpotForm />
+          <CreateStudySpotForm onSuccess={() => setOpen(false)} />
           <SheetClose>
             <Cross1Icon />
           </SheetClose>

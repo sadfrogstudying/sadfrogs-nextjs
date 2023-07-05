@@ -87,6 +87,11 @@ const FormButton = styled.button`
   background-color: #333;
   color: #fff;
   ${inputHoverFocusStyles}
+
+  &:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+  }
 `;
 const DropzoneRoot = styled.div`
   width: 100%;
