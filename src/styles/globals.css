@@ -80,6 +80,24 @@ li {
   list-style: none;
 }
 
+p,
+li {
+  color: var(--text1);
+}
+
+li::marker {
+  color: var(--accent1);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--heading1);
+}
+
 html {
   font-size: 14px;
   font-weight: 400;
@@ -94,22 +112,4 @@ html {
   &.is-loading * {
     cursor: wait !important;
   } */
-
-  p,
-  li {
-    color: var(--text1);
-  }
-
-  li::marker {
-    color: var(--accent1);
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    color: var(--heading1);
-  }
 }

@@ -84,7 +84,12 @@ const CreateStudySpotForm = () => {
   });
 
   return (
-    <FormRoot onSubmit={() => void submitHandler}>
+    <FormRoot
+      onSubmit={(e) => {
+        e.preventDefault();
+        void submitHandler();
+      }}
+    >
       <CardContent>
         <FormField name="name">
           <Flex>

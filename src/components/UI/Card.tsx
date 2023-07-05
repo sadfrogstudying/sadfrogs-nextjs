@@ -20,6 +20,8 @@ export const CardFooter = styled.div`
   gap: 1.75rem;
 `;
 export const Card = styled.div`
+  position: relative;
+  overflow: hidden;
   margin: auto;
   height: 100%;
   background-color: #fff;

@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/UI/Card";
 import Image from "~/components/UI/Image";
 import type { Prisma } from "@prisma/client";
 import styled from "@emotion/styled";
+import { api } from "~/utils/api";
+import DeleteAlertDialog from "./DeleteAlertDialog";
 
 const StudySpotGridItem = ({
   studySpot,
@@ -13,6 +15,12 @@ const StudySpotGridItem = ({
     };
   }>;
 }) => {
+  const apiUtils = api.useContext();
+  const { mutate: deleteStudyspot, isLoading: isDeleting } =
+    api.studySpots.deleteOne.useMutation({
+      onSuccess: () => apiUtils.studySpots.getNotValidated.invalidate(),
+    });
+
   return (
     <Card>
       <CardHeader>
@@ -35,6 +43,10 @@ const StudySpotGridItem = ({
         >
           {studySpot.name}
         </CardTitle>
+        <DeleteAlertDialog
+          deleteHandler={() => deleteStudyspot({ id: studySpot.id })}
+          isDeleting={isDeleting}
+        />
         <div>
           <CardRow>
             <strong>Location:</strong>

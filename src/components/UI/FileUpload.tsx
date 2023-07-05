@@ -10,6 +10,7 @@ import {
   Input,
 } from "~/components/UI/Form";
 import Image from "next/image";
+import styled from "@emotion/styled";
 
 const FileUpload = <T extends FieldValues>({
   control,
@@ -37,10 +38,14 @@ const FileUpload = <T extends FieldValues>({
   const renderedFiles = useMemo(() => {
     return acceptedFiles.map((file) => (
       <li key={file.name}>
-        <Image
-          src={URL.createObjectURL(file)}
-          alt="Photos waiting to be uploaded"
-        />
+        <ImageContainer>
+          <Image
+            src={URL.createObjectURL(file)}
+            alt="Photos waiting to be uploaded"
+            fill
+            style={{ objectFit: `contain` }}
+          />
+        </ImageContainer>
       </li>
     ));
   }, [acceptedFiles]);
@@ -84,3 +89,9 @@ const FileUpload = <T extends FieldValues>({
 };
 
 export default FileUpload;
+
+const ImageContainer = styled.div`
+  position: relative;
+  overflow: hidden;
+  height: 100px;
+`;
