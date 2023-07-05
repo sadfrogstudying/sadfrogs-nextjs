@@ -12,7 +12,7 @@ import {
 
 import { CardContent, CardFooter } from "~/components/UI/Card";
 import {
-  Button,
+  FormButton,
   Flex,
   FormField,
   FormLabel,
@@ -149,7 +149,7 @@ const CreateStudySpotForm = () => {
 
       <CardFooter>
         <Form.Submit asChild>
-          <Button>Post question</Button>
+          <FormButton>Post question</FormButton>
         </Form.Submit>
         {errorMessages && (
           <div style={{ textTransform: `capitalize` }}>

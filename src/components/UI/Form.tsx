@@ -72,7 +72,7 @@ const Input = styled.input`
     border: 1px solid #8acb49;
   }
 `;
-const Button = styled.button`
+const FormButton = styled.button`
   all: unset;
   box-sizing: border-box;
   display: inline-flex;
@@ -116,7 +116,7 @@ export {
   Flex,
   inputStyles,
   Input,
-  Button,
+  FormButton,
   DropzoneRoot,
   DropzoneFilesPreview,
   FormError,
