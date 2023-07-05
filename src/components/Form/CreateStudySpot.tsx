@@ -32,7 +32,7 @@ const CreateStudySpotForm = () => {
     images: File[];
   }
 
-  const { register, handleSubmit, control, setValue, getValues, reset } =
+  const { register, handleSubmit, control, setValue, getValues, reset, watch } =
     useForm<FormInput>({
       defaultValues: {
         hasWifi: false,
@@ -45,6 +45,7 @@ const CreateStudySpotForm = () => {
     mutate,
     error,
     isLoading: createIsLoading,
+    isSuccess: createIsSuccess,
   } = api.studySpots.createOne.useMutation({
     onSuccess: () => {
       reset();
@@ -80,7 +81,6 @@ const CreateStudySpotForm = () => {
   const submitHandler = handleSubmit((data) => {
     const filesToSubmit = data.images.map((file) => file.type);
     getPresignedUrls({ contentTypes: filesToSubmit });
-    void console.log(data);
   });
 
   return (
@@ -148,6 +148,8 @@ const CreateStudySpotForm = () => {
             control={control}
             name="images"
             setValue={(file: File[]) => setValue("images", file)}
+            isSuccess={createIsSuccess}
+            value={watch("images")}
           />
         </FormField>
       </CardContent>

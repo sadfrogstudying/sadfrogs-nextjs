@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Controller } from "react-hook-form";
 import type { Control, FieldValues, Path } from "react-hook-form";
 
@@ -16,10 +16,14 @@ const FileUpload = <T extends FieldValues>({
   control,
   name,
   setValue,
+  value,
+  isSuccess,
 }: {
   name: Path<T>;
   control: Control<T, unknown>;
   setValue: (file: File[]) => void;
+  value: File[];
+  isSuccess: boolean;
 }) => {
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
     useDropzone({
@@ -36,7 +40,7 @@ const FileUpload = <T extends FieldValues>({
     });
 
   const renderedFiles = useMemo(() => {
-    return acceptedFiles.map((file) => (
+    return value.map((file) => (
       <li key={file.name}>
         <ImageContainer>
           <Image
@@ -48,7 +52,11 @@ const FileUpload = <T extends FieldValues>({
         </ImageContainer>
       </li>
     ));
-  }, [acceptedFiles]);
+  }, [value]);
+
+  useEffect(() => {
+    if (isSuccess) setValue([]);
+  }, [isSuccess]);
 
   return (
     <>
