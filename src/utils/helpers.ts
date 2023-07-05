@@ -1,5 +1,6 @@
 import { TRPCClientError } from "@trpc/client";
 import axios from "axios";
+import { typeToFlattenedError } from "zod";
 
 /** Returns the urls of the uploaded images */
 export const uploadImagesToS3UsingPresignedUrls = async ({
@@ -34,23 +35,16 @@ export const uploadImagesToS3UsingPresignedUrls = async ({
   return imageUrls;
 };
 
-// export const parseClientError = <T>(error: T) => {
-//   type ClientError = {
-//     path: string[];
-//     message: string;
-//   }[];
-
-//   const clientError =
-//     error instanceof TRPCClientError && JSON.parse(error.message);
-
-//   const errorMessages: string[] | null = clientError
-//     ? clientError.map((err: { path: string[]; message: string }) => {
-//         return `${err.path.slice(-1)[0] || ""} - ${err.message}}`;
-//       })
-//     : null;
-
-//   return errorMessages;
-// };
+export const parseClientError = (
+  zodError: typeToFlattenedError<any, string> | null | undefined
+) => {
+  const fieldErrors = zodError?.fieldErrors;
+  const fieldErrorsEntries = fieldErrors ? Object.entries(fieldErrors) : [];
+  const errorMessages = fieldErrorsEntries.map(
+    ([key, value]) => `${key} - ${value && value[0] ? value[0] : ""}`
+  );
+  return errorMessages;
+};
 
 /*
  * Prevents props with "$" from being sent to the underlying DOM element

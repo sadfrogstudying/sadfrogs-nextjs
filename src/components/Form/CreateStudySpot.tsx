@@ -6,7 +6,7 @@ import { type CheckedState } from "@radix-ui/react-checkbox";
 
 import { api } from "~/utils/api";
 import {
-  // parseClientError,
+  parseClientError,
   uploadImagesToS3UsingPresignedUrls,
 } from "~/utils/helpers";
 
@@ -52,7 +52,7 @@ const CreateStudySpotForm = () => {
     },
   });
 
-  // const errorMessages = parseClientError(error);
+  const errorMessages = parseClientError(error?.data?.zodError);
 
   const { mutate: getPresignedUrls, isLoading: presignedUrlsIsLoading } =
     api.s3.getPresignedUrls.useMutation({
@@ -77,13 +77,14 @@ const CreateStudySpotForm = () => {
       },
     });
 
-  const onSubmit: SubmitHandler<FormInput> = (data) => {
+  const submitHandler = handleSubmit((data) => {
     const filesToSubmit = data.images.map((file) => file.type);
     getPresignedUrls({ contentTypes: filesToSubmit });
-  };
+    void console.log(data);
+  });
 
   return (
-    <FormRoot onSubmit={() => handleSubmit(onSubmit)}>
+    <FormRoot onSubmit={() => void submitHandler}>
       <CardContent>
         <FormField name="name">
           <Flex>
@@ -150,13 +151,13 @@ const CreateStudySpotForm = () => {
         <Form.Submit asChild>
           <Button>Post question</Button>
         </Form.Submit>
-        {/* {errorMessages && (
+        {errorMessages && (
           <div style={{ textTransform: `capitalize` }}>
             {errorMessages.map((errMsg) => (
               <div key={errMsg}>{errMsg}</div>
             ))}
           </div>
-        )} */}
+        )}
         {createIsLoading || (presignedUrlsIsLoading && <div>Creating...</div>)}
       </CardFooter>
     </FormRoot>
