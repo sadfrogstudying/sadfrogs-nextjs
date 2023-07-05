@@ -1,6 +1,5 @@
-import { TRPCClientError } from "@trpc/client";
 import axios from "axios";
-import { typeToFlattenedError } from "zod";
+import type { typeToFlattenedError } from "zod";
 
 /** Returns the urls of the uploaded images */
 export const uploadImagesToS3UsingPresignedUrls = async ({
@@ -36,7 +35,10 @@ export const uploadImagesToS3UsingPresignedUrls = async ({
 };
 
 export const parseClientError = (
-  zodError: typeToFlattenedError<any, string> | null | undefined
+  zodError:
+    | typeToFlattenedError<string[] | undefined, string>
+    | null
+    | undefined
 ) => {
   const fieldErrors = zodError?.fieldErrors;
   const fieldErrorsEntries = fieldErrors ? Object.entries(fieldErrors) : [];

@@ -1,5 +1,5 @@
 import React from "react";
-import { type SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import * as Form from "@radix-ui/react-form";
 import { type CheckedState } from "@radix-ui/react-checkbox";
