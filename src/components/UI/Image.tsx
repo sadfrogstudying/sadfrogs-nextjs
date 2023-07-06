@@ -58,7 +58,7 @@ const Image = ({
         onClick={onClick}
         placeholder={placeholder}
         quality={quality || undefined}
-        className={`w-full h-full ${imageOpacity} object-${objectFit} ease-out duration-500`}
+        className={`w-fit h-full ${imageOpacity} object-${objectFit} ease-out duration-500`}
       />
     </div>
   );

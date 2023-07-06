@@ -15,9 +15,6 @@ module.exports = {
         "2xl": "1400px",
       },
     },
-    gridTemplateColumns: {
-      "fill-40": "repeat(auto-fill, minmax(19rem, 1fr))",
-    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -72,6 +69,9 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      gridTemplateColumns: {
+        "fill-40": "repeat(auto-fill, minmax(300px, 1fr))",
       },
     },
   },

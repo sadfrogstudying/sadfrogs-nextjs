@@ -23,16 +23,18 @@ function CreateStudySpotFormSheet() {
       </SheetTrigger>
       <SheetContent>
         <ScrollArea className="h-full w-full rounded-md">
-          <SheetHeader>
-            <SheetTitle>Create New Spot</SheetTitle>
-            <SheetDescription>
-              Add a new study spot to SadFrogs ✍️.
-            </SheetDescription>
-          </SheetHeader>
-          {/* <CreateStudySpotForm onSuccess={() => setOpen(false)} /> */}
-          <CreateStudySpotFormV2
-          // onSuccess={() => setOpen(false)}
-          />
+          <div className="space-y-8">
+            <SheetHeader>
+              <SheetTitle>Create New Spot</SheetTitle>
+              <SheetDescription>
+                Add a new study spot to SadFrogs ✍️.
+              </SheetDescription>
+            </SheetHeader>
+            {/* <CreateStudySpotForm onSuccess={() => setOpen(false)} /> */}
+            <CreateStudySpotFormV2
+            // onSuccess={() => setOpen(false)}
+            />
+          </div>
         </ScrollArea>
       </SheetContent>
     </Sheet>

@@ -34,7 +34,7 @@ const StudySpotGridItem = ({
           </div>
         )}
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-8">
         <CardTitle>{studySpot.name}</CardTitle>
         <DeleteAlertDialog
           deleteHandler={() => deleteStudyspot({ id: studySpot.id })}

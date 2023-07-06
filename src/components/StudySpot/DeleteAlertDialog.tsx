@@ -22,7 +22,7 @@ const DeleteAlertDialog = ({
   <>
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button className="w-full" disabled={isDeleting} variant="destructive">
+        <Button className="w-full" disabled={isDeleting} variant="outline">
           {isDeleting ? (
             "Deleting..."
           ) : (
@@ -43,7 +43,7 @@ const DeleteAlertDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={deleteHandler}>
-            Continue
+            Delete Permanently
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

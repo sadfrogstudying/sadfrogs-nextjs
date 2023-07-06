@@ -14,7 +14,7 @@ const SkeletonStudySpotGridItem = () => (
     <CardHeader>
       <SkeletonImage />
     </CardHeader>
-    <CardContent>
+    <CardContent className="space-y-8">
       <SkeletonText className="h-6 w-1/2" />
       <div>
         <div className="flex justify-between gap-2">

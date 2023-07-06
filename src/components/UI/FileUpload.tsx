@@ -47,7 +47,7 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
     return (
       <>
         <div
-          className="rounded-md border border-dashed border-gray-300 flex justify-center items-center h-24 w-full cursor-pointer"
+          className="rounded-md border border-dashed border-gray-300 flex justify-center items-center h-24 w-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           style={{
             backgroundColor: isDragActive ? `#e5e5e5` : "#f5f5f5",
           }}
@@ -70,7 +70,7 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
         {acceptedFiles.length ? (
           <aside>
             <h3 style={{ marginBottom: `0.5rem` }}>Files pending upload:</h3>
-            <div className="grid grid-cols-3">{renderedFiles}</div>
+            <div className="grid grid-cols-3 gap-4">{renderedFiles}</div>
           </aside>
         ) : null}
       </>
