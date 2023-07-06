@@ -1,4 +1,4 @@
-import CreateStudySpotFormSheet from "~/components/StudySpot/CreateStudySpotFormSheet";
+import CreateStudySpotFormSheet from "~/components/StudySpot/CreateFormSheet";
 
 const Header = () => {
   return (

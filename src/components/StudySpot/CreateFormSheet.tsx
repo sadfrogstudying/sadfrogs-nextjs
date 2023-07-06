@@ -9,7 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "~/components/UI/Sheet";
-import CreateStudySpotFormV2 from "../Form/CreateStudySpotV2";
+import CreateStudySpotFormV2 from "./CreateForm";
 import { useState } from "react";
 import { ScrollArea } from "~/components/UI/ScrollArea";
 
