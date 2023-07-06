@@ -1,4 +1,4 @@
-import { Button } from "~/components/UI/button";
+import { Button } from "~/components/UI/Button";
 import {
   Form,
   FormControl,
@@ -7,7 +7,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "~/components/UI/form";
+} from "~/components/UI/Form";
 import { Input } from "~/components/UI/Input";
 import { useForm } from "react-hook-form";
 import { Checkbox } from "../UI/Checkbox";
