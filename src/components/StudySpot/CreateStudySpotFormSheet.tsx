@@ -1,41 +1,42 @@
-import { useState } from "react";
-import { Cross1Icon } from "@radix-ui/react-icons";
+import { Button } from "~/components/UI/button";
 import {
+  Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
-  SheetOverlay,
-  SheetPortal,
-  SheetRoot,
   SheetTitle,
   SheetTrigger,
-  SheetClose,
-} from "~/components/UI/Sheet";
-import CreateStudySpotForm from "~/components/Form/CreateStudySpot";
+} from "~/components/UI/sheet";
+import CreateStudySpotFormV2 from "../Form/CreateStudySpotV2";
+import { useState } from "react";
+import { ScrollArea } from "~/components/UI/scroll-area";
 
-const CreateStudySpotFormSheet = () => {
+function CreateStudySpotFormSheet() {
   const [open, setOpen] = useState(false);
 
   return (
-    <SheetRoot open={open} onOpenChange={setOpen}>
-      <SheetTrigger>Create New Spot</SheetTrigger>
-      <SheetPortal>
-        <SheetOverlay />
-        <SheetContent>
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="outline">Open</Button>
+      </SheetTrigger>
+      <SheetContent>
+        <ScrollArea className="h-full w-full rounded-md">
           <SheetHeader>
-            <SheetTitle>New Study Spot</SheetTitle>
+            <SheetTitle>Create New Spot</SheetTitle>
             <SheetDescription>
               Add a new study spot to SadFrogs ✍️.
             </SheetDescription>
           </SheetHeader>
-          <CreateStudySpotForm onSuccess={() => setOpen(false)} />
-          <SheetClose>
-            <Cross1Icon />
-          </SheetClose>
-        </SheetContent>
-      </SheetPortal>
-    </SheetRoot>
+          {/* <CreateStudySpotForm onSuccess={() => setOpen(false)} /> */}
+          <CreateStudySpotFormV2
+          // onSuccess={() => setOpen(false)}
+          />
+        </ScrollArea>
+      </SheetContent>
+    </Sheet>
   );
-};
+}
 
 export default CreateStudySpotFormSheet;

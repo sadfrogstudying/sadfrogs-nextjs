@@ -4,8 +4,9 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-} from "~/components/UI/Card";
-import CreateStudySpotForm from "~/components/Form/CreateStudySpot";
+  CardContent,
+} from "~/components/UI/card";
+import CreateStudySpotForm from "~/components/Form/CreateStudySpotV2";
 
 const CreateStudySpotFormCard = () => {
   return (
@@ -14,7 +15,9 @@ const CreateStudySpotFormCard = () => {
         <CardTitle>New Study Spot</CardTitle>
         <CardDescription>Add a new study spot to SadFrogs ✍️.</CardDescription>
       </CardHeader>
-      <CreateStudySpotForm />
+      <CardContent>
+        <CreateStudySpotForm />
+      </CardContent>
     </Card>
   );
 };

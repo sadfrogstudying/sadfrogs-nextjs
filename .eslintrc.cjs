@@ -9,6 +9,7 @@ const config = {
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
       ],
       files: ["*.ts", "*.tsx"],
+      parser: "@typescript-eslint/parser",
       parserOptions: {
         project: path.join(__dirname, "tsconfig.json"),
       },

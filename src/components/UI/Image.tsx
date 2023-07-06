@@ -1,8 +1,6 @@
 import { useState } from "react";
-import styled from "@emotion/styled";
 import type { Image as PrismaImageType } from "@prisma/client";
 import FutureImage from "next/image";
-import { transientOptions } from "~/utils/helpers";
 
 type ImageType = Omit<PrismaImageType, "id" | "studySpotId">;
 
@@ -32,61 +30,38 @@ const Image = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const doFadeIn = () => setImageLoaded(true);
 
+  const opacity = {
+    0: "opacity-0",
+    100: "opacity-100",
+  };
+
+  const imageOpacity = imageLoaded ? opacity[100] : opacity[0];
+  const placeholderOpacity = imageLoaded ? opacity[0] : opacity[100];
+
   return (
-    <ImageContainer>
+    <div className="relative h-full w-full">
       {placeholder === "empty" && (
-        <DominantColor
-          $loaded={imageLoaded}
+        <div
+          className={`${placeholderOpacity} absolute inset-0 z-10 ease-in duration-500`}
           style={{
             aspectRatio: aspectRatio,
             backgroundColor: dominantColour,
           }}
         />
       )}
-      <FutureImageStyled
+      <FutureImage
         src={url}
         alt={alt}
         width={width}
         height={height}
         onLoadingComplete={doFadeIn}
-        $loaded={placeholder === "blur" ? true : imageLoaded}
-        $objectFit={objectFit}
         onClick={onClick}
         placeholder={placeholder}
         quality={quality || undefined}
+        className={`w-full h-full ${imageOpacity} object-${objectFit} ease-out duration-500`}
       />
-    </ImageContainer>
+    </div>
   );
 };
 
 export default Image;
-
-const ImageContainer = styled.div`
-  position: relative;
-  height: 100%;
-  width: 100%;
-`;
-const FutureImageStyled = styled(FutureImage, transientOptions)<{
-  $loaded: boolean;
-  $objectFit: "contain" | "cover";
-}>`
-  opacity: ${({ $loaded }) => ($loaded ? 1 : 0)};
-  transition: opacity 0.25s linear;
-  object-fit: ${({ $objectFit }) => $objectFit};
-  will-change: opacity;
-  width: fit-content;
-  height: 100%;
-  width: 100%;
-`;
-const DominantColor = styled("div", transientOptions)<{
-  $loaded: boolean;
-}>`
-  opacity: ${({ $loaded }) => ($loaded ? 0 : 1)};
-  transition: opacity 500ms linear 0s;
-  position: absolute;
-  inset: 0px;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  z-index: 2;
-`;

@@ -1,7 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/UI/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/UI/card";
 import Image from "~/components/UI/Image";
 import type { Prisma } from "@prisma/client";
-import styled from "@emotion/styled";
 import { api } from "~/utils/api";
 import DeleteAlertDialog from "./DeleteAlertDialog";
 
@@ -25,43 +24,37 @@ const StudySpotGridItem = ({
     <Card>
       <CardHeader>
         {studySpot.images[0] && (
-          <ImageContainer>
+          <div className="overflow-hidden rounded-md">
             <Image
               image={{ ...studySpot.images[0] }}
               key={studySpot.images[0].url}
               alt={`Image of ${studySpot.name}`}
               objectFit="cover"
             />
-          </ImageContainer>
+          </div>
         )}
       </CardHeader>
       <CardContent>
-        <CardTitle
-          style={{
-            fontWeight: 400,
-          }}
-        >
-          {studySpot.name}
-        </CardTitle>
+        <CardTitle>{studySpot.name}</CardTitle>
         <DeleteAlertDialog
           deleteHandler={() => deleteStudyspot({ id: studySpot.id })}
           isDeleting={isDeleting}
         />
         <div>
-          <CardRow>
+          <div className="flex justify-between">
             <strong>Location:</strong>
             <div>The Rocks, Sydney</div>
-          </CardRow>
-          <CardRow>
+          </div>
+          <div className="flex justify-between">
             <strong>Wifi:</strong>
             <div>{studySpot.hasWifi ? "True" : "False"}</div>
-          </CardRow>
-          <CardRow>
+          </div>
+          <div className="flex justify-between">
             <strong>Coordinates:</strong>
             <div>
               {studySpot.location.latitude} : {studySpot.location.longitude}
             </div>
-          </CardRow>
+          </div>
         </div>
         <p>
           Este artículo se centra en el rechazo de Frederick Law Olmsted a la
@@ -74,12 +67,3 @@ const StudySpotGridItem = ({
 };
 
 export default StudySpotGridItem;
-
-const ImageContainer = styled.div`
-  overflow: hidden;
-  border-radius: 0.5rem;
-`;
-const CardRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;

@@ -12,7 +12,7 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main style={{ padding: `6rem 1rem 1rem 1rem` }}>
+      <main className="p-4 pt-20">
         <StudySpotGrid />
       </main>
     </>
