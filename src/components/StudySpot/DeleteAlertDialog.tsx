@@ -8,9 +8,9 @@ import {
   AlertDialogDescription,
   AlertDialogAction,
   AlertDialogCancel,
-} from "~/components/UI/alert-dialog";
+} from "~/components/UI/AlertDialog";
 import { Trash2 } from "lucide-react";
-import { Button } from "~/components/UI/button";
+import { Button } from "~/components/UI/Button";
 
 const DeleteAlertDialog = ({
   deleteHandler,

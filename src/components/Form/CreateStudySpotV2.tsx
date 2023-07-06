@@ -8,9 +8,9 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/UI/form";
-import { Input } from "~/components/UI/input";
+import { Input } from "~/components/UI/Input";
 import { useForm } from "react-hook-form";
-import { Checkbox } from "../UI/checkbox";
+import { Checkbox } from "../UI/Checkbox";
 import FileUpload from "../UI/FileUpload";
 
 interface FormInput {

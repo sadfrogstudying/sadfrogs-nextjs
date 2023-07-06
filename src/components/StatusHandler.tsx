@@ -1,5 +1,5 @@
 import type { FetchStatus, QueryStatus } from "@tanstack/react-query";
-import { SkeletonStudySpotGridItem } from "./UI/SkeletonV1";
+import { SkeletonStudySpotGridItem } from "./StudySpot/SkeletonGridItem";
 
 const StatusHandler = ({
   status,

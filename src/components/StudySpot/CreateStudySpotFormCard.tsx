@@ -5,7 +5,7 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from "~/components/UI/card";
+} from "~/components/UI/Card";
 import CreateStudySpotForm from "~/components/Form/CreateStudySpotV2";
 
 const CreateStudySpotFormCard = () => {

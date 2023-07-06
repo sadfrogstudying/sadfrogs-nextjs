@@ -1,4 +1,4 @@
-import { Button } from "~/components/UI/button";
+import { Button } from "~/components/UI/Button";
 import {
   Sheet,
   SheetClose,
@@ -8,10 +8,10 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "~/components/UI/sheet";
+} from "~/components/UI/Sheet";
 import CreateStudySpotFormV2 from "../Form/CreateStudySpotV2";
 import { useState } from "react";
-import { ScrollArea } from "~/components/UI/scroll-area";
+import { ScrollArea } from "~/components/UI/ScrollArea";
 
 function CreateStudySpotFormSheet() {
   const [open, setOpen] = useState(false);

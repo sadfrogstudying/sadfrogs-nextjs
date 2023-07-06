@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/UI/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/UI/Card";
 import Image from "~/components/UI/Image";
 import type { Prisma } from "@prisma/client";
 import { api } from "~/utils/api";

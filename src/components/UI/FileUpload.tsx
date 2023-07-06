@@ -3,7 +3,7 @@ import React, { useEffect, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
 
 import Image from "next/image";
-import { Input } from "./input";
+import { Input } from "~/components/UI/Input";
 
 interface Props {
   setValue: (file: File[]) => void;
