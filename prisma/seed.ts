@@ -9,6 +9,8 @@ async function main() {
     await prisma.image.deleteMany();
   */
 
+  return;
+
   const allStudySpots = await prisma.studySpot.findMany();
   const allStudySpotsNames = allStudySpots.map((s) => s.name);
 
