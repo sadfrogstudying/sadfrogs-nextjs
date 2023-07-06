@@ -96,7 +96,7 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       >
         <ul className="text-sm text-destructive">
           {errorMessages.map((x) => (
-            <li>
+            <li key={x[0]}>
               <strong className="capitalize">{x[0]}</strong>: {x[1]}
             </li>
           ))}
