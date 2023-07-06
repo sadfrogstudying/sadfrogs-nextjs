@@ -11,7 +11,7 @@ interface Props {
   isSuccess: boolean;
 }
 
-const FileUpload = React.forwardRef<HTMLInputElement, Props>(
+const FileInput = React.forwardRef<HTMLInputElement, Props>(
   ({ setValue, value, isSuccess, ...props }: Props, ref) => {
     const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
       useDropzone({
@@ -47,7 +47,7 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
     return (
       <>
         <div
-          className="rounded-md border border-dashed border-gray-300 flex justify-center items-center h-24 w-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="p-4 rounded-md border border-dashed border-gray-300 flex justify-center items-center h-24 w-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           style={{
             backgroundColor: isDragActive ? `#e5e5e5` : "#f5f5f5",
           }}
@@ -77,6 +77,6 @@ const FileUpload = React.forwardRef<HTMLInputElement, Props>(
     );
   }
 );
-FileUpload.displayName = "FileUpload";
+FileInput.displayName = "FileInput";
 
-export default FileUpload;
+export default FileInput;

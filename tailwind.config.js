@@ -73,6 +73,17 @@ module.exports = {
       gridTemplateColumns: {
         "fill-40": "repeat(auto-fill, minmax(300px, 1fr))",
       },
+      fontFamily: {
+        serif: ["Times New Roman", "Times", "serif"],
+        sans: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "Ubuntu",
+          "Helvetica Neue",
+          "sans-serif",
+        ],
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

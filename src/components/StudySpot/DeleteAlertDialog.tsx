@@ -22,7 +22,11 @@ const DeleteAlertDialog = ({
   <>
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button className="w-full" disabled={isDeleting} variant="outline">
+        <Button
+          className="w-full justify-start"
+          disabled={isDeleting}
+          variant="outline"
+        >
           {isDeleting ? (
             "Deleting..."
           ) : (

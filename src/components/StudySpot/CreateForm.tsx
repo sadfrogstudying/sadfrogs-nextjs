@@ -11,7 +11,12 @@ import {
 import { Input } from "~/components/UI/Input";
 import { useForm } from "react-hook-form";
 import { Checkbox } from "../UI/Checkbox";
-import FileUpload from "../UI/FileUpload";
+import FileInput from "../UI/FileInput";
+import { api } from "~/utils/api";
+import {
+  parseClientError,
+  uploadImagesToS3UsingPresignedUrls,
+} from "~/utils/helpers";
 
 interface FormInput {
   name: string;
@@ -21,7 +26,7 @@ interface FormInput {
   images: File[];
 }
 
-const CreateStudySpotFormV2 = ({ onSuccess }: { onSuccess?: () => void }) => {
+const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const form = useForm<FormInput>({
     defaultValues: {
       name: "",
@@ -32,23 +37,76 @@ const CreateStudySpotFormV2 = ({ onSuccess }: { onSuccess?: () => void }) => {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: FormInput) {
-    console.log(values);
-  }
+  const apiUtils = api.useContext();
+  const {
+    mutate,
+    error,
+    isLoading: createIsLoading,
+    isSuccess: createIsSuccess,
+  } = api.studySpots.createOne.useMutation({
+    onSuccess: () => {
+      form.reset();
+      void apiUtils.studySpots.getNotValidated.invalidate();
+      onSuccess?.();
+    },
+  });
+
+  const errorMessages = parseClientError(error?.data?.zodError);
+
+  const { mutate: getPresignedUrls, isLoading: presignedUrlsIsLoading } =
+    api.s3.getPresignedUrls.useMutation({
+      onSuccess: async (presignedUrls) => {
+        if (!presignedUrls.length) return;
+        const { name, hasWifi, latitude, longitude, images } = form.getValues();
+
+        const imageUrls = await uploadImagesToS3UsingPresignedUrls({
+          presignedUrls: presignedUrls,
+          acceptedFiles: images,
+        });
+
+        mutate({
+          name,
+          hasWifi,
+          imageUrls,
+          location: {
+            latitude,
+            longitude,
+          },
+        });
+      },
+    });
+
+  const submitHandler = form.handleSubmit((data) => {
+    const filesToSubmit = data.images.map((file) => file.type);
+    getPresignedUrls({ contentTypes: filesToSubmit });
+  });
+
+  const isLoading = createIsLoading || presignedUrlsIsLoading;
+  const submitDisabled =
+    isLoading || !form.watch("images").length || !form.watch("name");
 
   return (
     <Form {...form}>
       <form
-        onSubmit={() => void form.handleSubmit(onSubmit)}
+        onSubmit={(e) => {
+          e.preventDefault();
+          void submitHandler();
+        }}
         className="space-y-8"
       >
+        <ul className="text-sm text-destructive">
+          {errorMessages.map((x) => (
+            <li>
+              <strong className="capitalize">{x[0]}</strong>: {x[1]}
+            </li>
+          ))}
+        </ul>
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input placeholder="Enter Name" {...field} />
               </FormControl>
@@ -118,7 +176,7 @@ const CreateStudySpotFormV2 = ({ onSuccess }: { onSuccess?: () => void }) => {
             <FormItem>
               <FormLabel>Images</FormLabel>
               <FormControl>
-                <FileUpload
+                <FileInput
                   isSuccess={false}
                   setValue={(files) => form.setValue("images", files)}
                   {...field}
@@ -128,10 +186,16 @@ const CreateStudySpotFormV2 = ({ onSuccess }: { onSuccess?: () => void }) => {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button
+          type="submit"
+          disabled={submitDisabled}
+          className="disabled:cursor-not-allowed"
+        >
+          {isLoading ? "Creating..." : "Submit"}
+        </Button>
       </form>
     </Form>
   );
 };
 
-export default CreateStudySpotFormV2;
+export default CreateStudySpotForm;

@@ -42,9 +42,10 @@ export const parseClientError = (
 ) => {
   const fieldErrors = zodError?.fieldErrors;
   const fieldErrorsEntries = fieldErrors ? Object.entries(fieldErrors) : [];
-  const errorMessages = fieldErrorsEntries.map(
-    ([key, value]) => `${key} - ${value && value[0] ? value[0] : ""}`
-  );
+  const errorMessages = fieldErrorsEntries.map(([key, value]) => [
+    key,
+    value && value[0] ? value[0] : "",
+  ]);
   return errorMessages;
 };
 
