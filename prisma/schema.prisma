@@ -18,6 +18,7 @@ model StudySpot {
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
     name        String   @unique
+    slug        String   @unique
     hasWifi     Boolean
     isValidated Boolean  @default(false)
     location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)

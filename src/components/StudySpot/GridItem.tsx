@@ -3,6 +3,7 @@ import Image from "~/components/UI/Image";
 import type { Prisma } from "@prisma/client";
 import { api } from "~/utils/api";
 import DeleteAlertDialog from "./DeleteAlertDialog";
+import Link from "next/link";
 
 const StudySpotGridItem = ({
   studySpot,
@@ -35,7 +36,14 @@ const StudySpotGridItem = ({
         )}
       </CardHeader>
       <CardContent className="space-y-8">
-        <CardTitle>{studySpot.name}</CardTitle>
+        <CardTitle>
+          <Link
+            className="hover:underline"
+            href={`/study-spot/${studySpot.slug}`}
+          >
+            {studySpot.name}
+          </Link>
+        </CardTitle>
         <DeleteAlertDialog
           deleteHandler={() => deleteStudyspot({ id: studySpot.id })}
           isDeleting={isDeleting}

@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import slugify from "slugify";
 
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
@@ -11,7 +12,7 @@ import { env } from "~/env.mjs";
 // Create a new ratelimiter, that allows 3 requests per 1 minute
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(3, "1 m"),
+  limiter: Ratelimit.slidingWindow(6, "1 m"),
   analytics: true,
 });
 
@@ -31,6 +32,7 @@ export const studySpotsRouter = createTRPCRouter({
           createdAt: z.date(),
           updatedAt: z.date(),
           name: z.string(),
+          slug: z.string(),
           hasWifi: z.boolean(),
           isValidated: z.boolean(),
           location: z.object({
@@ -78,6 +80,7 @@ export const studySpotsRouter = createTRPCRouter({
           createdAt: z.date(),
           updatedAt: z.date(),
           name: z.string(),
+          slug: z.string(),
           hasWifi: z.boolean(),
           isValidated: z.boolean(),
           locationId: z.number(),
@@ -137,6 +140,7 @@ export const studySpotsRouter = createTRPCRouter({
         createdAt: z.date(),
         updatedAt: z.date(),
         name: z.string(),
+        slug: z.string(),
         hasWifi: z.boolean(),
         location: z.object({
           id: z.number(),
@@ -147,13 +151,23 @@ export const studySpotsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { success } = await ratelimit.limit(ctx.ip);
-      if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+      if (!success)
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Too many requests",
+        });
 
       const newImages = await getImagesMeta(input.imageUrls);
+      const slug = slugify(input.name, {
+        remove: /[*+~.()'"!:@]/g,
+        lower: true,
+        strict: true,
+      });
 
       const newStudySpot = await ctx.prisma.studySpot.create({
         data: {
           name: input.name,
+          slug: slug,
           hasWifi: input.hasWifi,
           location: {
             create: {
@@ -181,28 +195,39 @@ export const studySpotsRouter = createTRPCRouter({
    */
   getOne: publicProcedure
     .meta({ openapi: { method: "GET", path: "/studyspots.getOne" } })
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ slug: z.string() }))
     .output(
       z.object({
         id: z.number(),
         createdAt: z.date(),
         updatedAt: z.date(),
         name: z.string(),
+        slug: z.string(),
         hasWifi: z.boolean(),
         location: z.object({
           id: z.number(),
           latitude: z.number(),
           longitude: z.number(),
         }),
+        images: z
+          .object({
+            url: z.string(),
+            dominantColour: z.string(),
+            width: z.number(),
+            height: z.number(),
+            aspectRatio: z.number(),
+          })
+          .array(),
       })
     )
     .query(async ({ ctx, input }) => {
       const studySpot = await ctx.prisma.studySpot.findUnique({
         where: {
-          id: input.id,
+          slug: input.slug,
         },
         include: {
           location: true,
+          images: true,
         },
       });
 
@@ -275,5 +300,26 @@ export const studySpotsRouter = createTRPCRouter({
       });
 
       return true;
+    }),
+  /**
+   *
+   * Get Paths
+   *
+   */
+  getAllPaths: publicProcedure
+    .meta({ openapi: { method: "GET", path: "/studyspots.getAllPaths" } })
+    .input(z.void())
+    .output(z.string().array())
+    .query(async ({ ctx }) => {
+      const studySpots = await ctx.prisma.studySpot.findMany({
+        where: {
+          isValidated: false,
+        },
+        select: {
+          slug: true,
+        },
+      });
+
+      return studySpots.map((studySpot) => studySpot.slug);
     }),
 });
