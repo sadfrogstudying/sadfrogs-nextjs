@@ -34,7 +34,7 @@ export const uploadImagesToS3UsingPresignedUrls = async ({
   return imageUrls;
 };
 
-export const parseClientError = (
+export const parseZodClientError = (
   zodError:
     | typeToFlattenedError<string[] | undefined, string>
     | null
@@ -46,6 +46,7 @@ export const parseClientError = (
     key,
     value && value[0] ? value[0] : "",
   ]);
+
   return errorMessages;
 };
 

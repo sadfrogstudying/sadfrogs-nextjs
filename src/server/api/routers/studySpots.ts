@@ -238,6 +238,35 @@ export const studySpotsRouter = createTRPCRouter({
 
       return studySpot;
     }),
+  /** Throws an error if name exists */
+  checkIfNameExists: publicProcedure
+    .meta({
+      openapi: { method: "POST", path: "/studyspots.checkIfNameExists" },
+    })
+    .input(z.object({ name: z.string() }))
+    .output(z.boolean())
+    .mutation(async ({ ctx, input }) => {
+      const { success } = await ratelimit.limit(ctx.ip);
+      if (!success)
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Too many requests",
+        });
+
+      const studySpot = await ctx.prisma.studySpot.findUnique({
+        where: {
+          name: input.name,
+        },
+      });
+
+      if (studySpot)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Study spot already exists",
+        });
+
+      return true;
+    }),
   /**
    *
    * Delete One

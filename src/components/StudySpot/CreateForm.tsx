@@ -14,7 +14,7 @@ import { Checkbox } from "../UI/Checkbox";
 import FileInput from "../UI/FileInput";
 import { api } from "~/utils/api";
 import {
-  parseClientError,
+  parseZodClientError,
   uploadImagesToS3UsingPresignedUrls,
 } from "~/utils/helpers";
 
@@ -39,10 +39,9 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 
   const apiUtils = api.useContext();
   const {
-    mutate,
-    error,
+    mutate: createStudySpot,
+    error: createError,
     isLoading: createIsLoading,
-    isSuccess: createIsSuccess,
   } = api.studySpots.createOne.useMutation({
     onSuccess: () => {
       form.reset();
@@ -51,39 +50,51 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     },
   });
 
-  const errorMessages = parseClientError(error?.data?.zodError);
+  const {
+    mutate: getPresignedUrls,
+    error: getUrlsError,
+    isLoading: getUrlsIsLoading,
+  } = api.s3.getPresignedUrls.useMutation({
+    onSuccess: async (presignedUrls) => {
+      if (!presignedUrls.length) return;
+      const { name, hasWifi, latitude, longitude, images } = form.getValues();
 
-  const { mutate: getPresignedUrls, isLoading: presignedUrlsIsLoading } =
-    api.s3.getPresignedUrls.useMutation({
-      onSuccess: async (presignedUrls) => {
-        if (!presignedUrls.length) return;
-        const { name, hasWifi, latitude, longitude, images } = form.getValues();
+      const imageUrls = await uploadImagesToS3UsingPresignedUrls({
+        presignedUrls: presignedUrls,
+        acceptedFiles: images,
+      });
 
-        const imageUrls = await uploadImagesToS3UsingPresignedUrls({
-          presignedUrls: presignedUrls,
-          acceptedFiles: images,
-        });
-
-        mutate({
-          name,
-          hasWifi,
-          imageUrls,
-          location: {
-            latitude,
-            longitude,
-          },
-        });
-      },
-    });
-
-  const submitHandler = form.handleSubmit((data) => {
-    const filesToSubmit = data.images.map((file) => file.type);
-    getPresignedUrls({ contentTypes: filesToSubmit });
+      createStudySpot({
+        name,
+        hasWifi,
+        imageUrls,
+        location: {
+          latitude,
+          longitude,
+        },
+      });
+    },
   });
 
-  const isLoading = createIsLoading || presignedUrlsIsLoading;
+  const {
+    mutate: checkIfNameExists,
+    error: nameExistsError,
+    isLoading: nameExistsLoading,
+  } = api.studySpots.checkIfNameExists.useMutation({
+    onSuccess: () => {
+      const filesToSubmit = form.getValues("images").map((file) => file.type);
+      getPresignedUrls({ contentTypes: filesToSubmit });
+    },
+  });
+
+  const submitHandler = form.handleSubmit((data) =>
+    checkIfNameExists({ name: data.name })
+  );
+
+  const isLoading = createIsLoading || getUrlsIsLoading || nameExistsLoading;
   const submitDisabled =
     isLoading || !form.watch("images").length || !form.watch("name");
+  const zodErrorMessages = parseZodClientError(createError?.data?.zodError);
 
   return (
     <Form {...form}>
@@ -94,13 +105,6 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         }}
         className="space-y-8"
       >
-        <ul className="text-sm text-destructive">
-          {errorMessages.map((x) => (
-            <li key={x[0]}>
-              <strong className="capitalize">{x[0]}</strong>: {x[1]}
-            </li>
-          ))}
-        </ul>
         <FormField
           control={form.control}
           name="name"
@@ -186,6 +190,21 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             </FormItem>
           )}
         />
+        <ul className="text-sm text-destructive">
+          {zodErrorMessages.length !== 0 ? (
+            <>
+              {zodErrorMessages.map((x) => (
+                <li key={x[0]}>
+                  <strong className="capitalize">{x[0]}</strong>: {x[1]}
+                </li>
+              ))}
+            </>
+          ) : (
+            <li>{createError?.message}</li>
+          )}
+          {nameExistsError?.message && <li>{nameExistsError?.message}</li>}
+          {getUrlsError?.message && <li>{getUrlsError?.message}</li>}
+        </ul>
         <Button
           type="submit"
           disabled={submitDisabled}
