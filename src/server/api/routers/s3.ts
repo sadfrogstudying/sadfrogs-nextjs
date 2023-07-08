@@ -95,6 +95,12 @@ export const s3Router = createTRPCRouter({
       const signedUrlPromises = input.files.map(async (file) => {
         const fileExtension = extension(file.contentType) || "";
 
+        if (file.contentLength > 1024 * 1024 * 2)
+          throw new TRPCError({
+            code: "PAYLOAD_TOO_LARGE",
+            message: "File too large, limit to 2MB",
+          });
+
         const putObjectCommand = new PutObjectCommand({
           Bucket: env.BUCKET_NAME,
           Key: `${uuidv4()}.${fileExtension}`,
