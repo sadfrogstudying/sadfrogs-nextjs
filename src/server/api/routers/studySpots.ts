@@ -9,11 +9,37 @@ import { getImagesMeta } from "~/utils/server-helpers";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "~/env.mjs";
 
-// Create a new ratelimiter, that allows 3 requests per 1 minute
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
   limiter: Ratelimit.slidingWindow(6, "1 m"),
   analytics: true,
+});
+
+const studySpotSchema = z.object({
+  id: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  name: z.string(),
+  slug: z.string(),
+  hasWifi: z.boolean(),
+  isValidated: z.boolean(),
+  locationId: z.number(),
+  location: z.object({
+    id: z.number(),
+    latitude: z.number(),
+    longitude: z.number(),
+  }),
+  images: z
+    .object({
+      id: z.number(),
+      studySpotId: z.number().nullable(),
+      url: z.string(),
+      dominantColour: z.string(),
+      width: z.number(),
+      height: z.number(),
+      aspectRatio: z.number(),
+    })
+    .array(),
 });
 
 export const studySpotsRouter = createTRPCRouter({
@@ -25,33 +51,7 @@ export const studySpotsRouter = createTRPCRouter({
   getAll: publicProcedure
     .meta({ openapi: { method: "GET", path: "/studyspots.getAll" } })
     .input(z.void())
-    .output(
-      z
-        .object({
-          id: z.number(),
-          createdAt: z.date(),
-          updatedAt: z.date(),
-          name: z.string(),
-          slug: z.string(),
-          hasWifi: z.boolean(),
-          isValidated: z.boolean(),
-          location: z.object({
-            id: z.number(),
-            latitude: z.number(),
-            longitude: z.number(),
-          }),
-          images: z
-            .object({
-              url: z.string(),
-              dominantColour: z.string(),
-              width: z.number(),
-              height: z.number(),
-              aspectRatio: z.number(),
-            })
-            .array(),
-        })
-        .array()
-    )
+    .output(studySpotSchema.array())
     .query(async ({ ctx }) => {
       const studySpots = await ctx.prisma.studySpot.findMany({
         where: {
@@ -67,42 +67,13 @@ export const studySpotsRouter = createTRPCRouter({
     }),
   /**
    *
-   * Get getUnvalidated
+   * Get not validated
    *
    */
   getNotValidated: publicProcedure
     .meta({ openapi: { method: "GET", path: "/studyspots.getNotValidated" } })
     .input(z.void())
-    .output(
-      z
-        .object({
-          id: z.number(),
-          createdAt: z.date(),
-          updatedAt: z.date(),
-          name: z.string(),
-          slug: z.string(),
-          hasWifi: z.boolean(),
-          isValidated: z.boolean(),
-          locationId: z.number(),
-          location: z.object({
-            id: z.number(),
-            latitude: z.number(),
-            longitude: z.number(),
-          }),
-          images: z
-            .object({
-              id: z.number(),
-              studySpotId: z.number().nullable(),
-              url: z.string(),
-              dominantColour: z.string(),
-              width: z.number(),
-              height: z.number(),
-              aspectRatio: z.number(),
-            })
-            .array(),
-        })
-        .array()
-    )
+    .output(studySpotSchema.array())
     .query(async ({ ctx }) => {
       const studySpots = await ctx.prisma.studySpot.findMany({
         where: {
@@ -134,21 +105,7 @@ export const studySpotsRouter = createTRPCRouter({
         imageUrls: z.string().array(),
       })
     )
-    .output(
-      z.object({
-        id: z.number(),
-        createdAt: z.date(),
-        updatedAt: z.date(),
-        name: z.string(),
-        slug: z.string(),
-        hasWifi: z.boolean(),
-        location: z.object({
-          id: z.number(),
-          latitude: z.number(),
-          longitude: z.number(),
-        }),
-      })
-    )
+    .output(z.boolean())
     .mutation(async ({ ctx, input }) => {
       const { success } = await ratelimit.limit(ctx.ip);
       if (!success)
@@ -164,7 +121,7 @@ export const studySpotsRouter = createTRPCRouter({
         strict: true,
       });
 
-      const newStudySpot = await ctx.prisma.studySpot.create({
+      await ctx.prisma.studySpot.create({
         data: {
           name: input.name,
           slug: slug,
@@ -181,12 +138,9 @@ export const studySpotsRouter = createTRPCRouter({
             },
           },
         },
-        include: {
-          location: true, // Include all location in the returned object
-        },
       });
 
-      return newStudySpot;
+      return true;
     }),
   /**
    *
@@ -196,30 +150,7 @@ export const studySpotsRouter = createTRPCRouter({
   getOne: publicProcedure
     .meta({ openapi: { method: "GET", path: "/studyspots.getOne" } })
     .input(z.object({ slug: z.string() }))
-    .output(
-      z.object({
-        id: z.number(),
-        createdAt: z.date(),
-        updatedAt: z.date(),
-        name: z.string(),
-        slug: z.string(),
-        hasWifi: z.boolean(),
-        location: z.object({
-          id: z.number(),
-          latitude: z.number(),
-          longitude: z.number(),
-        }),
-        images: z
-          .object({
-            url: z.string(),
-            dominantColour: z.string(),
-            width: z.number(),
-            height: z.number(),
-            aspectRatio: z.number(),
-          })
-          .array(),
-      })
-    )
+    .output(studySpotSchema)
     .query(async ({ ctx, input }) => {
       const studySpot = await ctx.prisma.studySpot.findUnique({
         where: {
