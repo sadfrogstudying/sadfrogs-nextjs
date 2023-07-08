@@ -39,10 +39,15 @@ const Image = ({
   const placeholderOpacity = imageLoaded ? opacity[0] : opacity[100];
 
   return (
-    <div className="relative h-full w-full">
+    <div
+      className="relative h-full w-full"
+      style={{
+        aspectRatio: aspectRatio,
+      }}
+    >
       {placeholder === "empty" && (
         <div
-          className={`${placeholderOpacity} absolute inset-0 z-10 ease-in duration-500`}
+          className={`${placeholderOpacity} absolute inset-0 z-10 ease-in duration-500 opacity-20`}
           style={{
             aspectRatio: aspectRatio,
             backgroundColor: dominantColour,
