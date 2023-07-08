@@ -82,8 +82,12 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     isLoading: nameExistsLoading,
   } = api.studySpots.checkIfNameExists.useMutation({
     onSuccess: () => {
-      const filesToSubmit = form.getValues("images").map((file) => file.type);
-      getPresignedUrls({ contentTypes: filesToSubmit });
+      const filesToSubmit = form.getValues("images").map((file) => ({
+        contentLength: file.size,
+        contentType: file.type,
+      }));
+
+      getPresignedUrls({ files: filesToSubmit });
     },
   });
 

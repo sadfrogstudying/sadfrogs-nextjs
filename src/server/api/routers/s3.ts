@@ -7,7 +7,17 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuidv4 } from "uuid";
 import { extension } from "mime-types";
 
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+import { TRPCError } from "@trpc/server";
+
 // https://blog.nickramkissoon.com/posts/t3-s3-presigned-urls
+
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(6, "1 m"),
+  analytics: true,
+});
 
 export const s3Router = createTRPCRouter({
   /**
@@ -55,20 +65,41 @@ export const s3Router = createTRPCRouter({
     .meta({ openapi: { method: "POST", path: "/s3.getPresignedUrls" } })
     .input(
       z.object({
-        contentTypes: z.string().array(),
+        files: z
+          .object({
+            contentLength: z.number(),
+            contentType: z.string(),
+          })
+          .array(),
       })
     )
     .output(z.string().array())
     .mutation(async ({ ctx, input }) => {
+      // Rate limit
+      const { success } = await ratelimit.limit(ctx.ip);
+      if (!success)
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Too many requests",
+        });
+
+      // Limit to 8 files
+      if (input.files.length > 8)
+        throw new TRPCError({
+          code: "PAYLOAD_TOO_LARGE",
+          message: "Too many files, limit to 8",
+        });
+
       const { s3 } = ctx;
 
-      const signedUrlPromises = input.contentTypes.map(async (contentType) => {
-        const fileExtension = extension(contentType) || "";
+      const signedUrlPromises = input.files.map(async (file) => {
+        const fileExtension = extension(file.contentType) || "";
 
         const putObjectCommand = new PutObjectCommand({
           Bucket: env.BUCKET_NAME,
           Key: `${uuidv4()}.${fileExtension}`,
-          ContentType: contentType,
+          ContentType: file.contentType,
+          ContentLength: file.contentLength,
         });
 
         return await getSignedUrl(s3, putObjectCommand);
