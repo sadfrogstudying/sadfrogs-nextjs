@@ -1,4 +1,5 @@
-import axios from "axios";
+import { TRPCError } from "@trpc/server";
+import axios, { AxiosError } from "axios";
 import sharp from "sharp";
 import { env } from "~/env.mjs";
 
@@ -12,6 +13,7 @@ const rgbToHex = (r: number, g: number, b: number) => {
 };
 
 /**
+ * @description this function also serves to validate that the images are from the bucket and not some other dog
  * @param input array of image urls
  */
 export const getImagesMeta = async (input: string[]) => {
@@ -25,15 +27,17 @@ export const getImagesMeta = async (input: string[]) => {
   try {
     const allImagesWithMeta = await Promise.all(
       input.map(async (url) => {
+        if (url.startsWith(`${env.BUCKET_NAME}.s3.${env.REGION}`))
+          throw new TRPCError({
+            code: "UNPROCESSABLE_CONTENT",
+            message: "Image url is not from the bucket",
+          });
+
         // Download Image & use Buffer as Input
         const response = await axios<Record<string, never>, Response>({
           url,
           responseType: "arraybuffer",
         });
-
-        const host = response.request.host;
-        if (host !== `${env.BUCKET_NAME}.s3.${env.REGION}.amazonaws.com`)
-          throw new Error("The URLs provided are not from the bucket");
 
         const input = response.data;
 
@@ -46,9 +50,10 @@ export const getImagesMeta = async (input: string[]) => {
           width && height && parseFloat((width / height).toFixed(8));
 
         if (!width || !height || !aspectRatio)
-          throw new Error(
-            "Something went wrong getting width/height for image metadata"
-          );
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Something went wrong getting image metadata",
+          });
 
         return {
           url,
@@ -59,9 +64,22 @@ export const getImagesMeta = async (input: string[]) => {
         };
       })
     );
+
     return allImagesWithMeta;
   } catch (error) {
-    if (error instanceof Error) throw new Error(error.message);
-    throw new Error("Something went wrong getting image metadata");
+    const errorString = "Something went wrong getting image metadata";
+
+    if (error instanceof AxiosError) {
+      if (error.code === "ECONNREFUSED")
+        throw new TRPCError({
+          code: "UNPROCESSABLE_CONTENT",
+          message: `${errorString}: Could not connect to provided image url`,
+        });
+    }
+
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: errorString,
+    });
   }
 };

@@ -114,33 +114,42 @@ export const studySpotsRouter = createTRPCRouter({
           message: "Too many requests",
         });
 
-      const newImages = await getImagesMeta(input.imageUrls);
-      const slug = slugify(input.name, {
-        remove: /[*+~.()'"!:@]/g,
-        lower: true,
-        strict: true,
-      });
+      try {
+        const newImages = await getImagesMeta(input.imageUrls);
+        const slug = slugify(input.name, {
+          remove: /[*+~.()'"!:@]/g,
+          lower: true,
+          strict: true,
+        });
 
-      await ctx.prisma.studySpot.create({
-        data: {
-          name: input.name,
-          slug: slug,
-          hasWifi: input.hasWifi,
-          location: {
-            create: {
-              latitude: input.location.latitude,
-              longitude: input.location.longitude,
+        await ctx.prisma.studySpot.create({
+          data: {
+            name: input.name,
+            slug: slug,
+            hasWifi: input.hasWifi,
+            location: {
+              create: {
+                latitude: input.location.latitude,
+                longitude: input.location.longitude,
+              },
+            },
+            images: {
+              createMany: {
+                data: newImages,
+              },
             },
           },
-          images: {
-            createMany: {
-              data: newImages,
-            },
-          },
-        },
-      });
+        });
 
-      return true;
+        return true;
+      } catch (error: unknown) {
+        if (error instanceof TRPCError) throw error;
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong creating a study spot",
+        });
+      }
     }),
   /**
    *
