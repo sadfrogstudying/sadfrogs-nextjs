@@ -1,14 +1,9 @@
-import { Prisma, StudySpot } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import axios from "axios";
 import { GetStaticPaths, GetStaticProps } from "next";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "~/components/UI/Card";
-import Image from "~/components/UI/Image";
+import HeroCarousel from "~/components/StudySpot/Hero/Carousel";
+import HeroText from "~/components/StudySpot/Hero/Text";
+import InfoTable from "~/components/StudySpot/Info/Table";
 
 type StudySpotComplete = Prisma.StudySpotGetPayload<{
   include: {
@@ -32,45 +27,14 @@ const StudySpotPage = ({ studySpot }: { studySpot: StudySpotComplete }) => {
   } = studySpot;
 
   return (
-    <main className="p-4 pt-20 space-y-6">
-      <div>
-        <h1 className="text-4xl">{name}</h1>
-        <h2 className="text-xl">Individual page for {name}</h2>
-      </div>
-      <div className="grid grid-cols-5">
-        {studySpot.images?.map((image) => (
-          <div className="overflow-hidden" key={image.url}>
-            <Image
-              image={{ ...image }}
-              alt={`Image of ${studySpot.name}`}
-              objectFit="cover"
-            />
-          </div>
-        ))}
-      </div>
-      <div className="w-96">
-        <div className="flex">
-          <strong>Created at: </strong> <div>{createdAt.toString()}</div>
-        </div>
-        <div className="flex">
-          <strong>Has Wifi: </strong> <div>{hasWifi.toString()}</div>
-        </div>
-        <div className="flex">
-          <strong>Id: </strong> <div>{id}</div>
-        </div>
-        <div className="flex">
-          <strong>Is Validated: </strong> <div>{isValidated}</div>
-        </div>
-        <div className="flex">
-          <strong>Location Id: </strong> <div>{locationId}</div>
-        </div>
-        <div className="flex">
-          <strong>Slug: </strong> <div>{slug}</div>
-        </div>
-        <div className="flex">
-          <strong>Updated At: </strong> <div>{updatedAt.toString()}</div>
-        </div>
-      </div>
+    <main className="pb-4 h-full">
+      <section className="p-4 pt-20 flex flex-wrap items-end min-h-screen">
+        <HeroText studySpot={studySpot} />
+        <HeroCarousel name={name} images={images} />
+      </section>
+      <section className="pb-4 flex flex-col justify-end align-start items-start min-h-screen w-full bg-gray-50">
+        <InfoTable />
+      </section>
     </main>
   );
 };

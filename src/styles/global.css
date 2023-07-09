@@ -80,3 +80,10 @@
 html {
   font-size: 14px;
 }
+
+html,
+body,
+body > div:first-child,
+div#__next {
+  height: 100%;
+}
