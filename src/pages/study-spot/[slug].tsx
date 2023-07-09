@@ -1,10 +1,9 @@
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import axios from "axios";
-import { GetStaticPaths, GetStaticProps } from "next";
+import type { GetStaticPaths, GetStaticProps } from "next";
 import VerticalCarousel from "~/components/StudySpot/Hero/VerticalCarousel";
 import HeroText from "~/components/StudySpot/Hero/Text";
 import InfoTable from "~/components/StudySpot/Info/Table";
-import HeroCarousel from "~/components/StudySpot/Hero/Carousel";
 
 type StudySpotComplete = Prisma.StudySpotGetPayload<{
   include: {

@@ -40,10 +40,11 @@ const Row = ({
   useEffect(() => {
     setInt(getRandomInt(shadesOfOj.length));
   }, []);
+  const color = shadesOfOj[int] || "";
 
   return (
     <div className="flex border-b border-gray-200 w-full text-sm">
-      <div className={`w-2 mr-2 ${shadesOfOj[int]}`} />
+      <div className={`w-2 mr-2 ${color}`} />
       <div className="flex flex-wrap items-start justify-start py-1">
         <strong className="font-mono break-normal w-80">{label}: </strong>{" "}
         <div className="font-mono break-normal w-96">

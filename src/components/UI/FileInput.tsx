@@ -42,7 +42,7 @@ const FileInput = React.forwardRef<HTMLInputElement, Props>(
 
     useEffect(() => {
       if (isSuccess) setValue([]);
-    }, [isSuccess]);
+    }, [isSuccess, setValue]);
 
     return (
       <>
