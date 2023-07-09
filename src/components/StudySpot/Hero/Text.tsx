@@ -27,20 +27,17 @@ const HeroText = ({ studySpot }: { studySpot: StudySpotExtended }) => {
   });
 
   return (
-    <div className="w-1/3 min-w-max p-4 space-y-4">
-      <h1 className="text-xl font-bold">{name}</h1>
-      <p className="w-96">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti
-        excepturi assumenda quas dolorum similique, veniam doloremque earum sit
-        voluptate quo vero nulla, mollitia adipisci facere explicabo recusandae
-        repudiandae.
-      </p>
-      {/* <div>
-        {studySpotMapped.map((item) => {
-          return <Row label={item[0]} value={item[1]} key={item[0]} />;
-        })}
-      </div> */}
-    </div>
+    <>
+      <div className="w-full h-fit p-4 space-y-4 md:w-96">
+        <h1 className="text-3xl font-serif">{name}</h1>
+        <p className="w-full">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti
+          excepturi assumenda quas dolorum similique, veniam doloremque earum
+          sit voluptate quo vero nulla, mollitia adipisci facere explicabo
+          recusandae repudiandae.
+        </p>
+      </div>
+    </>
   );
 };
 

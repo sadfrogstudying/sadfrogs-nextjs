@@ -41,15 +41,8 @@ const HeroCarousel: React.FC<PropType> = (props) => {
     emblaMainApi.on("reInit", onSelect);
   }, [emblaMainApi, onSelect]);
 
-  // backface-visibility: hidden;
-  // display: flex;
-  // touch-action: pan-y;
-  // flex-direction: row;
-  // height: auto;
-  // margin-left: calc(var(--slide-spacing) * -1);
-
   return (
-    <div className="w-96 h-fit">
+    <div className="w-full h-fit p-4 md:w-96">
       <div className="overflow-hidden" ref={emblaMainRef}>
         <div className="flex touch-pan-y">
           {images.map((image, i) => (

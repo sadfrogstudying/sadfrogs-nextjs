@@ -29,7 +29,7 @@ const StudySpotPage = ({ studySpot }: { studySpot: StudySpotComplete }) => {
 
   return (
     <main className="pb-4 h-fit">
-      <section className="flex flex-wrap items-end min-h-screen">
+      <section className="pt-12 flex flex-wrap items-end min-h-screen md:pt-0">
         <HeroText studySpot={studySpot} />
         <VerticalCarousel name={name} images={images} />
         {/* <HeroCarousel name={name} images={images} /> */}

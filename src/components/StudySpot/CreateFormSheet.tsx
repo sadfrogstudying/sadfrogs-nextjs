@@ -17,7 +17,7 @@ function CreateStudySpotFormSheet() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline">Open</Button>
+        <Button variant="outline">Create</Button>
       </SheetTrigger>
       <SheetContent>
         <ScrollArea className="h-full w-full rounded-md">

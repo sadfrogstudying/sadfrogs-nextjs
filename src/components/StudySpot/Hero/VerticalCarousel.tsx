@@ -4,7 +4,6 @@ import type { Image as ImageType } from "@prisma/client";
 import useEmblaCarousel from "embla-carousel-react";
 
 import Image from "../../UI/Image";
-import { Thumb } from "./CarouselThumb";
 import { VerticalThumb } from "./VerticalCarouselThumb";
 
 type PropType = {
@@ -18,11 +17,11 @@ const VerticalCarousel: React.FC<PropType> = (props) => {
   const [emblaMainRef, emblaMainApi] = useEmblaCarousel({
     axis: "y",
     containScroll: "trimSnaps",
-    dragFree: true,
   });
   const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
     axis: "y",
     containScroll: "keepSnaps",
+    dragFree: true,
   });
 
   const onThumbClick = useCallback(
@@ -91,42 +90,3 @@ const VerticalCarousel: React.FC<PropType> = (props) => {
 };
 
 export default VerticalCarousel;
-
-// const VerticalCarousel = ({
-//   name,
-//   images,
-// }: {
-//   name: string;
-//   images: ImageType[];
-// }) => {
-//   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-//   const currentImage = images[currentImageIndex];
-
-//   return (
-//     <div className="w-1/4 flex">
-//       <div className="h-96">
-//         {currentImage && (
-//           <Image
-//             image={{ ...currentImage }}
-//             alt={`Image of ${name}`}
-//             objectFit="cover"
-//           />
-//         )}
-//       </div>
-//       <div className="flex flex-col">
-//         {images?.map((image) => (
-//           <div className="h-full">
-//             <Image
-//               image={{ ...image }}
-//               alt={`Image of ${name}`}
-//               objectFit="cover"
-//               key={image.url}
-//             />
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default VerticalCarousel;

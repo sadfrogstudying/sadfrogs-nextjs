@@ -66,6 +66,7 @@ module.exports = {
           to: { height: 0 },
         },
       },
+      /* @keyframes duration | easing-function | delay | iteration-count | direction | fill-mode | play-state | name */
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
