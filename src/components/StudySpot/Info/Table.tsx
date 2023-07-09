@@ -7,8 +7,8 @@ const InfoTable = () => {
   const secondHalf = dummyStudySpot.slice(half);
 
   return (
-    <div className="flex">
-      <div className="w-full w-1/2 border-t border-gray-400">
+    <div className="flex w-full">
+      <div className="w-full w-1/2 border-t border-gray-200 font-mono">
         {firstHalf.map((item, i) => {
           return <Row label={item.label} value={item.value} key={item.label} />;
         })}
@@ -50,10 +50,10 @@ const Row = ({
   }, []);
 
   return (
-    <div className="flex border-b border-gray-400 w-full text-sm">
+    <div className="flex border-b border-gray-200 w-full text-sm">
       <div className={`w-2 mr-2 ${shadesOfOj[int]}`}></div>
-      <div className="flex">
-        <strong className="w-64">{label}: </strong>{" "}
+      <div className="grid grid-cols-[200px_minmax(350px,_1fr)_100px] items-start justify-start">
+        <strong>{label}: </strong>{" "}
         <div>{typeof value === "boolean" ? value.toString() : value}</div>
       </div>
     </div>
@@ -72,7 +72,7 @@ const dummyStudySpot = [
     name: "comfort",
     value: "Ergonomic chairs and adjustable desks",
   },
-  { label: "Rating", name: "noiseLevel", value: "Quiet" },
+  { label: "Rating New", name: "noiseLevel", value: "Quiet" },
   { label: "Noise Level", name: "lighting", value: "Bright and adjustable" },
   {
     label: "Lighting",

@@ -1,9 +1,10 @@
 import { Prisma } from "@prisma/client";
 import axios from "axios";
 import { GetStaticPaths, GetStaticProps } from "next";
-import HeroCarousel from "~/components/StudySpot/Hero/Carousel";
+import VerticalCarousel from "~/components/StudySpot/Hero/VerticalCarousel";
 import HeroText from "~/components/StudySpot/Hero/Text";
 import InfoTable from "~/components/StudySpot/Info/Table";
+import HeroCarousel from "~/components/StudySpot/Hero/Carousel";
 
 type StudySpotComplete = Prisma.StudySpotGetPayload<{
   include: {
@@ -27,12 +28,13 @@ const StudySpotPage = ({ studySpot }: { studySpot: StudySpotComplete }) => {
   } = studySpot;
 
   return (
-    <main className="pb-4 h-full">
-      <section className="p-4 pt-20 flex flex-wrap items-end min-h-screen">
+    <main className="pb-4 h-fit">
+      <section className="flex flex-wrap items-end min-h-screen">
         <HeroText studySpot={studySpot} />
-        <HeroCarousel name={name} images={images} />
+        <VerticalCarousel name={name} images={images} />
+        {/* <HeroCarousel name={name} images={images} /> */}
       </section>
-      <section className="pb-4 flex flex-col justify-end align-start items-start min-h-screen w-full bg-gray-50">
+      <section className="pb-4 flex flex-col justify-end align-start items-start min-h-screen w-full">
         <InfoTable />
       </section>
     </main>

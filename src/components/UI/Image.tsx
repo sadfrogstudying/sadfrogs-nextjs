@@ -2,6 +2,8 @@ import { useState } from "react";
 import type { Image as PrismaImageType } from "@prisma/client";
 import FutureImage from "next/image";
 
+import { cn } from "~/lib/utils";
+
 type ImageType = Omit<PrismaImageType, "id" | "studySpotId">;
 
 interface Props {
@@ -11,6 +13,7 @@ interface Props {
   placeholder?: "blur" | "empty";
   objectFit?: "contain" | "cover";
   onClick?: () => void;
+  className?: string;
 }
 
 /*
@@ -25,6 +28,7 @@ const Image = ({
   placeholder = "empty",
   objectFit = "contain",
   onClick,
+  className,
 }: Props) => {
   const { aspectRatio, dominantColour, height, url, width } = image;
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -40,7 +44,8 @@ const Image = ({
 
   return (
     <div
-      className="relative h-full w-full"
+      className={cn("relative h-full w-full", className)}
+      onClick={onClick}
       style={{
         aspectRatio: aspectRatio,
       }}
@@ -60,7 +65,6 @@ const Image = ({
         width={width}
         height={height}
         onLoadingComplete={doFadeIn}
-        onClick={onClick}
         placeholder={placeholder}
         quality={quality || undefined}
         className={`w-fit h-full ${imageOpacity} object-${objectFit} ease-out duration-500`}
