@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 import { Skeleton } from "~/components/UI/Skeleton";
 
 type StudySpotExtended = Prisma.StudySpotGetPayload<{
