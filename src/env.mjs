@@ -20,6 +20,7 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: z.string(),
     BUCKET_NAME: z.string(),
     REGION: z.string(),
+    MAPBOX_TOKEN: z.string(),
   },
 
   /**
@@ -49,6 +50,7 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     BUCKET_NAME: process.env.BUCKET_NAME,
     REGION: process.env.REGION,
+    MAPBOX_TOKEN: process.env.MAPBOX_TOKEN,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
