@@ -45,10 +45,12 @@ const VerticalCarousel: React.FC<PropType> = (props) => {
     emblaMainApi.on("reInit", onSelect);
   }, [emblaMainApi, onSelect]);
 
+  const animatePulse = images.length === 0 ? "animate-pulse" : "";
+
   return (
     <div className="w-96 h-full max-h-screen flex gap-2 p-4">
       <div
-        className="overflow-hidden bg-muted w-4/5 rounded"
+        className={`w-4/5 overflow-hidden bg-muted rounded ${animatePulse}`}
         ref={emblaMainRef}
       >
         <div
@@ -69,7 +71,7 @@ const VerticalCarousel: React.FC<PropType> = (props) => {
       </div>
 
       <div
-        className="w-1/5 overflow-hidden bg-muted rounded"
+        className={`w-1/5 overflow-hidden bg-muted rounded ${animatePulse}`}
         ref={emblaThumbsRef}
       >
         <div className="flex flex-col touch-pan-x gap-2 h-full">
