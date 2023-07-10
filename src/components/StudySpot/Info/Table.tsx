@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const InfoTable = () => {
   return (
-    <div className="flex w-full">
+    <div className="flex w-full pt-12">
       <div className="w-full w-1/2 border-t border-gray-200">
         {dummyStudySpot.map((item, i) => {
           return <Row label={item.label} value={item.value} key={item.label} />;

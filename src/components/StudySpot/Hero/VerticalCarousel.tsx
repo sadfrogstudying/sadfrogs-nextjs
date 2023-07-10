@@ -48,7 +48,7 @@ const VerticalCarousel: React.FC<PropType> = (props) => {
   return (
     <div className="w-96 h-full max-h-screen flex gap-2 p-4">
       <div
-        className="overflow-hidden bg-gray-100 w-4/5 rounded"
+        className="overflow-hidden bg-muted w-4/5 rounded"
         ref={emblaMainRef}
       >
         <div
@@ -69,7 +69,7 @@ const VerticalCarousel: React.FC<PropType> = (props) => {
       </div>
 
       <div
-        className="w-1/5 overflow-hidden bg-gray-100 rounded"
+        className="w-1/5 overflow-hidden bg-muted rounded"
         ref={emblaThumbsRef}
       >
         <div className="flex flex-col touch-pan-x gap-2 h-full">
