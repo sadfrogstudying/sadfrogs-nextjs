@@ -11,7 +11,7 @@ type PropType = {
 };
 
 export const Thumb: React.FC<PropType> = (props) => {
-  const { selected, image, index, onClick, name } = props;
+  const { selected, image, onClick, name } = props;
 
   const opacity = {
     0: "opacity-50",

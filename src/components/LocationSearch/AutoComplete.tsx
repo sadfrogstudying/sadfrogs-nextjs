@@ -77,7 +77,7 @@ const LocationSearchAutoComplete = () => {
     if (inputValue === "") return setPredictions([]);
     if (!serviceAutocomplete.current) return;
 
-    serviceAutocomplete.current.getPlacePredictions(
+    void serviceAutocomplete.current.getPlacePredictions(
       { input: inputValue },
       displaySuggestions
     );

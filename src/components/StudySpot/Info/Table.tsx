@@ -4,7 +4,7 @@ const InfoTable = () => {
   return (
     <div className="flex w-full pt-12">
       <div className="w-full w-1/2 border-t border-gray-200">
-        {dummyStudySpot.map((item, i) => {
+        {dummyStudySpot.map((item) => {
           return <Row label={item.label} value={item.value} key={item.label} />;
         })}
       </div>
@@ -39,7 +39,7 @@ const Row = ({
   const [int, setInt] = useState(0);
   useEffect(() => {
     setInt(getRandomInt(shadesOfOj.length));
-  }, []);
+  }, [shadesOfOj.length]);
   const color = shadesOfOj[int] || "";
 
   return (

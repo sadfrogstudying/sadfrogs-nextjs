@@ -57,7 +57,7 @@ const VerticalCarousel: React.FC<PropType> = (props) => {
           className="flex flex-col touch-pan-x gap-2"
           style={{ height: "100vh" }}
         >
-          {images.map((image, i) => (
+          {images.map((image) => (
             <div key={image.url}>
               <Image
                 image={{ ...image }}

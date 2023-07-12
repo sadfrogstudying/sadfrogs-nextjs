@@ -45,7 +45,7 @@ const HeroCarousel: React.FC<PropType> = (props) => {
     <div className="w-full h-fit p-4 md:w-96">
       <div className="overflow-hidden" ref={emblaMainRef}>
         <div className="flex touch-pan-y">
-          {images.map((image, i) => (
+          {images.map((image) => (
             <div
               className="relative"
               style={{ flex: `0 0 100%` }}
@@ -83,42 +83,3 @@ const HeroCarousel: React.FC<PropType> = (props) => {
 };
 
 export default HeroCarousel;
-
-// const HeroCarousel = ({
-//   name,
-//   images,
-// }: {
-//   name: string;
-//   images: ImageType[];
-// }) => {
-//   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-//   const currentImage = images[currentImageIndex];
-
-//   return (
-//     <div className="w-1/4 flex">
-//       <div className="h-96">
-//         {currentImage && (
-//           <Image
-//             image={{ ...currentImage }}
-//             alt={`Image of ${name}`}
-//             objectFit="cover"
-//           />
-//         )}
-//       </div>
-//       <div className="flex flex-col">
-//         {images?.map((image) => (
-//           <div className="h-full">
-//             <Image
-//               image={{ ...image }}
-//               alt={`Image of ${name}`}
-//               objectFit="cover"
-//               key={image.url}
-//             />
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default HeroCarousel;

@@ -9,15 +9,15 @@ type StudySpotExtended = Prisma.StudySpotGetPayload<{
 
 const HeroText = ({ studySpot }: { studySpot?: StudySpotExtended }) => {
   const {
-    createdAt,
-    hasWifi,
-    id,
-    isValidated,
-    locationId,
+    // createdAt,
+    // hasWifi,
+    // id,
+    // isValidated,
+    // locationId,
     name,
-    slug,
-    updatedAt,
-    location,
+    // slug,
+    // updatedAt,
+    // location,
   } = studySpot || {};
 
   return (
@@ -49,20 +49,3 @@ const HeroText = ({ studySpot }: { studySpot?: StudySpotExtended }) => {
 };
 
 export default HeroText;
-
-const Row = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | number | boolean | string[];
-}) => {
-  return (
-    <div className="flex">
-      <strong className="w-64">{label}: </strong>{" "}
-      <div className="w-64">
-        {typeof value === "boolean" ? value.toString() : value}
-      </div>
-    </div>
-  );
-};

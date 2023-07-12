@@ -1,4 +1,4 @@
-import { DebouncedFunc, debounce } from "lodash";
+import { type DebouncedFunc, debounce } from "lodash";
 import { useEffect, useMemo, useRef } from "react";
 
 /**
@@ -11,7 +11,7 @@ import { useEffect, useMemo, useRef } from "react";
  * Credits: https://www.developerway.com/posts/debouncing-in-react
  *
  */
-const useDebounce = <T extends Function>(
+const useDebounce = <T extends () => void>(
   callback: T
 ): DebouncedFunc<() => void> => {
   const ref = useRef<T>();

@@ -18,15 +18,15 @@ const StudySpotPage = () => {
   );
 
   const {
-    createdAt,
-    hasWifi,
-    id,
-    isValidated,
-    locationId,
+    // createdAt,
+    // hasWifi,
+    // id,
+    // isValidated,
+    // locationId,
     name = "",
-    updatedAt,
+    // updatedAt,
     images = [],
-    location,
+    // location,
   } = studySpot.data || {};
 
   return (
