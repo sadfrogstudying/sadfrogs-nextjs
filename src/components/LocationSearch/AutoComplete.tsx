@@ -32,8 +32,12 @@ type PlaceResultPicked = Pick<
   | "website"
 >;
 
-export const loadApiErr =
+const loadApiErr =
   "💡 use-places-autocomplete: Google Maps Places API library must be loaded. See: https://github.com/wellyshen/use-places-autocomplete#load-the-library";
+const checkStatusOk = (status: PlacesServiceStatus) => {
+  if (status !== google.maps.places.PlacesServiceStatus.OK) return false;
+  return true;
+};
 
 const LocationSearchAutoComplete = () => {
   const [inputValue, setInputValue] = React.useState("");
@@ -63,23 +67,15 @@ const LocationSearchAutoComplete = () => {
   }, [libraryReady]);
 
   const debouncedRequest = useDebounce(() => {
-    const displaySuggestions = function (
-      predictions: AutocompletePrediction[] | null,
-      status: PlacesServiceStatus
-    ) {
-      if (status != google.maps.places.PlacesServiceStatus.OK || !predictions) {
-        return alert(status);
-      }
-
-      setPredictions(predictions);
-    };
-
     if (inputValue === "") return setPredictions([]);
     if (!serviceAutocomplete.current) return;
 
     void serviceAutocomplete.current.getPlacePredictions(
       { input: inputValue },
-      displaySuggestions
+      (predictions, status) => {
+        if (checkStatusOk(status) === false) return alert(status);
+        setPredictions(predictions || []);
+      }
     );
   });
 
@@ -97,29 +93,26 @@ const LocationSearchAutoComplete = () => {
       "Do you want to getDetails and complete the session?"
     );
 
-    if (confirmed && selectedPlaceId && servicePlaces.current) {
-      return servicePlaces.current.getDetails(
-        {
-          placeId: selectedPlaceId,
-          fields: [
-            "address_components",
-            "opening_hours",
-            "formatted_address",
-            "geometry",
-            "name",
-            "opening_hours",
-            "website",
-          ],
-        },
-        (place, status) => {
-          if (status !== google.maps.places.PlacesServiceStatus.OK) {
-            return alert(status);
-          }
+    if (!confirmed || !selectedPlaceId || !servicePlaces.current) return;
 
-          setSelectedPlace(place);
-        }
-      );
-    }
+    return servicePlaces.current.getDetails(
+      {
+        placeId: selectedPlaceId,
+        fields: [
+          "address_components",
+          "opening_hours",
+          "formatted_address",
+          "geometry",
+          "name",
+          "opening_hours",
+          "website",
+        ],
+      },
+      (place, status) => {
+        if (checkStatusOk(status) === false) return alert(status);
+        setSelectedPlace(place);
+      }
+    );
   };
 
   console.log(selectedPlace);
