@@ -1,4 +1,4 @@
-import AutoComplete from "~/components/LocationSearch/AutoComplete";
+import AutoComplete from "~/components/LocationSearch";
 
 const LocationsTestPage = () => {
   return (
