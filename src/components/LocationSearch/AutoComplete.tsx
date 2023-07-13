@@ -1,7 +1,4 @@
-import { useRef, useState } from "react";
-import { Button } from "../UI/Button";
-
-import * as React from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
 
 import { cn } from "~/lib/utils";
@@ -19,7 +16,6 @@ type AutocompletePrediction = google.maps.places.QueryAutocompletePrediction;
 type AutocompleteService = google.maps.places.AutocompleteService;
 type AutocompleteSessionToken = google.maps.places.AutocompleteSessionToken;
 type PlacesService = google.maps.places.PlacesService;
-type PlacesServiceStatus = google.maps.places.PlacesServiceStatus;
 type PlaceResult = google.maps.places.PlaceResult;
 type PlaceResultPicked = Pick<
   PlaceResult,
@@ -32,15 +28,20 @@ type PlaceResultPicked = Pick<
   | "website"
 >;
 
-const loadApiErr =
-  "💡 use-places-autocomplete: Google Maps Places API library must be loaded. See: https://github.com/wellyshen/use-places-autocomplete#load-the-library";
-const checkStatusOk = (status: PlacesServiceStatus) => {
-  if (status !== google.maps.places.PlacesServiceStatus.OK) return false;
-  return true;
+type CachedData = Record<
+  string,
+  { data: AutocompletePrediction[]; maxAge: number }
+>;
+
+const cacheKey = "sfgpk"; // Key to identify our data in sessionStorage
+const cache = 0.25 * 60 * 60; // 15 minutes in seconds
+
+const getCachedData = (): CachedData => {
+  return JSON.parse(sessionStorage.getItem(cacheKey) || "{}");
 };
 
 const LocationSearchAutoComplete = () => {
-  const [inputValue, setInputValue] = React.useState("");
+  const [inputValue, setInputValue] = useState("");
   const [predictions, setPredictions] = useState<AutocompletePrediction[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<PlaceResultPicked | null>(
     null
@@ -53,35 +54,68 @@ const LocationSearchAutoComplete = () => {
   const servicePlaces = useRef<PlacesService>();
   const sessionToken = useRef<AutocompleteSessionToken | null>(null);
 
-  const placesDivRef = useRef<HTMLDivElement>(null);
+  const placesDivRef = useRef<HTMLDivElement>(null); // need to figure out what this is for
 
-  React.useEffect(() => {
-    if (!libraryReady || !placesDivRef.current) return;
+  const refreshSessionToken = () => {
+    sessionToken.current = new google.maps.places.AutocompleteSessionToken();
+  };
+
+  useEffect(() => {
+    if (!scriptReady || !placesDivRef.current) return;
 
     serviceAutocomplete.current =
       new window.google.maps.places.AutocompleteService();
     servicePlaces.current = new window.google.maps.places.PlacesService(
       placesDivRef.current
     );
-    sessionToken.current = new google.maps.places.AutocompleteSessionToken();
-  }, [libraryReady]);
 
-  const debouncedRequest = useDebounce(() => {
-    if (inputValue === "") return setPredictions([]);
-    if (!serviceAutocomplete.current) return;
+    refreshSessionToken();
+
+    setLibraryReady(true);
+  }, [scriptReady]);
+
+  const getPredictions = useDebounce(() => {
+    if (!serviceAutocomplete.current || !sessionToken.current) return;
 
     void serviceAutocomplete.current.getPlacePredictions(
-      { input: inputValue },
+      { sessionToken: sessionToken.current, input: inputValue },
       (predictions, status) => {
-        if (checkStatusOk(status) === false) return alert(status);
+        if (status !== "OK") return alert(status);
+
         setPredictions(predictions || []);
+
+        // adding new predictions to cache
+        const cachedData = getCachedData();
+        cachedData[inputValue] = {
+          data: predictions || [],
+          maxAge: Date.now() + cache * 1000,
+        };
+        sessionStorage.setItem(cacheKey, JSON.stringify(cachedData));
       }
     );
   });
 
   const onChange = (val: string) => {
     setInputValue(val);
-    debouncedRequest();
+
+    if (val === "") return setPredictions([]);
+
+    // check cache
+    const cachedData = getCachedData();
+    // remove expired cached data
+    const reducedCachedData = Object.keys(cachedData).reduce(
+      (acc: CachedData, key) => {
+        const entry = cachedData[key];
+        if (entry && entry.maxAge - Date.now() >= 0) acc[key] = entry;
+        return acc;
+      },
+      {} as CachedData
+    );
+    const cachedPredictions = reducedCachedData[val]?.data || null;
+    if (cachedPredictions) return setPredictions(cachedPredictions);
+
+    // if not in cache, send request
+    getPredictions();
   };
 
   const onSelect = (desc: string) => {
@@ -93,10 +127,17 @@ const LocationSearchAutoComplete = () => {
       "Do you want to getDetails and complete the session?"
     );
 
-    if (!confirmed || !selectedPlaceId || !servicePlaces.current) return;
+    if (
+      !confirmed ||
+      !selectedPlaceId ||
+      !servicePlaces.current ||
+      !sessionToken.current
+    )
+      return;
 
     return servicePlaces.current.getDetails(
       {
+        sessionToken: sessionToken.current,
         placeId: selectedPlaceId,
         fields: [
           "address_components",
@@ -109,32 +150,26 @@ const LocationSearchAutoComplete = () => {
         ],
       },
       (place, status) => {
-        if (checkStatusOk(status) === false) return alert(status);
+        if (status !== "OK") return alert(status);
         setSelectedPlace(place);
+        refreshSessionToken();
       }
     );
   };
 
-  console.log(selectedPlace);
-
   return (
     <div>
-      {scriptReady && (
-        <Script
-          src={`https://maps.googleapis.com/maps/api/js?key=${env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places&callback=Function.prototype`}
-          onReady={() => {
-            setLibraryReady(true);
-          }}
-        />
-      )}
-      <Button className="m-2" onClick={() => setScriptReady(true)}>
-        setScriptReady
-      </Button>
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places&callback=Function.prototype`}
+        onReady={() => {
+          setScriptReady(true);
+        }}
+      />
       <div ref={placesDivRef}></div>
       <div className="w-96 border rounded p-2">
         <Command shouldFilter={false}>
           <CommandInput
-            placeholder="Search location..."
+            placeholder={!libraryReady ? "Loading..." : "Search location..."}
             onValueChange={(val) => onChange(val)}
             value={inputValue}
             disabled={!libraryReady}
