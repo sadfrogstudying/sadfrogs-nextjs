@@ -37,7 +37,7 @@ const cacheKey = "sfgpk"; // Key to identify our data in sessionStorage
 const cache = 0.25 * 60 * 60; // 15 minutes in seconds
 
 const getCachedData = (): CachedData => {
-  return JSON.parse(sessionStorage.getItem(cacheKey) || "{}");
+  return JSON.parse(sessionStorage.getItem(cacheKey) || "{}") as CachedData;
 };
 
 const LocationSearchAutoComplete = () => {
