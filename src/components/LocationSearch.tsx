@@ -40,7 +40,7 @@ const getCachedData = (): CachedData => {
   return JSON.parse(sessionStorage.getItem(cacheKey) || "{}") as CachedData;
 };
 
-const LocationSearchAutoComplete = () => {
+const LocationSearchInput = () => {
   const [inputValue, setInputValue] = useState("");
   const [predictions, setPredictions] = useState<AutocompletePrediction[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<PlaceResultPicked | null>(
@@ -194,4 +194,4 @@ const LocationSearchAutoComplete = () => {
   );
 };
 
-export default LocationSearchAutoComplete;
+export default LocationSearchInput;
