@@ -19,16 +19,16 @@ const studySpotSchema = z.object({
   id: z.number(),
   createdAt: z.date(),
   updatedAt: z.date(),
+  isValidated: z.boolean(),
+
+  // general (if people submit a study spot they must fill these out)
   name: z.string(),
   slug: z.string(),
-  hasWifi: z.boolean(),
-  isValidated: z.boolean(),
-  locationId: z.number(),
-  location: z.object({
-    id: z.number(),
-    latitude: z.number(),
-    longitude: z.number(),
-  }),
+  rating: z.number(),
+  wifi: z.boolean(),
+  powerOutlets: z.string(),
+  noiseLevel: z.string(),
+  venueType: z.string(),
   images: z
     .object({
       id: z.number(),
@@ -40,6 +40,50 @@ const studySpotSchema = z.object({
       aspectRatio: z.number(),
     })
     .array(),
+
+  // location
+  placeId: z.string().nullable(),
+  latitude: z.number().nullable(),
+  longitude: z.number().nullable(),
+  address: z.string().nullable(),
+  country: z.string().nullable(),
+  city: z.string().nullable(),
+  state: z.string().nullable(),
+
+  // hours
+  openingHours: z
+    .object({
+      id: z.number(),
+      day: z.number(),
+      openingTime: z.string(),
+      closingTime: z.string(),
+    })
+    .array(),
+
+  // etiquette
+  canStudyForLong: z.string().nullable(),
+
+  // ambiance
+  vibe: z.string().nullable(),
+  comfort: z.string().nullable(),
+  views: z.string().nullable(),
+  sunlight: z.boolean().nullable(),
+  temperature: z.string().nullable(),
+  music: z.string().nullable(),
+  lighting: z.string().nullable(),
+
+  // crowdedness
+  distractions: z.string().nullable(),
+  crowdedness: z.string().nullable(),
+
+  // surroundings
+  naturalSurroundings: z.string().nullable(),
+  proximityToAmenities: z.string().nullable(),
+
+  // amenities
+  drinks: z.boolean().nullable(),
+  food: z.boolean().nullable(),
+  studyBreakFacilities: z.string().nullable(),
 });
 
 export const studySpotsRouter = createTRPCRouter({
@@ -58,8 +102,8 @@ export const studySpotsRouter = createTRPCRouter({
           isValidated: true,
         },
         include: {
-          location: true,
           images: true,
+          openingHours: true,
         },
       });
 
@@ -80,8 +124,8 @@ export const studySpotsRouter = createTRPCRouter({
           isValidated: false,
         },
         include: {
-          location: true,
           images: true,
+          openingHours: true,
         },
       });
 
@@ -126,13 +170,11 @@ export const studySpotsRouter = createTRPCRouter({
           data: {
             name: input.name,
             slug: slug,
-            hasWifi: input.hasWifi,
-            location: {
-              create: {
-                latitude: input.location.latitude,
-                longitude: input.location.longitude,
-              },
-            },
+            wifi: input.hasWifi,
+            rating: 0,
+            powerOutlets: "",
+            noiseLevel: "",
+            venueType: "",
             images: {
               createMany: {
                 data: newImages,
@@ -166,8 +208,8 @@ export const studySpotsRouter = createTRPCRouter({
           slug: input.slug,
         },
         include: {
-          location: true,
           images: true,
+          openingHours: true,
         },
       });
 
@@ -235,13 +277,6 @@ export const studySpotsRouter = createTRPCRouter({
           code: "NOT_FOUND",
         });
 
-      // Delete associated location
-      await ctx.prisma.location.delete({
-        where: {
-          id: deletedStudySpot.locationId,
-        },
-      });
-
       // Delete uploaded images in s3
       const { s3 } = ctx;
       try {
@@ -263,6 +298,13 @@ export const studySpotsRouter = createTRPCRouter({
 
       // Delete associated images
       await ctx.prisma.image.deleteMany({
+        where: {
+          studySpotId: deletedStudySpot.id,
+        },
+      });
+
+      // Delete associated opening hours
+      await ctx.prisma.openingHours.deleteMany({
         where: {
           studySpotId: deletedStudySpot.id,
         },
