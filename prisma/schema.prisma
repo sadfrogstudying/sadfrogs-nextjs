@@ -11,26 +11,67 @@ generator client {
     provider = "prisma-client-js"
 }
 
-// You cannot create a StudySpot without connecting or creating a Location
-// https://www.prisma.io/docs/concepts/components/prisma-schema/relations/one-to-one-relations#required-and-optional-1-1-relation-fields
 model StudySpot {
     id          Int      @id @default(autoincrement())
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
-    name        String   @unique
-    slug        String   @unique
-    hasWifi     Boolean
     isValidated Boolean  @default(false)
-    location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
-    locationId  Int      @unique
-    images      Image[] // if StudySpot is deleted, all images are deleted (default behavior)
+
+    // general (if people submit a study spot they must fill these out)
+    name         String  @unique
+    slug         String  @unique
+    rating       Float
+    wifi         Boolean
+    powerOutlets String
+    noiseLevel   String
+    venueType    String
+    images       Image[] // if StudySpot is deleted, all images are deleted (default behavior)
+
+    // location
+    placeId   String?
+    latitude  Float?
+    longitude Float?
+    address   String?
+    country   String?
+    city      String?
+    state     String?
+
+    // hours
+    openingHours OpeningHours[]
+
+    // etiquette
+    canStudyForLong String?
+
+    // ambiance
+    vibe        String?
+    comfort     String?
+    views       String?
+    sunlight    Boolean?
+    temperature String?
+    music       String?
+    lighting    String?
+
+    // crowdedness
+    distractions String?
+    crowdedness  String?
+
+    // surroundings
+    naturalSurroundings  String?
+    proximityToAmenities String?
+
+    // amenities
+    drinks               Boolean?
+    food                 Boolean?
+    studyBreakFacilities String?
 }
 
-model Location {
-    id        Int        @id @default(autoincrement())
-    latitude  Float
-    longitude Float
-    studySpot StudySpot?
+model OpeningHours {
+    id          Int        @id @default(autoincrement())
+    dayOfWeek   Int
+    openingTime String
+    closingTime String
+    StudySpot   StudySpot? @relation(fields: [studySpotId], references: [id])
+    studySpotId Int?       @unique
 }
 
 model Image {
