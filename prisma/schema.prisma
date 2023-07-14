@@ -67,10 +67,10 @@ model StudySpot {
 
 model OpeningHours {
     id          Int        @id @default(autoincrement())
-    dayOfWeek   Int
+    day         Int
     openingTime String
     closingTime String
-    StudySpot   StudySpot? @relation(fields: [studySpotId], references: [id])
+    StudySpot   StudySpot? @relation(fields: [studySpotId], references: [id], onDelete: Cascade)
     studySpotId Int?       @unique
 }
 
