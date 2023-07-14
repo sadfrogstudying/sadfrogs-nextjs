@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import useDebounce from "~/hooks/useDebounce";
 
-type AutocompletePrediction = google.maps.places.QueryAutocompletePrediction;
+type AutocompletePrediction = google.maps.places.AutocompletePrediction;
 type AutocompleteService = google.maps.places.AutocompleteService;
 type AutocompleteSessionToken = google.maps.places.AutocompleteSessionToken;
 type PlacesService = google.maps.places.PlacesService;
