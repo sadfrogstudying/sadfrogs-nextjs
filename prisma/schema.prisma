@@ -22,7 +22,7 @@ model StudySpot {
     slug         String  @unique
     rating       Float
     wifi         Boolean
-    powerOutlets String
+    powerOutlets Boolean
     noiseLevel   String
     venueType    String
     images       Image[] // if StudySpot is deleted, all images are deleted (default behavior)

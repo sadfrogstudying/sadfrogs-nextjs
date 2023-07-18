@@ -18,31 +18,18 @@ import {
   uploadImagesToS3UsingPresignedUrls,
 } from "~/utils/helpers";
 import LocationSearchInput from "../LocationSearch";
-
-interface FormInput {
-  name: string;
-  wifi: boolean;
-  images: File[];
-  latitude: number;
-  location: {
-    address: string;
-    latitude: number;
-    longitude: number;
-  };
-}
+import { StudySpotInputV2 } from "~/schemas/study-spots";
 
 const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
-  const form = useForm<FormInput>({
+  const form = useForm<StudySpotInputV2>({
     defaultValues: {
       name: "",
+      rating: 0,
       wifi: false,
+      powerOutlets: false,
+      noiseLevel: "",
+      venueType: "",
       images: [],
-      latitude: 0,
-      location: {
-        address: "",
-        latitude: 0,
-        longitude: 0,
-      },
     },
   });
 
@@ -66,21 +53,36 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   } = api.s3.getPresignedUrls.useMutation({
     onSuccess: async (presignedUrls) => {
       if (!presignedUrls.length) return;
-      const { name, wifi, images, location } = form.getValues();
-      const { latitude, longitude } = location;
+      const {
+        name,
+        rating,
+        wifi,
+        powerOutlets,
+        noiseLevel,
+        venueType,
+        images,
+      } = form.getValues();
 
       const imageUrls = await uploadImagesToS3UsingPresignedUrls({
         presignedUrls: presignedUrls,
         acceptedFiles: images,
       });
 
+      console.log(name);
+      console.log(rating);
+      console.log(wifi);
+      console.log(powerOutlets);
+      console.log(noiseLevel);
+      console.log(venueType);
+      console.log(imageUrls);
+      return;
       createStudySpot({
         name,
-        rating: 0,
+        rating,
         wifi,
-        powerOutlets: "",
-        noiseLevel: "",
-        venueType: "",
+        powerOutlets,
+        noiseLevel,
+        venueType,
         images: imageUrls,
       });
     },
@@ -117,7 +119,7 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           e.preventDefault();
           void submitHandler();
         }}
-        className="space-y-8 max-w-lg m-auto"
+        className="space-y-8 m-auto"
       >
         <FormField
           control={form.control}
@@ -137,9 +139,23 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         />
         <FormField
           control={form.control}
+          name="rating"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Rating</FormLabel>
+              <FormControl>
+                <Input placeholder="0" {...field} type="number" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="wifi"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+            <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
               <FormControl>
                 <Checkbox
                   checked={field.value}
@@ -155,6 +171,55 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="powerOutlets"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={(v) => form.setValue("powerOutlets", !!v)}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Power Outlets</FormLabel>
+                <FormDescription>
+                  Does this spot have power outlets?
+                </FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="noiseLevel"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Noise Level</FormLabel>
+              <FormControl>
+                <Input placeholder="Loud at peak hours" {...field} />
+              </FormControl>
+              <FormDescription>How is the noise level?</FormDescription>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="venueType"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Venue Type</FormLabel>
+              <FormControl>
+                <Input placeholder={`Cafe`} {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="images"
@@ -172,7 +237,7 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="location"
           render={({ field }) => {
@@ -186,7 +251,7 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
               </FormItem>
             );
           }}
-        />
+        /> */}
 
         <ul className="text-sm text-destructive">
           {zodErrorMessages.length !== 0 ? (
