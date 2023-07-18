@@ -55,13 +55,13 @@ const StudySpotGridItem = ({
           </div>
           <div className="flex justify-between">
             <strong>Wifi:</strong>
-            <div>{studySpot.hasWifi ? "True" : "False"}</div>
+            {/* <div>{studySpot.hasWifi ? "True" : "False"}</div> */}
           </div>
           <div className="flex justify-between">
             <strong>Coordinates:</strong>
-            <div>
+            {/* <div>
               {studySpot.location.latitude} : {studySpot.location.longitude}
-            </div>
+            </div> */}
           </div>
         </div>
         <p>

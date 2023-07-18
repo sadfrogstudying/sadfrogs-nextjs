@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CreateStudySpotFormSheet from "~/components/StudySpot/CreateFormSheet";
+import { Button } from "./UI/Button";
 
 const Header = () => {
   return (
@@ -11,8 +12,19 @@ const Header = () => {
           </h1>
         </Link>
       </header>
-      <div role="menubar" className="flex fixed top-0 right-0 p-4 z-20">
-        <CreateStudySpotFormSheet />
+      <div
+        role="menubar"
+        className="flex fixed top-0 right-0 p-4 z-20 gap-4 justify-center items-center"
+      >
+        {/* <CreateStudySpotFormSheet /> */}
+
+        <Link href="/about" className="h-fit">
+          About
+        </Link>
+
+        <Button asChild>
+          <Link href="/create-spot">Create</Link>
+        </Button>
       </div>
     </>
   );

@@ -17,23 +17,32 @@ import {
   parseZodClientError,
   uploadImagesToS3UsingPresignedUrls,
 } from "~/utils/helpers";
+import LocationSearchInput from "../LocationSearch";
 
 interface FormInput {
   name: string;
-  hasWifi: boolean;
-  latitude: number;
-  longitude: number;
+  wifi: boolean;
   images: File[];
+  latitude: number;
+  location: {
+    address: string;
+    latitude: number;
+    longitude: number;
+  };
 }
 
 const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const form = useForm<FormInput>({
     defaultValues: {
       name: "",
-      hasWifi: false,
+      wifi: false,
       images: [],
       latitude: 0,
-      longitude: 0,
+      location: {
+        address: "",
+        latitude: 0,
+        longitude: 0,
+      },
     },
   });
 
@@ -43,7 +52,7 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     error: createError,
     isLoading: createIsLoading,
   } = api.studySpots.createOne.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       form.reset();
       void apiUtils.studySpots.getNotValidated.invalidate();
       onSuccess?.();
@@ -57,7 +66,8 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   } = api.s3.getPresignedUrls.useMutation({
     onSuccess: async (presignedUrls) => {
       if (!presignedUrls.length) return;
-      const { name, hasWifi, latitude, longitude, images } = form.getValues();
+      const { name, wifi, images, location } = form.getValues();
+      const { latitude, longitude } = location;
 
       const imageUrls = await uploadImagesToS3UsingPresignedUrls({
         presignedUrls: presignedUrls,
@@ -66,12 +76,12 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 
       createStudySpot({
         name,
-        hasWifi,
-        imageUrls,
-        location: {
-          latitude,
-          longitude,
-        },
+        rating: 0,
+        wifi,
+        powerOutlets: "",
+        noiseLevel: "",
+        venueType: "",
+        images: imageUrls,
       });
     },
   });
@@ -107,7 +117,7 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           e.preventDefault();
           void submitHandler();
         }}
-        className="space-y-8"
+        className="space-y-8 max-w-lg m-auto"
       >
         <FormField
           control={form.control}
@@ -127,13 +137,13 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         />
         <FormField
           control={form.control}
-          name="hasWifi"
+          name="wifi"
           render={({ field }) => (
             <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
               <FormControl>
                 <Checkbox
                   checked={field.value}
-                  onCheckedChange={(v) => form.setValue("hasWifi", !!v)}
+                  onCheckedChange={(v) => form.setValue("wifi", !!v)}
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
@@ -142,38 +152,6 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                   Does this study spot have wifi?
                 </FormDescription>
               </div>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="latitude"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Latitude</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter Latitude" {...field} type="number" />
-              </FormControl>
-              <FormDescription>
-                This is the latitude of the study spot
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="longitude"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Longitude</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter Longitude" {...field} type="number" />
-              </FormControl>
-              <FormDescription>
-                This is the longitude of the study spot
-              </FormDescription>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -194,6 +172,22 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => {
+            return (
+              <FormItem>
+                <FormLabel>Location</FormLabel>
+                <FormControl>
+                  <LocationSearchInput />
+                </FormControl>
+                <FormDescription>Location of the study spot</FormDescription>
+              </FormItem>
+            );
+          }}
+        />
+
         <ul className="text-sm text-destructive">
           {zodErrorMessages.length !== 0 ? (
             <>

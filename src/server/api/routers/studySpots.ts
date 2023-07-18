@@ -8,82 +8,12 @@ import { Redis } from "@upstash/redis";
 import { getImagesMeta } from "~/utils/server-helpers";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "~/env.mjs";
+import { studySpotInputSchema, studySpotSchema } from "~/schemas/study-spots";
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
   limiter: Ratelimit.slidingWindow(6, "1 m"),
   analytics: true,
-});
-
-const studySpotSchema = z.object({
-  id: z.number(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  isValidated: z.boolean(),
-
-  // general (if people submit a study spot they must fill these out)
-  name: z.string(),
-  slug: z.string(),
-  rating: z.number(),
-  wifi: z.boolean(),
-  powerOutlets: z.string(),
-  noiseLevel: z.string(),
-  venueType: z.string(),
-  images: z
-    .object({
-      id: z.number(),
-      studySpotId: z.number().nullable(),
-      url: z.string(),
-      dominantColour: z.string(),
-      width: z.number(),
-      height: z.number(),
-      aspectRatio: z.number(),
-    })
-    .array(),
-
-  // location
-  placeId: z.string().nullable(),
-  latitude: z.number().nullable(),
-  longitude: z.number().nullable(),
-  address: z.string().nullable(),
-  country: z.string().nullable(),
-  city: z.string().nullable(),
-  state: z.string().nullable(),
-
-  // hours
-  openingHours: z
-    .object({
-      id: z.number(),
-      day: z.number(),
-      openingTime: z.string(),
-      closingTime: z.string(),
-    })
-    .array(),
-
-  // etiquette
-  canStudyForLong: z.string().nullable(),
-
-  // ambiance
-  vibe: z.string().nullable(),
-  comfort: z.string().nullable(),
-  views: z.string().nullable(),
-  sunlight: z.boolean().nullable(),
-  temperature: z.string().nullable(),
-  music: z.string().nullable(),
-  lighting: z.string().nullable(),
-
-  // crowdedness
-  distractions: z.string().nullable(),
-  crowdedness: z.string().nullable(),
-
-  // surroundings
-  naturalSurroundings: z.string().nullable(),
-  proximityToAmenities: z.string().nullable(),
-
-  // amenities
-  drinks: z.boolean().nullable(),
-  food: z.boolean().nullable(),
-  studyBreakFacilities: z.string().nullable(),
 });
 
 export const studySpotsRouter = createTRPCRouter({
@@ -138,17 +68,7 @@ export const studySpotsRouter = createTRPCRouter({
    */
   createOne: publicProcedure
     .meta({ openapi: { method: "POST", path: "/studyspots.createOne" } })
-    .input(
-      z.object({
-        name: z.string().min(1),
-        hasWifi: z.boolean(),
-        location: z.object({
-          latitude: z.number(),
-          longitude: z.number(),
-        }),
-        imageUrls: z.string().array(),
-      })
-    )
+    .input(studySpotInputSchema)
     .output(z.boolean())
     .mutation(async ({ ctx, input }) => {
       const { success } = await ratelimit.limit(ctx.ip);
@@ -159,7 +79,7 @@ export const studySpotsRouter = createTRPCRouter({
         });
 
       try {
-        const newImages = await getImagesMeta(input.imageUrls);
+        const newImages = await getImagesMeta(input.images);
         const slug = slugify(input.name, {
           remove: /[*+~.()'"!:@]/g,
           lower: true,
@@ -170,16 +90,52 @@ export const studySpotsRouter = createTRPCRouter({
           data: {
             name: input.name,
             slug: slug,
-            wifi: input.hasWifi,
-            rating: 0,
-            powerOutlets: "",
-            noiseLevel: "",
-            venueType: "",
+            wifi: input.wifi,
+            rating: input.rating,
+            powerOutlets: input.powerOutlets,
+            noiseLevel: input.noiseLevel,
+            venueType: input.venueType,
             images: {
               createMany: {
                 data: newImages,
               },
             },
+
+            placeId: input.placeId,
+            latitude: input.latitude,
+            longitude: input.longitude,
+            address: input.address,
+            country: input.country,
+            city: input.city,
+            state: input.state,
+
+            ...(input.openingHours && {
+              openingHours: {
+                createMany: {
+                  data: input.openingHours,
+                },
+              },
+            }),
+
+            canStudyForLong: input.canStudyForLong,
+
+            vibe: input.vibe,
+            comfort: input.comfort,
+            views: input.views,
+            sunlight: input.sunlight,
+            temperature: input.temperature,
+            music: input.music,
+            lighting: input.lighting,
+
+            distractions: input.distractions,
+            crowdedness: input.crowdedness,
+
+            naturalSurroundings: input.naturalSurroundings,
+            proximityToAmenities: input.proximityToAmenities,
+
+            drinks: input.drinks,
+            food: input.food,
+            studyBreakFacilities: input.studyBreakFacilities,
           },
         });
 
