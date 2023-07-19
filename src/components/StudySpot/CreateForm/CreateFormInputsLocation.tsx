@@ -56,7 +56,9 @@ const CreateFormInputsLocation = ({ form }: Props) => {
                   onSelectedPlaceReady={onSelectedPlaceReady}
                 />
               </FormControl>
-              <FormDescription>Search for the location.</FormDescription>
+              <FormDescription>
+                You can use this input to assist in filling location details.
+              </FormDescription>
             </FormItem>
           )}
         />
