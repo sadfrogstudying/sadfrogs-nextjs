@@ -27,7 +27,7 @@ const CreateFormInputsGeneral = ({ form }: Props) => {
         description="This section must be filled out."
       />
 
-      <div className="space-y-8 pl-4">
+      <div className="space-y-8">
         <FormField
           control={form.control}
           name="name"

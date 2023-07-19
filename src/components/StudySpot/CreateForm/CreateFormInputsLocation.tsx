@@ -26,7 +26,7 @@ const CreateFormInputsLocation = ({ form }: Props) => {
         description="Information about the location."
       />
 
-      <div className="space-y-8 pl-4">
+      <div className="space-y-8">
         <FormField
           control={form.control}
           name="images"
