@@ -25,6 +25,12 @@ export const getImagesMeta = async (input: string[]) => {
   }
 
   try {
+    if (input.length === 0)
+      throw new TRPCError({
+        code: "UNPROCESSABLE_CONTENT",
+        message: "No images provided",
+      });
+
     const allImagesWithMeta = await Promise.all(
       input.map(async (url) => {
         if (url.startsWith(`${env.BUCKET_NAME}.s3.${env.REGION}`))

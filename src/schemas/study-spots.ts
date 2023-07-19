@@ -2,13 +2,16 @@ import * as z from "zod";
 
 const studySpotInputSchema = z.object({
   // general (if people submit a study spot they must fill these out)
-  name: z.string(),
+  name: z.string().min(1),
   rating: z.number(),
   wifi: z.boolean(),
   powerOutlets: z.boolean(),
-  noiseLevel: z.string(),
-  venueType: z.string(),
-  images: z.string().array(),
+  noiseLevel: z.string().min(1),
+  venueType: z.string().min(1),
+  images: z
+    .string()
+    .array()
+    .min(1, { message: "At least one image is required." }),
 
   // location
   placeId: z.string().nullable().optional(),
