@@ -10,6 +10,7 @@ import { Button } from "~/components/UI/Button";
 import { Form } from "~/components/UI/Form";
 import CreateFormInputsGeneral from "~/components/StudySpot/CreateForm/CreateFormInputsGeneral";
 import CreateFormInputsLocation from "~/components/StudySpot/CreateForm/CreateFormInputsLocation";
+import CreateFormInputsMisc from "~/components/StudySpot/CreateForm/CreateFormInputsMisc";
 
 import type { StudySpotInputV2 } from "~/schemas/study-spots";
 
@@ -38,6 +39,28 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       country: "",
       city: "",
       state: "",
+
+      openingHours: [],
+
+      canStudyForLong: "",
+
+      vibe: "",
+      comfort: "",
+      views: "",
+      sunlight: false,
+      temperature: "",
+      music: "",
+      lighting: "",
+
+      distractions: "",
+      crowdedness: "",
+
+      naturalSurroundings: "",
+      proximityToAmenities: "",
+
+      drinks: false,
+      food: false,
+      studyBreakFacilities: "",
     },
   });
 
@@ -123,6 +146,7 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       >
         <CreateFormInputsGeneral form={form} />
         <CreateFormInputsLocation form={form} />
+        <CreateFormInputsMisc form={form} />
         <ul className="text-sm text-destructive">
           {zodErrorMessages.length !== 0 ? (
             <>

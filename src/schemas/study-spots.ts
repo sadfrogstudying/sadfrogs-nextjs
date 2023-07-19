@@ -109,41 +109,40 @@ const studySpotInputSchemaV2 = z.object({
   city: z.string().optional(),
   state: z.string().optional(),
 
-  // // hours
-  // openingHours: z
-  //   .object({
-  //     day: z.number(),
-  //     openingTime: z.string(),
-  //     closingTime: z.string(),
-  //   })
-  //   .array()
-  //
-  //   .optional(),
+  // hours
+  openingHours: z
+    .object({
+      day: z.number(),
+      openingTime: z.string(),
+      closingTime: z.string(),
+    })
+    .array()
+    .optional(),
 
-  // // etiquette
-  // canStudyForLong: z.string().optional(),
+  // etiquette
+  canStudyForLong: z.string().optional(),
 
-  // // ambiance
-  // vibe: z.string().optional(),
-  // comfort: z.string().optional(),
-  // views: z.string().optional(),
-  // sunlight: z.boolean().optional(),
-  // temperature: z.string().optional(),
-  // music: z.string().optional(),
-  // lighting: z.string().optional(),
+  // ambiance
+  vibe: z.string().optional(),
+  comfort: z.string().optional(),
+  views: z.string().optional(),
+  sunlight: z.boolean().optional(),
+  temperature: z.string().optional(),
+  music: z.string().optional(),
+  lighting: z.string().optional(),
 
-  // // crowdedness
-  // distractions: z.string().optional(),
-  // crowdedness: z.string().optional(),
+  // crowdedness
+  distractions: z.string().optional(),
+  crowdedness: z.string().optional(),
 
-  // // surroundings
-  // naturalSurroundings: z.string().optional(),
-  // proximityToAmenities: z.string().optional(),
+  // surroundings
+  naturalSurroundings: z.string().optional(),
+  proximityToAmenities: z.string().optional(),
 
-  // // amenities
-  // drinks: z.boolean().optional(),
-  // food: z.boolean().optional(),
-  // studyBreakFacilities: z.string().optional(),
+  // amenities
+  drinks: z.boolean().optional(),
+  food: z.boolean().optional(),
+  studyBreakFacilities: z.string().optional(),
 });
 
 type StudySpotInput = z.infer<typeof studySpotInputSchemaV2>;
