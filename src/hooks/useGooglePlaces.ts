@@ -101,16 +101,7 @@ const useGooglePlaces = () => {
       (p) => p.description.toLowerCase().trim() === desc
     )?.place_id;
 
-    const confirmed = confirm(
-      "Do you want to getDetails and complete the session?"
-    );
-
-    if (
-      !confirmed ||
-      !selectedPlaceId ||
-      !servicePlaces.current ||
-      !sessionToken.current
-    )
+    if (!selectedPlaceId || !servicePlaces.current || !sessionToken.current)
       return;
 
     return servicePlaces.current.getDetails(

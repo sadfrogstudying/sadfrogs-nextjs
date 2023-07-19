@@ -22,6 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/UI/Popover";
+import { AutocompletePrediction } from "~/types/GoogleTypes";
 
 interface Props {
   onSelectedPlaceReady: (place: google.maps.places.PlaceResult) => void;
@@ -29,6 +30,7 @@ interface Props {
 
 const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
   const [open, setOpen] = useState(false);
+  const [value, setValue] = useState<AutocompletePrediction>();
   const {
     setScriptReady,
     libraryReady,
@@ -61,7 +63,19 @@ const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
             aria-expanded={open}
             className="w-full justify-between"
           >
-            Select Location
+            {selectedPlace ? (
+              <span className="flex truncate items-center">
+                <MapPinIcon className={cn("mr-2 h-4 w-4 shrink-0")} />
+                <strong className="mr-2">
+                  {value?.structured_formatting.main_text}
+                </strong>
+                <span className="truncate font-normal">
+                  {value?.structured_formatting.secondary_text}
+                </span>
+              </span>
+            ) : (
+              "Select Location..."
+            )}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -83,10 +97,21 @@ const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
                   <CommandItem
                     key={prediction.description}
                     value={prediction.description}
-                    onSelect={onSelect}
+                    onSelect={(desc) => {
+                      setValue(prediction);
+                      onSelect(desc);
+                      setOpen(false);
+                    }}
                     className="truncate"
                   >
-                    <MapPinIcon className={cn("mr-2 h-4 w-4 shrink-0")} />
+                    <MapPinIcon
+                      className={cn(
+                        "mr-2 h-4 w-4 shrink-0",
+                        prediction.place_id === value?.place_id
+                          ? "opacity-100"
+                          : "opacity-20"
+                      )}
+                    />
                     <strong className="mr-2">
                       {prediction.structured_formatting.main_text}
                     </strong>
