@@ -20,49 +20,49 @@ model StudySpot {
     // general (if people submit a study spot they must fill these out)
     name         String  @unique
     slug         String  @unique
-    rating       Float
-    wifi         Boolean
-    powerOutlets Boolean
-    noiseLevel   String
-    venueType    String
+    rating       Float   @default(0)
+    wifi         Boolean @default(false)
+    powerOutlets Boolean @default(false)
+    noiseLevel   String  @default("")
+    venueType    String  @default("")
     images       Image[] // if StudySpot is deleted, all images are deleted (default behavior)
 
     // location
-    placeId   String?
-    latitude  Float?
-    longitude Float?
-    address   String?
-    country   String?
-    city      String?
-    state     String?
+    placeId   String @default("")
+    latitude  Float  @default(0)
+    longitude Float  @default(0)
+    address   String @default("")
+    country   String @default("")
+    city      String @default("")
+    state     String @default("")
 
     // hours
     openingHours OpeningHours[]
 
     // etiquette
-    canStudyForLong String?
+    canStudyForLong String @default("")
 
     // ambiance
-    vibe        String?
-    comfort     String?
-    views       String?
-    sunlight    Boolean?
-    temperature String?
-    music       String?
-    lighting    String?
+    vibe        String  @default("")
+    comfort     String  @default("")
+    views       String  @default("")
+    sunlight    Boolean @default(false)
+    temperature String  @default("")
+    music       String  @default("")
+    lighting    String  @default("")
 
     // crowdedness
-    distractions String?
-    crowdedness  String?
+    distractions String @default("")
+    crowdedness  String @default("")
 
     // surroundings
-    naturalSurroundings  String?
-    proximityToAmenities String?
+    naturalSurroundings  String @default("")
+    proximityToAmenities String @default("")
 
     // amenities
-    drinks               Boolean?
-    food                 Boolean?
-    studyBreakFacilities String?
+    drinks               Boolean @default(false)
+    food                 Boolean @default(false)
+    studyBreakFacilities String  @default("")
 }
 
 model OpeningHours {

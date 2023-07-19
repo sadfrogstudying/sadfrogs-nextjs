@@ -14,13 +14,13 @@ const studySpotInputSchema = z.object({
     .min(1, { message: "At least one image is required." }),
 
   // location
-  placeId: z.string().nullable().optional(),
-  latitude: z.number().nullable().optional(),
-  longitude: z.number().nullable().optional(),
-  address: z.string().nullable().optional(),
-  country: z.string().nullable().optional(),
-  city: z.string().nullable().optional(),
-  state: z.string().nullable().optional(),
+  placeId: z.string().optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  address: z.string().optional(),
+  country: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
 
   // hours
   openingHours: z
@@ -30,33 +30,33 @@ const studySpotInputSchema = z.object({
       closingTime: z.string(),
     })
     .array()
-    .nullable()
+
     .optional(),
 
   // etiquette
-  canStudyForLong: z.string().nullable().optional(),
+  canStudyForLong: z.string().optional(),
 
   // ambiance
-  vibe: z.string().nullable().optional(),
-  comfort: z.string().nullable().optional(),
-  views: z.string().nullable().optional(),
-  sunlight: z.boolean().nullable().optional(),
-  temperature: z.string().nullable().optional(),
-  music: z.string().nullable().optional(),
-  lighting: z.string().nullable().optional(),
+  vibe: z.string().optional(),
+  comfort: z.string().optional(),
+  views: z.string().optional(),
+  sunlight: z.boolean().optional(),
+  temperature: z.string().optional(),
+  music: z.string().optional(),
+  lighting: z.string().optional(),
 
   // crowdedness
-  distractions: z.string().nullable().optional(),
-  crowdedness: z.string().nullable().optional(),
+  distractions: z.string().optional(),
+  crowdedness: z.string().optional(),
 
   // surroundings
-  naturalSurroundings: z.string().nullable().optional(),
-  proximityToAmenities: z.string().nullable().optional(),
+  naturalSurroundings: z.string().optional(),
+  proximityToAmenities: z.string().optional(),
 
   // amenities
-  drinks: z.boolean().nullable().optional(),
-  food: z.boolean().nullable().optional(),
-  studyBreakFacilities: z.string().nullable().optional(),
+  drinks: z.boolean().optional(),
+  food: z.boolean().optional(),
+  studyBreakFacilities: z.string().optional(),
 });
 
 const studySpotSchema = studySpotInputSchema.extend({
@@ -101,13 +101,13 @@ const studySpotInputSchemaV2 = z.object({
   images: z.string().array(),
 
   // // location
-  // placeId: z.string().nullable().optional(),
-  // latitude: z.number().nullable().optional(),
-  // longitude: z.number().nullable().optional(),
-  // address: z.string().nullable().optional(),
-  // country: z.string().nullable().optional(),
-  // city: z.string().nullable().optional(),
-  // state: z.string().nullable().optional(),
+  placeId: z.string().optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  address: z.string().optional(),
+  country: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
 
   // // hours
   // openingHours: z
@@ -117,33 +117,33 @@ const studySpotInputSchemaV2 = z.object({
   //     closingTime: z.string(),
   //   })
   //   .array()
-  //   .nullable()
+  //
   //   .optional(),
 
   // // etiquette
-  // canStudyForLong: z.string().nullable().optional(),
+  // canStudyForLong: z.string().optional(),
 
   // // ambiance
-  // vibe: z.string().nullable().optional(),
-  // comfort: z.string().nullable().optional(),
-  // views: z.string().nullable().optional(),
-  // sunlight: z.boolean().nullable().optional(),
-  // temperature: z.string().nullable().optional(),
-  // music: z.string().nullable().optional(),
-  // lighting: z.string().nullable().optional(),
+  // vibe: z.string().optional(),
+  // comfort: z.string().optional(),
+  // views: z.string().optional(),
+  // sunlight: z.boolean().optional(),
+  // temperature: z.string().optional(),
+  // music: z.string().optional(),
+  // lighting: z.string().optional(),
 
   // // crowdedness
-  // distractions: z.string().nullable().optional(),
-  // crowdedness: z.string().nullable().optional(),
+  // distractions: z.string().optional(),
+  // crowdedness: z.string().optional(),
 
   // // surroundings
-  // naturalSurroundings: z.string().nullable().optional(),
-  // proximityToAmenities: z.string().nullable().optional(),
+  // naturalSurroundings: z.string().optional(),
+  // proximityToAmenities: z.string().optional(),
 
   // // amenities
-  // drinks: z.boolean().nullable().optional(),
-  // food: z.boolean().nullable().optional(),
-  // studyBreakFacilities: z.string().nullable().optional(),
+  // drinks: z.boolean().optional(),
+  // food: z.boolean().optional(),
+  // studyBreakFacilities: z.string().optional(),
 });
 
 type StudySpotInput = z.infer<typeof studySpotInputSchemaV2>;
