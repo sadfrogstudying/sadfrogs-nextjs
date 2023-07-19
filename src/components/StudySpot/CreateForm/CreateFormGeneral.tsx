@@ -1,3 +1,5 @@
+import type { UseFormReturn } from "react-hook-form";
+
 import {
   FormControl,
   FormDescription,
@@ -7,12 +9,11 @@ import {
   FormMessage,
 } from "~/components/UI/Form";
 import { Input } from "~/components/UI/Input";
-import type { UseFormReturn } from "react-hook-form";
-import { Checkbox } from "../UI/Checkbox";
-import FileInput from "../UI/FileInput";
+import { Checkbox } from "~/components/UI/Checkbox";
+import { Separator } from "~/components/UI/Seperator";
+import FileInput from "~/components/UI/FileInput";
 
 import type { StudySpotInputV2 } from "~/schemas/study-spots";
-import { Separator } from "@radix-ui/react-separator";
 
 interface Props {
   form: UseFormReturn<StudySpotInputV2>;

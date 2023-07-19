@@ -1,5 +1,5 @@
 import Link from "next/link";
-import CreateStudySpotFormSheet from "~/components/StudySpot/CreateFormSheet";
+import CreateStudySpotFormSheet from "~/components/StudySpot/CreateForm/CreateFormSheet";
 import { Button } from "./UI/Button";
 
 const Header = () => {

@@ -1,4 +1,4 @@
-import CreateStudySpotForm from "~/components/StudySpot/CreateForm";
+import CreateStudySpotForm from "~/components/StudySpot/CreateForm/CreateForm";
 import { Separator } from "~/components/UI/Seperator";
 
 const CreateSpotPage = () => {
