@@ -2,26 +2,14 @@ import { useEffect, useRef, useState } from "react";
 
 import useDebounce from "~/hooks/useDebounce";
 
-type AutocompletePrediction = google.maps.places.AutocompletePrediction;
-type AutocompleteService = google.maps.places.AutocompleteService;
-type AutocompleteSessionToken = google.maps.places.AutocompleteSessionToken;
-type PlacesService = google.maps.places.PlacesService;
-type PlaceResult = google.maps.places.PlaceResult;
-type PlaceResultPicked = Pick<
-  PlaceResult,
-  | "address_components"
-  | "opening_hours"
-  | "formatted_address"
-  | "geometry"
-  | "name"
-  | "opening_hours"
-  | "website"
->;
-
-type CachedData = Record<
-  string,
-  { data: AutocompletePrediction[]; maxAge: number }
->;
+import type {
+  AutocompletePrediction,
+  AutocompleteService,
+  AutocompleteSessionToken,
+  PlacesService,
+  PlaceResultPicked,
+  CachedData,
+} from "~/types/GoogleTypes";
 
 const cacheKey = "sfgpk"; // Key to identify our data in sessionStorage
 const cacheMaxAge = 0.25 * 60 * 60; // 15 minutes in seconds
@@ -130,13 +118,14 @@ const useGooglePlaces = () => {
         sessionToken: sessionToken.current,
         placeId: selectedPlaceId,
         fields: [
+          "place_id",
           "address_components",
           "opening_hours",
           "formatted_address",
           "geometry",
-          "name",
-          "opening_hours",
-          "website",
+          // "name",
+          // "opening_hours",
+          // "website",
         ],
       },
       (place, status) => {

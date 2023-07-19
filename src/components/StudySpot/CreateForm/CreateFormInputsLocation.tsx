@@ -13,12 +13,30 @@ import { Separator } from "~/components/UI/Seperator";
 
 import type { StudySpotInputV2 } from "~/schemas/study-spots";
 import LocationSearchInput from "~/components/LocationSearch";
+import { PlaceResultPicked } from "~/types/GoogleTypes";
 
 interface Props {
   form: UseFormReturn<StudySpotInputV2>;
 }
 
 const CreateFormInputsLocation = ({ form }: Props) => {
+  const onSelectedPlaceReady = (place: PlaceResultPicked) => {
+    const { place_id, address_components, formatted_address, geometry } = place;
+
+    address_components?.forEach((address) => {
+      if (address.types.includes("locality"))
+        form.setValue("city", address.long_name);
+      if (address.types.includes("country"))
+        form.setValue("country", address.long_name);
+      if (address.types.includes("administrative_area_level_1"))
+        form.setValue("state", address.long_name);
+    });
+    form.setValue("placeId", place_id);
+    form.setValue("latitude", geometry?.location?.lat());
+    form.setValue("longitude", geometry?.location?.lng());
+    form.setValue("address", formatted_address);
+  };
+
   return (
     <div className="space-y-8">
       <SectionHeader
@@ -34,7 +52,9 @@ const CreateFormInputsLocation = ({ form }: Props) => {
             <FormItem>
               <FormLabel>Location</FormLabel>
               <FormControl>
-                <LocationSearchInput />
+                <LocationSearchInput
+                  onSelectedPlaceReady={onSelectedPlaceReady}
+                />
               </FormControl>
               <FormDescription>Search for the location.</FormDescription>
             </FormItem>

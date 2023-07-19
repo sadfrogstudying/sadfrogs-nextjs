@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronsUpDown, MapPinIcon } from "lucide-react";
 
 import Script from "next/script";
@@ -23,7 +23,11 @@ import {
   PopoverTrigger,
 } from "~/components/UI/Popover";
 
-const LocationSearchInput = () => {
+interface Props {
+  onSelectedPlaceReady: (place: google.maps.places.PlaceResult) => void;
+}
+
+const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
   const [open, setOpen] = useState(false);
   const {
     setScriptReady,
@@ -36,7 +40,9 @@ const LocationSearchInput = () => {
     selectedPlace,
   } = useGooglePlaces();
 
-  console.log(selectedPlace);
+  useEffect(() => {
+    if (selectedPlace) onSelectedPlaceReady(selectedPlace);
+  }, [selectedPlace]);
 
   return (
     <>
