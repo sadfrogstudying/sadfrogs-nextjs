@@ -104,6 +104,8 @@ const useGooglePlaces = () => {
     if (!selectedPlaceId || !servicePlaces.current || !sessionToken.current)
       return;
 
+    if (selectedPlaceId === selectedPlace?.place_id) return; // same place was selected
+
     return servicePlaces.current.getDetails(
       {
         sessionToken: sessionToken.current,
