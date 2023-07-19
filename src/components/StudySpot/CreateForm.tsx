@@ -6,7 +6,7 @@ import {
   parseZodClientError,
   uploadImagesToS3UsingPresignedUrls,
 } from "~/utils/helpers";
-import { StudySpotInputV2 } from "~/schemas/study-spots";
+import type { StudySpotInputV2 } from "~/schemas/study-spots";
 import CreateFormGeneral from "./CreateFormGeneral";
 
 /**
@@ -35,7 +35,7 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     error: createError,
     isLoading: createIsLoading,
   } = api.studySpots.createOne.useMutation({
-    onSuccess: (data) => {
+    onSuccess: () => {
       form.reset();
       void apiUtils.studySpots.getNotValidated.invalidate();
       onSuccess?.();

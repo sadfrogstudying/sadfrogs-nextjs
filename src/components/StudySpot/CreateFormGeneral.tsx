@@ -11,11 +11,11 @@ import type { UseFormReturn } from "react-hook-form";
 import { Checkbox } from "../UI/Checkbox";
 import FileInput from "../UI/FileInput";
 
-import { StudySpotInputV2 } from "~/schemas/study-spots";
+import type { StudySpotInputV2 } from "~/schemas/study-spots";
 import { Separator } from "@radix-ui/react-separator";
 
 interface Props {
-  form: UseFormReturn<StudySpotInputV2, any, undefined>;
+  form: UseFormReturn<StudySpotInputV2>;
 }
 
 const CreateFormGeneral = ({ form }: Props) => {

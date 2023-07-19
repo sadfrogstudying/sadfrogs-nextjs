@@ -36,6 +36,8 @@ const LocationSearchInput = () => {
     selectedPlace,
   } = useGooglePlaces();
 
+  console.log(selectedPlace);
+
   return (
     <>
       <Script
