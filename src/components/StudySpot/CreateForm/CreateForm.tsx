@@ -1,13 +1,17 @@
-import { Button } from "~/components/UI/Button";
-import { Form } from "~/components/UI/Form";
 import { useForm } from "react-hook-form";
+
 import { api } from "~/utils/api";
 import {
   parseZodClientError,
   uploadImagesToS3UsingPresignedUrls,
 } from "~/utils/helpers";
+
+import { Button } from "~/components/UI/Button";
+import { Form } from "~/components/UI/Form";
+import CreateFormInputsGeneral from "~/components/StudySpot/CreateForm/CreateFormInputsGeneral";
+import CreateFormInputsLocation from "~/components/StudySpot/CreateForm/CreateFormInputsLocation";
+
 import type { StudySpotInputV2 } from "~/schemas/study-spots";
-import CreateFormGeneral from "./CreateFormGeneral";
 
 /**
  *
@@ -26,6 +30,14 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       noiseLevel: "",
       venueType: "",
       images: [],
+
+      placeId: "",
+      latitude: 0,
+      longitude: 0,
+      address: "",
+      country: "",
+      city: "",
+      state: "",
     },
   });
 
@@ -92,7 +104,8 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   });
 
   const submitHandler = form.handleSubmit((data) => {
-    checkIfNameExists({ name: data.name });
+    console.log(form.getValues());
+    // checkIfNameExists({ name: data.name });
   });
 
   const isLoading = createIsLoading || getUrlsIsLoading || nameExistsLoading;
@@ -108,7 +121,8 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         }}
         className="space-y-8 m-auto"
       >
-        <CreateFormGeneral form={form} />
+        <CreateFormInputsGeneral form={form} />
+        <CreateFormInputsLocation form={form} />
         <ul className="text-sm text-destructive">
           {zodErrorMessages.length !== 0 ? (
             <>
