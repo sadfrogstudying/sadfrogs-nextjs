@@ -27,7 +27,7 @@ const CreateFormInputsGeneral = ({ form }: Props) => {
         description="This section must be filled out."
       />
 
-      <div className="space-y-8">
+      <div className="grid grid-cols-4 gap-4">
         <FormField
           control={form.control}
           name="name"
@@ -59,44 +59,6 @@ const CreateFormInputsGeneral = ({ form }: Props) => {
                 <Input placeholder="0" {...field} type="number" />
               </FormControl>
               <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="wifi"
-          render={({ field }) => (
-            <FormItem className="flex flex-row space-x-3 space-y-0 rounded-md">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={(v) => form.setValue("wifi", !!v)}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Wifi</FormLabel>
-                <FormDescription>Does the spot have wifi?</FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="powerOutlets"
-          render={({ field }) => (
-            <FormItem className="flex flex-row space-x-3 space-y-0 rounded-md">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={(v) => form.setValue("powerOutlets", !!v)}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Power Outlets</FormLabel>
-                <FormDescription>
-                  Does this spot have power outlets?
-                </FormDescription>
-              </div>
             </FormItem>
           )}
         />
@@ -144,6 +106,44 @@ const CreateFormInputsGeneral = ({ form }: Props) => {
                 />
               </FormControl>
               <FormDescription>Images you want to upload</FormDescription>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="wifi"
+          render={({ field }) => (
+            <FormItem className="flex flex-row space-x-3 space-y-0 rounded-md">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={(v) => form.setValue("wifi", !!v)}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Wifi</FormLabel>
+                <FormDescription>Does the spot have wifi?</FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="powerOutlets"
+          render={({ field }) => (
+            <FormItem className="flex flex-row space-x-3 space-y-0 rounded-md">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={(v) => form.setValue("powerOutlets", !!v)}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Power Outlets</FormLabel>
+                <FormDescription>
+                  Does this spot have power outlets?
+                </FormDescription>
+              </div>
             </FormItem>
           )}
         />

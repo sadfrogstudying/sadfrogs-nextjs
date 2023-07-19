@@ -48,23 +48,19 @@ const CreateFormInputsLocation = ({ form }: Props) => {
         <FormField
           control={form.control}
           name="images"
-          render={({ field }) => {
-            console.log(field);
-
-            return (
-              <FormItem>
-                <FormLabel>Location</FormLabel>
-                <FormControl>
-                  <LocationSearchInput
-                    onSelectedPlaceReady={onSelectedPlaceReady}
-                  />
-                </FormControl>
-                <FormDescription>
-                  You can use this input to assist in filling location details.
-                </FormDescription>
-              </FormItem>
-            );
-          }}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Location</FormLabel>
+              <FormControl>
+                <LocationSearchInput
+                  onSelectedPlaceReady={onSelectedPlaceReady}
+                />
+              </FormControl>
+              <FormDescription>
+                You can use this input to assist in filling location details.
+              </FormDescription>
+            </FormItem>
+          )}
         />
         <FormField
           control={form.control}
@@ -82,7 +78,7 @@ const CreateFormInputsLocation = ({ form }: Props) => {
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <FormField
             control={form.control}
             name="latitude"
