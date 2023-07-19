@@ -13,7 +13,7 @@ import { Separator } from "~/components/UI/Seperator";
 
 import type { StudySpotInputV2 } from "~/schemas/study-spots";
 import LocationSearchInput from "~/components/LocationSearch";
-import { PlaceResultPicked } from "~/types/GoogleTypes";
+import type { PlaceResultPicked } from "~/types/GoogleTypes";
 
 interface Props {
   form: UseFormReturn<StudySpotInputV2>;
@@ -48,19 +48,23 @@ const CreateFormInputsLocation = ({ form }: Props) => {
         <FormField
           control={form.control}
           name="images"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location</FormLabel>
-              <FormControl>
-                <LocationSearchInput
-                  onSelectedPlaceReady={onSelectedPlaceReady}
-                />
-              </FormControl>
-              <FormDescription>
-                You can use this input to assist in filling location details.
-              </FormDescription>
-            </FormItem>
-          )}
+          render={({ field }) => {
+            console.log(field);
+
+            return (
+              <FormItem>
+                <FormLabel>Location</FormLabel>
+                <FormControl>
+                  <LocationSearchInput
+                    onSelectedPlaceReady={onSelectedPlaceReady}
+                  />
+                </FormControl>
+                <FormDescription>
+                  You can use this input to assist in filling location details.
+                </FormDescription>
+              </FormItem>
+            );
+          }}
         />
         <FormField
           control={form.control}

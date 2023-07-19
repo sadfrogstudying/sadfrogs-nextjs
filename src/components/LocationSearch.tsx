@@ -22,7 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/UI/Popover";
-import { AutocompletePrediction } from "~/types/GoogleTypes";
+import type { AutocompletePrediction } from "~/types/GoogleTypes";
 
 interface Props {
   onSelectedPlaceReady: (place: google.maps.places.PlaceResult) => void;
@@ -44,7 +44,7 @@ const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
 
   useEffect(() => {
     if (selectedPlace) onSelectedPlaceReady(selectedPlace);
-  }, [selectedPlace]);
+  }, [selectedPlace, onSelectedPlaceReady]);
 
   return (
     <>
@@ -83,7 +83,7 @@ const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
           className="w-[var(--radix-popover-trigger-width)] p-0"
           align="start"
         >
-          <Command shouldFilter={false}>
+          <Command>
             <CommandInput
               placeholder={!libraryReady ? "Loading..." : "Search location..."}
               onValueChange={(val) => onChange(val)}
