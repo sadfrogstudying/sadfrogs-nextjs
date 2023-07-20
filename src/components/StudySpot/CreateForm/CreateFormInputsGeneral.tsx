@@ -7,10 +7,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormSectionHeader,
 } from "~/components/UI/Form";
 import { Input } from "~/components/UI/Input";
 import { Checkbox } from "~/components/UI/Checkbox";
-import { Separator } from "~/components/UI/Seperator";
 import FileInput from "~/components/UI/FileInput";
 
 import type { StudySpotInputV2 } from "~/schemas/study-spots";
@@ -22,12 +22,12 @@ interface Props {
 const CreateFormInputsGeneral = ({ form }: Props) => {
   return (
     <div className="space-y-8">
-      <SectionHeader
+      <FormSectionHeader
         title="General"
         description="This section must be filled out."
       />
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <FormField
           control={form.control}
           name="name"
@@ -35,16 +35,8 @@ const CreateFormInputsGeneral = ({ form }: Props) => {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Enter Name"
-                  {...field}
-                  minLength={1}
-                  required
-                />
+                <Input {...field} minLength={1} required />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -76,7 +68,6 @@ const CreateFormInputsGeneral = ({ form }: Props) => {
                   required
                 />
               </FormControl>
-              <FormDescription>How is the noise level?</FormDescription>
             </FormItem>
           )}
         />
@@ -105,7 +96,6 @@ const CreateFormInputsGeneral = ({ form }: Props) => {
                   {...field}
                 />
               </FormControl>
-              <FormDescription>Images you want to upload</FormDescription>
             </FormItem>
           )}
         />
@@ -153,23 +143,3 @@ const CreateFormInputsGeneral = ({ form }: Props) => {
 };
 
 export default CreateFormInputsGeneral;
-
-const SectionHeader = ({
-  title,
-  description,
-}: {
-  title: string;
-  description?: string;
-}) => {
-  return (
-    <>
-      <div>
-        <h3 className="text-lg font-medium">{title}</h3>
-        {description && (
-          <p className="text-sm text-muted-foreground">{description}</p>
-        )}
-        <Separator className="mt-4" />
-      </div>
-    </>
-  );
-};

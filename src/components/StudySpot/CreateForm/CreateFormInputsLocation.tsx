@@ -7,9 +7,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormSectionHeader,
 } from "~/components/UI/Form";
 import { Input } from "~/components/UI/Input";
-import { Separator } from "~/components/UI/Seperator";
 
 import type { StudySpotInputV2 } from "~/schemas/study-spots";
 import LocationSearchInput from "~/components/LocationSearch";
@@ -39,10 +39,7 @@ const CreateFormInputsLocation = ({ form }: Props) => {
 
   return (
     <div className="space-y-8">
-      <SectionHeader
-        title="Location"
-        description="Information about the location."
-      />
+      <FormSectionHeader title="Location" />
 
       <div className="space-y-8">
         <FormField
@@ -172,23 +169,3 @@ const CreateFormInputsLocation = ({ form }: Props) => {
 };
 
 export default CreateFormInputsLocation;
-
-const SectionHeader = ({
-  title,
-  description,
-}: {
-  title: string;
-  description?: string;
-}) => {
-  return (
-    <>
-      <div>
-        <h3 className="text-lg font-medium">{title}</h3>
-        {description && (
-          <p className="text-sm text-muted-foreground">{description}</p>
-        )}
-        <Separator className="mt-4" />
-      </div>
-    </>
-  );
-};

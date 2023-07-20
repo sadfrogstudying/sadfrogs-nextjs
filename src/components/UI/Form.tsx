@@ -12,6 +12,7 @@ import {
 
 import { cn } from "~/lib/utils";
 import { Label } from "~/components/UI/Label";
+import { Separator } from "./Seperator";
 
 const Form = FormProvider;
 
@@ -165,6 +166,26 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = "FormMessage";
 
+const FormSectionHeader = ({
+  title,
+  description,
+}: {
+  title: string;
+  description?: string;
+}) => {
+  return (
+    <>
+      <div>
+        <h3 className="text-2xl font-regular mb-1">{title}</h3>
+        {description && (
+          <p className="text-sm text-muted-foreground">{description}</p>
+        )}
+        <Separator className="mt-3" />
+      </div>
+    </>
+  );
+};
+
 export {
   useFormField,
   Form,
@@ -174,4 +195,5 @@ export {
   FormDescription,
   FormMessage,
   FormField,
+  FormSectionHeader,
 };

@@ -7,9 +7,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormSectionHeader,
 } from "~/components/UI/Form";
 import { Input } from "~/components/UI/Input";
-import { Separator } from "~/components/UI/Seperator";
 
 import type { StudySpotInputV2 } from "~/schemas/study-spots";
 import { Checkbox } from "~/components/UI/Checkbox";
@@ -21,12 +21,9 @@ interface Props {
 const CreateFormInputsMisc = ({ form }: Props) => {
   return (
     <div className="space-y-8">
-      <SectionHeader
-        title="Misc"
-        description="Miscellaneous information about the Study Spot."
-      />
+      <FormSectionHeader title="Miscellaneous" />
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         <FormField
           control={form.control}
           name="canStudyForLong"
@@ -36,9 +33,6 @@ const CreateFormInputsMisc = ({ form }: Props) => {
               <FormControl>
                 <Input placeholder="Over 2 hours" {...field} />
               </FormControl>
-              <FormDescription>
-                How long do you think you can study for at this location?
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -128,7 +122,7 @@ const CreateFormInputsMisc = ({ form }: Props) => {
             <FormItem>
               <FormLabel>Distractions</FormLabel>
               <FormControl>
-                <Input placeholder="" {...field} />
+                <Input placeholder="Constant loud coffee machines" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -248,23 +242,3 @@ const CreateFormInputsMisc = ({ form }: Props) => {
 };
 
 export default CreateFormInputsMisc;
-
-const SectionHeader = ({
-  title,
-  description,
-}: {
-  title: string;
-  description?: string;
-}) => {
-  return (
-    <>
-      <div>
-        <h3 className="text-lg font-medium">{title}</h3>
-        {description && (
-          <p className="text-sm text-muted-foreground">{description}</p>
-        )}
-        <Separator className="mt-4" />
-      </div>
-    </>
-  );
-};
