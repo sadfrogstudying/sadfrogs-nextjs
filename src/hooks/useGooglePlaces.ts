@@ -58,7 +58,8 @@ const useGooglePlaces = () => {
     void serviceAutocomplete.current.getPlacePredictions(
       { sessionToken: sessionToken.current, input: inputValue },
       (predictions, status) => {
-        if (status !== "OK") return alert(status);
+        if (status !== google.maps.places.PlacesServiceStatus.OK)
+          return alert(status);
 
         setPredictions(predictions || []);
 
@@ -122,7 +123,8 @@ const useGooglePlaces = () => {
         ],
       },
       (place, status) => {
-        if (status !== "OK") return alert(status);
+        if (status !== google.maps.places.PlacesServiceStatus.OK)
+          return alert(status);
         setSelectedPlace(place);
         refreshSessionToken();
       }

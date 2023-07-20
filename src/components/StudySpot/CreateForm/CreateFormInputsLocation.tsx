@@ -49,7 +49,7 @@ const CreateFormInputsLocation = ({ form }: Props) => {
         <FormField
           control={form.control}
           name="images"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel>Location</FormLabel>
               <FormControl>

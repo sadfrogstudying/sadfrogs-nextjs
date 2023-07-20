@@ -22,12 +22,12 @@ function CreateStudySpotFormSheet() {
       <SheetContent className="pt-14">
         <ScrollArea className="h-full w-full rounded-md">
           <div className="space-y-8 pr-4">
-            {/* <SheetHeader aria-hidden className="screenreader">
+            <SheetHeader aria-hidden className="sr-only">
               <SheetTitle>Create New Spot</SheetTitle>
               <SheetDescription>
                 Add a new study spot to SadFrogs ✍️.
               </SheetDescription>
-            </SheetHeader> */}
+            </SheetHeader>
             <CreateStudySpotForm onSuccess={() => setOpen(false)} />
           </div>
         </ScrollArea>

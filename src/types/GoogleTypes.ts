@@ -14,6 +14,7 @@ type PlaceResultPicked = Pick<
   //   | "opening_hours"
   //   | "website"
 >;
+type PlacesServiceStatus = google.maps.places.PlacesServiceStatus;
 
 type CachedData = Record<
   string,
@@ -26,5 +27,6 @@ export type {
   AutocompleteSessionToken,
   PlacesService,
   PlaceResultPicked,
+  PlacesServiceStatus,
   CachedData,
 };

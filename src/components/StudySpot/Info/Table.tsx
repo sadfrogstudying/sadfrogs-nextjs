@@ -1,4 +1,4 @@
-import { StudySpot } from "@prisma/client";
+import type { StudySpot } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 const InfoTable = ({ studySpot }: { studySpot?: StudySpot }) => {

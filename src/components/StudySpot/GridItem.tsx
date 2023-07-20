@@ -1,10 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/UI/Card";
+import { Card, CardContent, CardHeader } from "~/components/UI/Card";
 import Image from "~/components/UI/Image";
 import type { Prisma } from "@prisma/client";
 import { api } from "~/utils/api";
 import DeleteAlertDialog from "./DeleteAlertDialog";
 import Link from "next/link";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 const StudySpotGridItem = ({
   studySpot,
@@ -21,9 +21,7 @@ const StudySpotGridItem = ({
       onSuccess: () => apiUtils.studySpots.getNotValidated.invalidate(),
     });
 
-  const { name, address, wifi, music, powerOutlets } = studySpot;
-
-  const second = Object.entries({ wifi, music, powerOutlets });
+  const { address, wifi, music, powerOutlets } = studySpot;
 
   const properties = Object.entries({ address, wifi, music, powerOutlets });
 
