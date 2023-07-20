@@ -8,7 +8,10 @@ import { Redis } from "@upstash/redis";
 import { getImagesMeta } from "~/utils/server-helpers";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "~/env.mjs";
-import { studySpotInputSchema, studySpotSchema } from "~/schemas/study-spots";
+import {
+  studySpotInputSchema,
+  studySpotOutputSchema,
+} from "~/schemas/study-spots";
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -25,7 +28,7 @@ export const studySpotsRouter = createTRPCRouter({
   getAll: publicProcedure
     .meta({ openapi: { method: "GET", path: "/studyspots.getAll" } })
     .input(z.void())
-    .output(studySpotSchema.array())
+    .output(studySpotOutputSchema.array())
     .query(async ({ ctx }) => {
       const studySpots = await ctx.prisma.studySpot.findMany({
         where: {
@@ -47,7 +50,7 @@ export const studySpotsRouter = createTRPCRouter({
   getNotValidated: publicProcedure
     .meta({ openapi: { method: "GET", path: "/studyspots.getNotValidated" } })
     .input(z.void())
-    .output(studySpotSchema.array())
+    .output(studySpotOutputSchema.array())
     .query(async ({ ctx }) => {
       const studySpots = await ctx.prisma.studySpot.findMany({
         where: {
@@ -157,7 +160,7 @@ export const studySpotsRouter = createTRPCRouter({
   getOne: publicProcedure
     .meta({ openapi: { method: "GET", path: "/studyspots.getOne" } })
     .input(z.object({ slug: z.string() }))
-    .output(studySpotSchema)
+    .output(studySpotOutputSchema)
     .query(async ({ ctx, input }) => {
       const studySpot = await ctx.prisma.studySpot.findUnique({
         where: {

@@ -1,13 +1,7 @@
-import { type Prisma } from "@prisma/client";
+import { type StudySpot } from "@prisma/client";
 import { Skeleton } from "~/components/UI/Skeleton";
 
-type StudySpotExtended = Prisma.StudySpotGetPayload<{
-  include: {
-    location: true;
-  };
-}>;
-
-const HeroText = ({ studySpot }: { studySpot?: StudySpotExtended }) => {
+const HeroText = ({ studySpot }: { studySpot?: StudySpot }) => {
   const {
     // createdAt,
     // hasWifi,
@@ -18,13 +12,17 @@ const HeroText = ({ studySpot }: { studySpot?: StudySpotExtended }) => {
     // slug,
     // updatedAt,
     // location,
+    address,
   } = studySpot || {};
 
   return (
     <>
       <div className="w-full h-fit p-4 space-y-4 md:w-96">
         {name ? (
-          <h1 className="text-3xl font-serif">{name}</h1>
+          <>
+            <h1 className="text-3xl font-serif">{name}</h1>
+            <div>{address}</div>
+          </>
         ) : (
           <Skeleton className="h-8 w-4/5" />
         )}
