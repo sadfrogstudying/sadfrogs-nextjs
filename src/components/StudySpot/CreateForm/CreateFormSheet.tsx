@@ -19,15 +19,15 @@ function CreateStudySpotFormSheet() {
       <SheetTrigger asChild>
         <Button variant="outline">Create</Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="pt-14">
         <ScrollArea className="h-full w-full rounded-md">
           <div className="space-y-8 pr-4">
-            <SheetHeader>
+            {/* <SheetHeader aria-hidden className="screenreader">
               <SheetTitle>Create New Spot</SheetTitle>
               <SheetDescription>
                 Add a new study spot to SadFrogs ✍️.
               </SheetDescription>
-            </SheetHeader>
+            </SheetHeader> */}
             <CreateStudySpotForm onSuccess={() => setOpen(false)} />
           </div>
         </ScrollArea>

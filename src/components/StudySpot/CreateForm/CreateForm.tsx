@@ -130,7 +130,7 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           e.preventDefault();
           void submitHandler();
         }}
-        className="space-y-16 m-auto"
+        className="space-y-16 m-auto font-mono"
       >
         <CreateFormInputsGeneral form={form} />
         <CreateFormInputsLocation form={form} />

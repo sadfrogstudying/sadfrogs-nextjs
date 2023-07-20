@@ -6,8 +6,39 @@ const StudySpotGrid = () => {
   const { data, status } = api.studySpots.getNotValidated.useQuery();
 
   return (
-    <div className="grid gap-4 relative grid-cols-fill-40">
+    // <div className="flex column">
+    <div className="grid gap-8 relative grid-cols-fill-40">
       <StatusHandler status={status}>
+        {data?.map((studySpot) => (
+          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
+        ))}
+        {data?.map((studySpot) => (
+          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
+        ))}
+        {data?.map((studySpot) => (
+          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
+        ))}
+        {data?.map((studySpot) => (
+          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
+        ))}
+        {data?.map((studySpot) => (
+          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
+        ))}
+        {data?.map((studySpot) => (
+          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
+        ))}
+        {data?.map((studySpot) => (
+          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
+        ))}
+        {data?.map((studySpot) => (
+          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
+        ))}
+        {data?.map((studySpot) => (
+          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
+        ))}
+        {data?.map((studySpot) => (
+          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
+        ))}
         {data?.map((studySpot) => (
           <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
         ))}

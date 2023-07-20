@@ -13,9 +13,13 @@ const HeroText = ({ studySpot }: { studySpot?: StudySpot }) => {
             <div className="italic">{address}</div>
           </>
         ) : (
-          <Skeleton className="h-8 w-4/5" />
+          <>
+            <Skeleton className="h-8 w-4/5" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-1/2" />
+          </>
         )}
-        {name ? (
+        {/* {name ? (
           <p className="w-full">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti
             excepturi assumenda quas dolorum similique, veniam doloremque earum
@@ -29,7 +33,7 @@ const HeroText = ({ studySpot }: { studySpot?: StudySpot }) => {
             <Skeleton className="h-4" />
             <Skeleton className="h-4" />
           </div>
-        )}
+        )} */}
       </div>
     </>
   );

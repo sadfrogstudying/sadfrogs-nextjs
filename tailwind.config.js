@@ -75,6 +75,7 @@ module.exports = {
         "fill-40": "repeat(auto-fill, minmax(300px, 1fr))",
       },
       fontFamily: {
+        mono: ["Courier New", "Courier", "serif"],
         serif: ["Times New Roman", "Times", "serif"],
         sans: [
           "-apple-system",
