@@ -1,4 +1,4 @@
-import type { UseFormReturn } from "react-hook-form";
+import type { SetValueConfig, UseFormReturn } from "react-hook-form";
 
 import {
   FormControl,
@@ -23,6 +23,10 @@ const CreateFormInputsLocation = ({ form }: Props) => {
   const onSelectedPlaceReady = (place: PlaceResultPicked) => {
     const { place_id, address_components, formatted_address, geometry } = place;
 
+    const setValueOptions: SetValueConfig = {
+      shouldTouch: true,
+    };
+
     address_components?.forEach((address) => {
       if (address.types.includes("locality"))
         form.setValue("city", address.long_name);
@@ -31,10 +35,10 @@ const CreateFormInputsLocation = ({ form }: Props) => {
       if (address.types.includes("administrative_area_level_1"))
         form.setValue("state", address.long_name);
     });
-    form.setValue("placeId", place_id);
-    form.setValue("latitude", geometry?.location?.lat());
-    form.setValue("longitude", geometry?.location?.lng());
-    form.setValue("address", formatted_address);
+    form.setValue("placeId", place_id, setValueOptions);
+    form.setValue("latitude", geometry?.location?.lat(), setValueOptions);
+    form.setValue("longitude", geometry?.location?.lng(), setValueOptions);
+    form.setValue("address", formatted_address, setValueOptions);
   };
 
   return (

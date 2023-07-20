@@ -86,28 +86,15 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   } = api.s3.getPresignedUrls.useMutation({
     onSuccess: async (presignedUrls) => {
       if (!presignedUrls.length) return;
-      const {
-        name,
-        rating,
-        wifi,
-        powerOutlets,
-        noiseLevel,
-        venueType,
-        images,
-      } = form.getValues();
+      const formValues = form.getValues();
 
       const imageUrls = await uploadImagesToS3UsingPresignedUrls({
         presignedUrls: presignedUrls,
-        acceptedFiles: images,
+        acceptedFiles: formValues.images,
       });
 
       createStudySpot({
-        name,
-        rating,
-        wifi,
-        powerOutlets,
-        noiseLevel,
-        venueType,
+        ...formValues,
         images: imageUrls,
       });
     },
