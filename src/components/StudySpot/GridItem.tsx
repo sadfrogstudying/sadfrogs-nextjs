@@ -21,12 +21,14 @@ const StudySpotGridItem = ({
       onSuccess: () => apiUtils.studySpots.getNotValidated.invalidate(),
     });
 
-  const { address, wifi, music, powerOutlets } = studySpot;
+  const { name, address, wifi, music, powerOutlets } = studySpot;
+
+  const second = Object.entries({ wifi, music, powerOutlets });
 
   const properties = Object.entries({ address, wifi, music, powerOutlets });
 
   // return (
-  //   <Card>
+  //   <Card className="font-mono">
   //     <CardHeader>
   //       {studySpot.images[0] && (
   //         <div className="overflow-hidden rounded-md">
@@ -39,16 +41,27 @@ const StudySpotGridItem = ({
   //         </div>
   //       )}
   //     </CardHeader>
-  //     <CardContent className="space-y-8">
+  //     <CardContent className="space-y-4">
   //       <CardTitle>
   //         <Link
-  //           className="hover:underline font-serif"
+  //           className="hover:underline text-sm"
   //           href={`/study-spot/${studySpot.slug}`}
   //         >
   //           {studySpot.name}
   //         </Link>
   //       </CardTitle>
-  //       <div className="text-sm">{address}</div>
+  //       <div className="text-sm">
+  //         Otters are carnivorous mammals in the subfamily Lutrinae. The 13
+  //         extant otter species are all semiaquatic, aquatic, or marine, with
+  //         diets based on fish and invertebrates.
+  //       </div>
+  //       <div className="text-sm">
+  //         {properties.map(([key, value]) => (
+  //           <Row key={key.toString()} title={key.toString()}>
+  //             {value.toString()}
+  //           </Row>
+  //         ))}
+  //       </div>
   //       <DeleteAlertDialog
   //         deleteHandler={() => deleteStudyspot({ id: studySpot.id })}
   //         isDeleting={isDeleting}
@@ -75,22 +88,27 @@ const StudySpotGridItem = ({
           </Link>
         )}
       </CardHeader>
-      <CardContent className="space-y-2 p-0 w-29 border-y border-black py-2 flex flex-col">
+      <CardContent className="space-y-4 p-0 w-29 border-y border-gray-400 py-4 flex flex-col">
+        <Link
+          className="hover:underline"
+          href={`/study-spot/${studySpot.slug}`}
+        >
+          {studySpot.name}
+        </Link>
         <div>
-          <Row title="title">
-            <Link
-              className="hover:underline"
-              href={`/study-spot/${studySpot.slug}`}
-            >
-              {studySpot.name}
-            </Link>
-          </Row>
+          Otters are carnivorous mammals in the subfamily Lutrinae. The 13
+          extant otter species are all semiaquatic, aquatic, or marine, with
+          diets based on fish and invertebrates.
+        </div>
+
+        <div>
           {properties.map(([key, value]) => (
             <Row key={key.toString()} title={key.toString()}>
               {value.toString()}
             </Row>
           ))}
         </div>
+
         <DeleteAlertDialog
           deleteHandler={() => deleteStudyspot({ id: studySpot.id })}
           isDeleting={isDeleting}

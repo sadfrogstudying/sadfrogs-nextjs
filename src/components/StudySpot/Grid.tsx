@@ -12,36 +12,6 @@ const StudySpotGrid = () => {
         {data?.map((studySpot) => (
           <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
         ))}
-        {data?.map((studySpot) => (
-          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
-        ))}
-        {data?.map((studySpot) => (
-          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
-        ))}
-        {data?.map((studySpot) => (
-          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
-        ))}
-        {data?.map((studySpot) => (
-          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
-        ))}
-        {data?.map((studySpot) => (
-          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
-        ))}
-        {data?.map((studySpot) => (
-          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
-        ))}
-        {data?.map((studySpot) => (
-          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
-        ))}
-        {data?.map((studySpot) => (
-          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
-        ))}
-        {data?.map((studySpot) => (
-          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
-        ))}
-        {data?.map((studySpot) => (
-          <StudySpotGridItem studySpot={studySpot} key={studySpot.id} />
-        ))}
       </StatusHandler>
     </div>
   );
