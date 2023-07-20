@@ -14,6 +14,46 @@ import CreateFormInputsMisc from "~/components/StudySpot/CreateForm/CreateFormIn
 
 import type { StudySpotInputV2 } from "~/schemas/study-spots";
 
+const defaultValues = {
+  name: "",
+  rating: 0,
+  wifi: false,
+  powerOutlets: false,
+  noiseLevel: "",
+  venueType: "",
+  images: [],
+
+  placeId: "",
+  latitude: 0,
+  longitude: 0,
+  address: "",
+  country: "",
+  city: "",
+  state: "",
+
+  openingHours: [],
+
+  canStudyForLong: "",
+
+  vibe: "",
+  comfort: "",
+  views: "",
+  sunlight: false,
+  temperature: "",
+  music: "",
+  lighting: "",
+
+  distractions: "",
+  crowdedness: "",
+
+  naturalSurroundings: "",
+  proximityToAmenities: "",
+
+  drinks: false,
+  food: false,
+  studyBreakFacilities: "",
+};
+
 /**
  *
  * This component is single source of truth for form data and handles submission.
@@ -23,45 +63,7 @@ import type { StudySpotInputV2 } from "~/schemas/study-spots";
  */
 const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const form = useForm<StudySpotInputV2>({
-    defaultValues: {
-      name: "",
-      rating: 0,
-      wifi: false,
-      powerOutlets: false,
-      noiseLevel: "",
-      venueType: "",
-      images: [],
-
-      placeId: "",
-      latitude: 0,
-      longitude: 0,
-      address: "",
-      country: "",
-      city: "",
-      state: "",
-
-      openingHours: [],
-
-      canStudyForLong: "",
-
-      vibe: "",
-      comfort: "",
-      views: "",
-      sunlight: false,
-      temperature: "",
-      music: "",
-      lighting: "",
-
-      distractions: "",
-      crowdedness: "",
-
-      naturalSurroundings: "",
-      proximityToAmenities: "",
-
-      drinks: false,
-      food: false,
-      studyBreakFacilities: "",
-    },
+    defaultValues,
   });
 
   const apiUtils = api.useContext();
@@ -127,8 +129,7 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   });
 
   const submitHandler = form.handleSubmit((data) => {
-    console.log(form.getValues());
-    // checkIfNameExists({ name: data.name });
+    checkIfNameExists({ name: data.name });
   });
 
   const isLoading = createIsLoading || getUrlsIsLoading || nameExistsLoading;
