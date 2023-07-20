@@ -48,7 +48,12 @@ const CreateFormInputsGeneral = ({ form }: Props) => {
             <FormItem>
               <FormLabel>Rating</FormLabel>
               <FormControl>
-                <Input placeholder="0" {...field} type="number" />
+                <Input
+                  placeholder="0"
+                  {...field}
+                  type="number"
+                  onChange={(event) => field.onChange(+event.target.value)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

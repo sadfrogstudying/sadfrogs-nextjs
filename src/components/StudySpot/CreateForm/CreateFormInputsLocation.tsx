@@ -87,6 +87,7 @@ const CreateFormInputsLocation = ({ form }: Props) => {
                     placeholder="Enter latitude"
                     {...field}
                     type="number"
+                    onChange={(event) => field.onChange(+event.target.value)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -104,6 +105,7 @@ const CreateFormInputsLocation = ({ form }: Props) => {
                     placeholder="Enter longitude"
                     {...field}
                     type="number"
+                    onChange={(event) => field.onChange(+event.target.value)}
                   />
                 </FormControl>
                 <FormMessage />
