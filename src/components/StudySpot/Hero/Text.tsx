@@ -2,18 +2,7 @@ import { type StudySpot } from "@prisma/client";
 import { Skeleton } from "~/components/UI/Skeleton";
 
 const HeroText = ({ studySpot }: { studySpot?: StudySpot }) => {
-  const {
-    // createdAt,
-    // hasWifi,
-    // id,
-    // isValidated,
-    // locationId,
-    name,
-    // slug,
-    // updatedAt,
-    // location,
-    address,
-  } = studySpot || {};
+  const { name, address } = studySpot || {};
 
   return (
     <>
@@ -21,7 +10,7 @@ const HeroText = ({ studySpot }: { studySpot?: StudySpot }) => {
         {name ? (
           <>
             <h1 className="text-3xl font-serif">{name}</h1>
-            <div>{address}</div>
+            <div className="italic">{address}</div>
           </>
         ) : (
           <Skeleton className="h-8 w-4/5" />

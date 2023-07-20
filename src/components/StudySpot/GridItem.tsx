@@ -10,7 +10,6 @@ const StudySpotGridItem = ({
 }: {
   studySpot: Prisma.StudySpotGetPayload<{
     include: {
-      location: true;
       images: true;
     };
   }>;
@@ -20,6 +19,8 @@ const StudySpotGridItem = ({
     api.studySpots.deleteOne.useMutation({
       onSuccess: () => apiUtils.studySpots.getNotValidated.invalidate(),
     });
+
+  const { address, wifi } = studySpot;
 
   return (
     <Card>
@@ -38,37 +39,17 @@ const StudySpotGridItem = ({
       <CardContent className="space-y-8">
         <CardTitle>
           <Link
-            className="hover:underline"
+            className="hover:underline font-serif"
             href={`/study-spot/${studySpot.slug}`}
           >
             {studySpot.name}
           </Link>
         </CardTitle>
+        <div className="text-sm">{address}</div>
         <DeleteAlertDialog
           deleteHandler={() => deleteStudyspot({ id: studySpot.id })}
           isDeleting={isDeleting}
         />
-        <div>
-          <div className="flex justify-between">
-            <strong>Location:</strong>
-            <div>The Rocks, Sydney</div>
-          </div>
-          <div className="flex justify-between">
-            <strong>Wifi:</strong>
-            {/* <div>{studySpot.hasWifi ? "True" : "False"}</div> */}
-          </div>
-          <div className="flex justify-between">
-            <strong>Coordinates:</strong>
-            {/* <div>
-              {studySpot.location.latitude} : {studySpot.location.longitude}
-            </div> */}
-          </div>
-        </div>
-        <p>
-          Este artículo se centra en el rechazo de Frederick Law Olmsted a la
-          representación del paisaje en general y, en particular, a la pintura
-          como modelo de paisaje.
-        </p>
       </CardContent>
     </Card>
   );

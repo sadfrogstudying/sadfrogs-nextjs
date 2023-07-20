@@ -17,17 +17,7 @@ const StudySpotPage = () => {
     }
   );
 
-  const {
-    // createdAt,
-    // hasWifi,
-    // id,
-    // isValidated,
-    // locationId,
-    name = "",
-    // updatedAt,
-    images = [],
-    // location,
-  } = studySpot.data || {};
+  const { name = "", images = [] } = studySpot.data || {};
 
   return (
     <main className="pb-4 h-fit">
@@ -38,7 +28,7 @@ const StudySpotPage = () => {
         </>
       </section>
       <section className="pb-4 flex flex-col justify-end align-start items-start min-h-screen w-full">
-        <InfoTable />
+        <InfoTable studySpot={studySpot.data} />
       </section>
     </main>
   );

@@ -16,15 +16,11 @@ const Header = () => {
         role="menubar"
         className="flex fixed top-0 right-0 p-4 z-20 gap-4 justify-center items-center"
       >
-        <CreateStudySpotFormSheet />
-
         <Link href="/about" className="h-fit">
           About
         </Link>
 
-        <Button asChild>
-          <Link href="/create-spot">Create</Link>
-        </Button>
+        <CreateStudySpotFormSheet />
       </div>
     </>
   );

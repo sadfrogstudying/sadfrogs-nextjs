@@ -52,7 +52,7 @@ const Image = ({
     >
       {placeholder === "empty" && (
         <div
-          className={`${placeholderOpacity} absolute inset-0 z-10 ease-in duration-500 opacity-20`}
+          className={`${placeholderOpacity} absolute inset-0 z-10 ease-in duration-500`}
           style={{
             aspectRatio: aspectRatio,
             backgroundColor: dominantColour,
