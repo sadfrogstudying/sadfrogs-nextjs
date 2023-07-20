@@ -1,8 +1,8 @@
-import VerticalCarousel from "~/components/StudySpot/Hero/VerticalCarousel";
 import HeroText from "~/components/StudySpot/Hero/Text";
 import InfoTable from "~/components/StudySpot/Info/Table";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
+import FullWidthHeroCarousel from "~/components/StudySpot/Hero/FullWidthCarousel";
 
 const StudySpotPage = () => {
   const router = useRouter();
@@ -21,11 +21,11 @@ const StudySpotPage = () => {
 
   return (
     <main className="pb-4 h-fit">
-      <section className="pt-12 flex flex-wrap items-end min-h-screen md:pt-0">
-        <>
-          <HeroText studySpot={studySpot.data} />
-          <VerticalCarousel name={name} images={images} />
-        </>
+      <section className="flex-col-reverse pt-12 min-h-screen md:pt-0 mt-auto flex flex-col">
+        <HeroText studySpot={studySpot.data} />
+        <div>
+          <FullWidthHeroCarousel images={images} name={name} />
+        </div>
       </section>
       <section className="pb-4 flex flex-col justify-end align-start items-start min-h-screen w-full">
         <InfoTable studySpot={studySpot.data} />

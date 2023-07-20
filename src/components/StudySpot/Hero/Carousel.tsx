@@ -42,7 +42,7 @@ const HeroCarousel: React.FC<PropType> = (props) => {
   }, [emblaMainApi, onSelect]);
 
   return (
-    <div className="w-full h-fit p-4 md:w-96">
+    <div className="w-full h-fit p-4">
       <div className="overflow-hidden" ref={emblaMainRef}>
         <div className="flex touch-pan-y">
           {images.map((image) => (

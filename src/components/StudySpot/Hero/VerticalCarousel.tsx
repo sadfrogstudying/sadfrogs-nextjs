@@ -15,13 +15,19 @@ const VerticalCarousel: React.FC<PropType> = (props) => {
   const { images, name } = props;
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaMainRef, emblaMainApi] = useEmblaCarousel({
-    axis: "y",
+    axis: "x",
     containScroll: "trimSnaps",
+    breakpoints: {
+      "(min-width: 768px)": { axis: "y" },
+    },
   });
   const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
-    axis: "y",
+    axis: "x",
     containScroll: "keepSnaps",
     dragFree: true,
+    breakpoints: {
+      "(min-width: 768px)": { axis: "y" },
+    },
   });
 
   const onThumbClick = useCallback(
@@ -48,13 +54,13 @@ const VerticalCarousel: React.FC<PropType> = (props) => {
   const animatePulse = images.length === 0 ? "animate-pulse" : "";
 
   return (
-    <div className="w-96 h-full max-h-screen flex gap-2 p-4">
+    <div className="w-full h-full max-h-screen flex gap-2 p-4 md:w-96">
       <div
         className={`w-4/5 overflow-hidden bg-muted rounded ${animatePulse}`}
         ref={emblaMainRef}
       >
         <div
-          className="flex flex-col touch-pan-x gap-2"
+          className="flex flex-row touch-pan-y gap-2 md:touch-pan-x md:flex-col"
           style={{ height: "100vh" }}
         >
           {images.map((image) => (

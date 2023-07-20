@@ -10,7 +10,7 @@ const HeroText = ({ studySpot }: { studySpot?: StudySpot }) => {
         {name ? (
           <>
             <h1 className="text-3xl font-serif">{name}</h1>
-            <div className="italic">{address}</div>
+            <div className="italic font-mono">{address}</div>
           </>
         ) : (
           <>
