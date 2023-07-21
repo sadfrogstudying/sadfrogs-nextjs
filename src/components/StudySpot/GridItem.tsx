@@ -1,10 +1,22 @@
 import { Card, CardContent, CardHeader } from "~/components/UI/Card";
 import Image from "~/components/UI/Image";
 import type { Prisma } from "@prisma/client";
-import { api } from "~/utils/api";
-import DeleteAlertDialog from "./DeleteAlertDialog";
 import Link from "next/link";
 import type { ReactNode } from "react";
+
+import dynamic from "next/dynamic";
+import { Button } from "../UI/Button";
+
+const DeleteAlertDialog = dynamic(() => import("./DeleteAlertDialog"), {
+  loading: () => <Loading />,
+  ssr: false,
+});
+
+const Loading = () => (
+  <Button className="h-7" variant="secondary">
+    Deleting...
+  </Button>
+);
 
 const StudySpotGridItem = ({
   studySpot,
@@ -15,14 +27,7 @@ const StudySpotGridItem = ({
     };
   }>;
 }) => {
-  const apiUtils = api.useContext();
-  const { mutate: deleteStudyspot, isLoading: isDeleting } =
-    api.studySpots.deleteOne.useMutation({
-      onSuccess: () => apiUtils.studySpots.getNotValidated.invalidate(),
-    });
-
   const { address, wifi, music, powerOutlets } = studySpot;
-
   const properties = Object.entries({ address, wifi, music, powerOutlets });
 
   return (
@@ -61,10 +66,7 @@ const StudySpotGridItem = ({
           ))}
         </div>
 
-        <DeleteAlertDialog
-          deleteHandler={() => deleteStudyspot({ id: studySpot.id })}
-          isDeleting={isDeleting}
-        />
+        <DeleteAlertDialog id={studySpot.id} />
       </CardContent>
     </Card>
   );
