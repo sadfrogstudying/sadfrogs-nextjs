@@ -1,5 +1,20 @@
 import Link from "next/link";
-import CreateStudySpotFormSheet from "~/components/StudySpot/CreateForm/CreateFormSheet";
+
+import dynamic from "next/dynamic";
+import { Button } from "./UI/Button";
+const CreateStudySpotFormSheet = dynamic(
+  () => import("~/components/StudySpot/CreateForm/CreateFormSheet"),
+  {
+    loading: () => <Loading />,
+    ssr: false,
+  }
+);
+
+const Loading = () => (
+  <Button variant="outline" disabled>
+    Create
+  </Button>
+);
 
 const Header = () => {
   return (

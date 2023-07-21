@@ -7,9 +7,17 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "~/components/UI/Sheet";
-import CreateStudySpotForm from "./CreateForm";
 import { useState } from "react";
 import { ScrollArea } from "~/components/UI/ScrollArea";
+
+import dynamic from "next/dynamic";
+import { Separator } from "~/components/UI/Seperator";
+const CreateStudySpotForm = dynamic(() => import("./CreateForm"), {
+  loading: () => <Loading />,
+  ssr: false,
+});
+
+const Loading = () => <div className="font-mono">Loading the form...</div>;
 
 function CreateStudySpotFormSheet() {
   const [open, setOpen] = useState(false);
@@ -28,6 +36,10 @@ function CreateStudySpotFormSheet() {
                 Add a new study spot to SadFrogs ✍️.
               </SheetDescription>
             </SheetHeader>
+            <div className="font-mono space-y-4">
+              <div className="text-3xl">Add a new spot</div>
+              <Separator />
+            </div>
             <CreateStudySpotForm onSuccess={() => setOpen(false)} />
           </div>
         </ScrollArea>

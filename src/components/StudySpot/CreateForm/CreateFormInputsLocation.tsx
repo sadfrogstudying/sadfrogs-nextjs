@@ -1,3 +1,5 @@
+import dynamic from "next/dynamic";
+
 import type { SetValueConfig, UseFormReturn } from "react-hook-form";
 
 import {
@@ -12,8 +14,28 @@ import {
 import { Input } from "~/components/UI/Input";
 
 import type { StudySpotInputV2 } from "~/schemas/study-spots";
-import LocationSearchInput from "~/components/LocationSearch";
+import { Button } from "~/components/UI/Button";
+import { ChevronsUpDown } from "lucide-react";
 import type { PlaceResultPicked } from "~/types/GoogleTypes";
+
+const LocationSearchInput = dynamic(
+  () => import("~/components/LocationSearch"),
+  {
+    loading: () => <Loading />,
+    ssr: false,
+  }
+);
+
+const Loading = () => (
+  <Button
+    variant="secondary"
+    role="combobox"
+    className="w-full justify-between"
+  >
+    Loading Location Search...
+    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+  </Button>
+);
 
 interface Props {
   form: UseFormReturn<StudySpotInputV2>;
