@@ -6,7 +6,6 @@ const StudySpotGrid = () => {
   const { data, status } = api.studySpots.getNotValidated.useQuery();
 
   return (
-    // <div className="flex column">
     <div className="grid gap-8 relative grid-cols-fill-40">
       <StatusHandler status={status}>
         {data?.map((studySpot) => (

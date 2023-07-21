@@ -3,39 +3,41 @@ import { Skeleton } from "~/components/UI/Skeleton";
 
 const SkeletonImage = ({ className = "" }: { className?: string }) => (
   <Skeleton
-    className={`aspect-[2/3] w-full bg-gray-300 rounded-md ${className}`}
+    className={`aspect-[2/3] w-full bg-gray-200 rounded-md ${className}`}
   />
 );
 const SkeletonText = ({ className = "" }: { className?: string }) => (
-  <Skeleton className={`bg-gray-300 h-4 rounded-md mb-2 ${className}`} />
+  <Skeleton className={`bg-gray-200 h-4 rounded-md ${className}`} />
 );
 const SkeletonStudySpotGridItem = () => (
-  <Card>
-    <CardHeader>
-      <SkeletonImage />
+  <Card className="flex flex-col gap-4 border-0 shadow-none w-full font-mono text-sm justify-end">
+    <CardHeader className="p-0 w-full">
+      <SkeletonImage className="w-4/5" />
     </CardHeader>
-    <CardContent className="space-y-8">
-      <SkeletonText className="h-6 w-1/2" />
-      <div>
-        <div className="flex justify-between gap-2">
-          <SkeletonText className="w-2/5" />
-          <SkeletonText className="w-full" />
+    <CardContent className="space-y-4 p-0 w-29 border-y border-gray-200 py-4 flex flex-col">
+      <SkeletonText className="h-3.5 w-2/5" />
+      <div className="space-y-2">
+        <SkeletonText className="h-3.5" />
+        <SkeletonText className="h-3.5" />
+        <SkeletonText className="h-3.5" />
+        <SkeletonText className="h-3.5" />
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex gap-2 items-start">
+          <SkeletonText className="w-28 h-3.5 shrink-0 min-w-max" />
+          <SkeletonText className="w-20 h-3.5" />
         </div>
-        <div className="flex justify-between gap-2">
-          <SkeletonText className="w-2/5" />
-          <SkeletonText className="w-full" />
+        <div className="flex gap-2 items-start">
+          <SkeletonText className="w-28 h-3.5 shrink-0 min-w-max" />
+          <SkeletonText className="w-20 h-3.5" />
         </div>
-        <div className="flex justify-between gap-2">
-          <SkeletonText className="w-2/5" />
-          <SkeletonText className="w-full" />
+        <div className="flex gap-2 items-start">
+          <SkeletonText className="w-28 h-3.5 shrink-0 min-w-max" />
+          <SkeletonText className="w-20 h-3.5" />
         </div>
       </div>
-      <div>
-        <SkeletonText />
-        <SkeletonText />
-        <SkeletonText />
-        <SkeletonText />
-      </div>
+      <Skeleton className="bg-gray-200 h-7 w-full rounded-md" />
     </CardContent>
   </Card>
 );
