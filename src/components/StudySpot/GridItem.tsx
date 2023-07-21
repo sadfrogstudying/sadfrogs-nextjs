@@ -69,21 +69,28 @@ const StudySpotGridItem = ({
   // );
 
   return (
-    <Card className="flex flex-wrap gap-4 border-0 shadow-none w-full font-mono text-sm">
-      <CardHeader className="p-0">
+    <Card className="flex flex-col gap-4 border-0 shadow-none w-full font-mono text-sm justify-end">
+      <CardHeader className="p-0 w-full">
         {studySpot.images[0] && (
-          <Link
-            tabIndex={-1}
-            className="overflow-hidden rounded-md w-4/5"
-            href={`/study-spot/${studySpot.slug}`}
-          >
-            <Image
-              image={{ ...studySpot.images[0] }}
-              key={studySpot.images[0].url}
-              alt={`Image of ${studySpot.name}`}
-              objectFit="cover"
-            />
-          </Link>
+          // <Link
+          //   tabIndex={-1}
+          //   className="overflow-hidden rounded-md w-4/5"
+          //   href={`/study-spot/${studySpot.slug}`}
+          //   style={{
+          //     aspectRatio: studySpot.images[0].aspectRatio,
+          //     width: `100%`,
+          //     height: `100%`,
+          //     display: `block`,
+          //   }}
+          // >
+          <Image
+            image={{ ...studySpot.images[0] }}
+            key={studySpot.images[0].url}
+            alt={`Image of ${studySpot.name}`}
+            objectFit="contain"
+            className="rounded-md overflow-hidden w-4/5"
+          />
+          // </Link>
         )}
       </CardHeader>
       <CardContent className="space-y-4 p-0 w-29 border-y border-gray-400 py-4 flex flex-col">

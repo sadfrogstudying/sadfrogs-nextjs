@@ -51,7 +51,10 @@ const FullWidthHeroCarousel: React.FC<PropType> = (props) => {
       >
         <div className="flex touch-pan-y h-96 gap-2">
           {images.map((image) => (
-            <div className="relative w-full h-full" key={image.id}>
+            <div
+              className="relative w-fit h-full rounded-md overflow-hidden"
+              key={image.id}
+            >
               <Image
                 image={{ ...image }}
                 alt={`Image of ${name}`}
