@@ -54,6 +54,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^13.4.10",
     "@types/eslint": "^8.44.0",
     "@types/google.maps": "^3.53.5",
     "@types/lodash": "^4.14.195",
@@ -66,6 +67,7 @@
     "@typescript-eslint/parser": "^6.1.0",
     "@upstash/ratelimit": "^0.4.3",
     "autoprefixer": "^10.4.14",
+    "cross-env": "^7.0.3",
     "eslint": "^8.45.0",
     "eslint-config-next": "^13.4.10",
     "mime-types": "^2.1.35",
