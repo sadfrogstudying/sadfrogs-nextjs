@@ -2,7 +2,17 @@ import HeroText from "~/components/StudySpot/Hero/Text";
 import InfoTable from "~/components/StudySpot/Info/Table";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
-import FullWidthHeroCarousel from "~/components/StudySpot/Hero/FullWidthCarousel";
+
+import dynamic from "next/dynamic";
+import FullWidthCarouselSkeleton from "~/components/StudySpot/Hero/FullWidthCarouselSkeleton";
+
+const FullWidthHeroCarousel = dynamic(
+  () => import("~/components/StudySpot/Hero/FullWidthCarousel"),
+  {
+    loading: () => <FullWidthCarouselSkeleton />,
+    ssr: false,
+  }
+);
 
 const StudySpotPage = () => {
   const router = useRouter();
