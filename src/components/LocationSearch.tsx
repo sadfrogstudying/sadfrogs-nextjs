@@ -55,6 +55,7 @@ const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
         }}
       />
       <Popover open={open} onOpenChange={setOpen}>
+        <div ref={placesDivRef}></div>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
@@ -129,7 +130,6 @@ const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
               </CommandGroup>
             )}
           </Command>
-          <div ref={placesDivRef}></div>
         </PopoverContent>
       </Popover>
     </>
