@@ -22,7 +22,7 @@ export const FullWidthCarouselThumb: React.FC<PropType> = (props) => {
   return (
     <button
       onClick={onClick}
-      className={`touch-manipulation relative rounded ${thumbOpacity} flex touch-pan-y h-full`}
+      className={`touch-manipulation relative ${thumbOpacity} flex touch-pan-y h-full`}
       type="button"
       style={{
         aspectRatio: image.aspectRatio,
@@ -33,6 +33,7 @@ export const FullWidthCarouselThumb: React.FC<PropType> = (props) => {
         alt={`Image of ${name}`}
         objectFit="cover"
         key={image.url}
+        className="rounded overflow-hidden"
       />
     </button>
   );
