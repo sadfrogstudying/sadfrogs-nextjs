@@ -14,7 +14,7 @@ const DeleteAlertDialog = dynamic(() => import("./DeleteAlertDialog"), {
 
 const Loading = () => (
   <Button className="h-7" variant="secondary">
-    Deleting...
+    Loading...
   </Button>
 );
 
