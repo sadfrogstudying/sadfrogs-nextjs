@@ -1,5 +1,6 @@
-import { ReactNode, useEffect } from "react";
-import Leaflet, { MapOptions } from "leaflet";
+import { useEffect } from "react";
+import { Icon } from "leaflet";
+import type { MapOptions } from "leaflet";
 import {
   MapContainer,
   Marker,
@@ -9,6 +10,7 @@ import {
 } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
+import { cn } from "~/lib/utils";
 
 interface Props extends MapOptions {
   className?: string;
@@ -17,8 +19,8 @@ interface Props extends MapOptions {
 
 const FinalDynamicMap = ({ className, markers, ...rest }: Props) => {
   useEffect(() => {
-    (async function init() {
-      Leaflet.Icon.Default.mergeOptions({
+    (function init() {
+      Icon.Default.mergeOptions({
         iconSize: [24, 24],
         iconAnchor: [12, 12],
         iconRetinaUrl: "leaflet/images/marker-icon-2x.png",
@@ -32,8 +34,10 @@ const FinalDynamicMap = ({ className, markers, ...rest }: Props) => {
 
   return (
     <div
-      className="w-full mb-4 rounded-md overflow-hidden border border-gray-200"
-      style={{ height: `500px` }}
+      className={cn(
+        "w-full h-96 mb-4 rounded-md overflow-hidden border border-gray-200",
+        className
+      )}
     >
       <MapContainer
         center={DEFAULT_CENTER}
