@@ -49,12 +49,9 @@ const FullWidthHeroCarousel: React.FC<PropType> = (props) => {
         className={`overflow-hidden bg-muted rounded ${animatePulse}`}
         ref={emblaMainRef}
       >
-        <div className="flex touch-pan-y h-96 gap-2">
+        <div className="flex touch-pan-y h-96 gap-2 cursor-grab active:cursor-grabbing">
           {images.map((image) => (
-            <div
-              className="relative w-fit h-full rounded-md overflow-hidden"
-              key={image.id}
-            >
+            <div className="relative w-fit h-full rounded-md" key={image.id}>
               <Image
                 image={{ ...image }}
                 alt={`Image of ${name}`}
