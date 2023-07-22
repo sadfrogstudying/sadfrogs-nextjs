@@ -10,13 +10,19 @@ const HeroText = ({ studySpot }: { studySpot?: StudySpot }) => {
         {name ? (
           <>
             <h1 className="text-3xl font-serif">{name}</h1>
-            <div className="italic font-mono">{address}</div>
+            <div className="italic font-mono">
+              {address
+                ? address
+                : "No address yet, submit one to help others find this spot!"}
+            </div>
           </>
         ) : (
           <>
-            <Skeleton className="h-8 w-4/5" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-9 w-4/5 mt-2" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
           </>
         )}
         {/* {name ? (
