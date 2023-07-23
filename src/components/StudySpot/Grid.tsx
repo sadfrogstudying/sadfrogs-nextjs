@@ -1,11 +1,9 @@
-import { api } from "~/utils/api";
 import StudySpotGridItem from "~/components/StudySpot/GridItem";
 import StatusHandler from "../StatusHandler";
-import { StudySpot } from "@prisma/client";
 
 import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "~/server/api/root";
-import { QueryStatus } from "@tanstack/react-query";
+import type { QueryStatus } from "@tanstack/react-query";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type GetNotValidatedOutput = RouterOutput["studySpots"]["getNotValidated"];

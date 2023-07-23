@@ -8,7 +8,6 @@ import {
   SheetTrigger,
 } from "~/components/UI/Sheet";
 import { useState } from "react";
-import { ScrollArea } from "~/components/UI/ScrollArea";
 
 import dynamic from "next/dynamic";
 import { Separator } from "~/components/UI/Seperator";

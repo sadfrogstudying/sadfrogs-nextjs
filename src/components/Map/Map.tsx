@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { Icon } from "leaflet";
 import type { MapOptions } from "leaflet";
