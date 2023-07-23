@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { Icon } from "leaflet";
-import type { MapOptions } from "leaflet";
+import type { LatLng, MapOptions } from "leaflet";
 import {
   MapContainer,
   Marker,
@@ -17,6 +17,9 @@ import Link from "next/link";
 import type { Image as ImageType } from "@prisma/client";
 import Image from "../UI/Image";
 import MapInfoPanel from "./MapInfoPanel";
+import { Button } from "../UI/Button";
+import MapCurrentLocationButton from "./MapCurrentLocationButton";
+import { haversineDistance } from "~/lib/map-utils";
 
 export type MarkerData = {
   name: string;
@@ -68,9 +71,11 @@ const FinalDynamicMap = ({ className, markerData, ...rest }: Props) => {
 
         <ZoomControl position="bottomleft" zoomInText="+" zoomOutText="-" />
 
+        <MapCurrentLocationButton />
+
         <MarkerClusterGroup chunkedLoading>
           {markerData.map((marker, index) => (
-            <Marker key={index} position={marker.latlng}>
+            <Marker key={index} position={marker.latlng} autoPan>
               <Popup>
                 <div className="flex flex-col space-y-4">
                   <div>
