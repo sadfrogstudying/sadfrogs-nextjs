@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { Icon } from "leaflet";
 import type { MapOptions } from "leaflet";
@@ -16,6 +16,7 @@ import { cn } from "~/lib/utils";
 import Link from "next/link";
 import type { Image as ImageType } from "@prisma/client";
 import Image from "../UI/Image";
+import MapInfoPanel from "./MapInfoPanel";
 
 export type MarkerData = {
   name: string;
@@ -55,13 +56,17 @@ const FinalDynamicMap = ({ className, markerData, ...rest }: Props) => {
         zoom={24}
         scrollWheelZoom={false}
         className="h-full w-full relative"
+        zoomControl={false}
         {...rest}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
-        <ZoomControl position="bottomleft" zoomInText="🧐" zoomOutText="🗺️" />
+
+        <MapInfoPanel />
+
+        <ZoomControl position="bottomleft" zoomInText="+" zoomOutText="-" />
 
         <MarkerClusterGroup chunkedLoading>
           {markerData.map((marker, index) => (
