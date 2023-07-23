@@ -19,7 +19,6 @@ import Image from "../UI/Image";
 import MapInfoPanel from "./MapInfoPanel";
 import { Button } from "../UI/Button";
 import MapCurrentLocationButton from "./MapCurrentLocationButton";
-import { haversineDistance } from "~/lib/map-utils";
 
 export type MarkerData = {
   name: string;
