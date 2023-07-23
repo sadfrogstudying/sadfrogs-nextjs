@@ -28,7 +28,7 @@ function CreateStudySpotFormSheet() {
         <Button variant="outline">Create</Button>
       </SheetTrigger>
       <SheetContent className="pt-14">
-        <div className="h-full w-full rounded-md overflow-scroll">
+        <div className="h-full w-full rounded-md overflow-scroll p-4">
           <div className="space-y-8 pr-4">
             <SheetHeader aria-hidden className="sr-only">
               <SheetTitle>Create New Spot</SheetTitle>

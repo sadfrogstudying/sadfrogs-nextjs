@@ -120,15 +120,16 @@ const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
                     </div>
                   </CommandItem>
                 ))}
-                <Image
-                  src="/powered_by_google.png"
-                  alt="Powered by Google"
-                  width="120"
-                  height="14"
-                  className="pt-4 pb-2 mr-2 ml-auto"
-                />
               </CommandGroup>
             )}
+
+            <Image
+              src="/powered_by_google.png"
+              alt="Powered by Google"
+              width="120"
+              height="14"
+              className="pt-4 pb-2 mr-2 ml-auto"
+            />
           </Command>
         </PopoverContent>
       </Popover>
