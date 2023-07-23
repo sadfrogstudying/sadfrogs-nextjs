@@ -1,7 +1,10 @@
 import dynamic from "next/dynamic";
 import { Skeleton } from "../UI/Skeleton";
 
-/** New pattern, where I re-export the dynamic component from index.tsx */
+/**
+ * New pattern, where I re-export the dynamic component from index.tsx
+ * The benefit is cleaner import
+ */
 const FinalMap = dynamic(
   () => import("~/components/FinalMap/FinalDynamicMap"),
   {

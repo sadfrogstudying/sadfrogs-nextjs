@@ -30,7 +30,7 @@ const FinalDynamicMap = ({ className, markers, ...rest }: Props) => {
     })();
   }, []);
 
-  const DEFAULT_CENTER: [number, number] = [38.907132, -77.036546];
+  const DEFAULT_CENTER: [number, number] = [-33.8721876, 151.2058977];
 
   return (
     <div
