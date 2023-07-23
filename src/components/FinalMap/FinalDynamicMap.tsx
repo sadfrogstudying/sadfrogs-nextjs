@@ -13,13 +13,24 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import "leaflet/dist/leaflet.css";
 
 import { cn } from "~/lib/utils";
+import Link from "next/link";
+import type { Image as ImageType } from "@prisma/client";
+import Image from "../UI/Image";
+
+export type MarkerData = {
+  name: string;
+  address: string;
+  latlng: [number, number];
+  image?: ImageType;
+  slug: string;
+}[];
 
 interface Props extends MapOptions {
   className?: string;
-  markers: [number, number][];
+  markerData: MarkerData;
 }
 
-const FinalDynamicMap = ({ className, markers, ...rest }: Props) => {
+const FinalDynamicMap = ({ className, markerData, ...rest }: Props) => {
   useEffect(() => {
     (function init() {
       Icon.Default.mergeOptions({
@@ -53,10 +64,23 @@ const FinalDynamicMap = ({ className, markers, ...rest }: Props) => {
         <ZoomControl position="bottomleft" zoomInText="🧐" zoomOutText="🗺️" />
 
         <MarkerClusterGroup chunkedLoading>
-          {markers.map((marker, index) => (
-            <Marker key={index} position={marker}>
+          {markerData.map((marker, index) => (
+            <Marker key={index} position={marker.latlng}>
               <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
+                <div className="flex flex-col space-y-4">
+                  <div>
+                    <div className="font-semibold">{marker.name}</div>
+                    <div className="text-sm">{marker.address}</div>
+                    <Link href={`/study-spot/${marker.slug}`}></Link>
+                  </div>
+                  {marker.image && (
+                    <Image
+                      image={marker.image}
+                      alt={`Photo of ${marker.name}`}
+                      className="w-40 rounded overflow-hidden"
+                    />
+                  )}
+                </div>
               </Popup>
             </Marker>
           ))}
