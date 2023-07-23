@@ -13,6 +13,7 @@ const withBundleAnalyzer = NextBundleAnalyzer({
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  transpilePackages: ["react-leaflet-cluster"],
 
   /**
    * If you have `experimental: { appDir: true }` set, then you must comment the below `i18n` config
