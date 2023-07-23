@@ -4,7 +4,7 @@ import { api } from "~/utils/api";
 import StudySpotGrid from "~/components/StudySpot/Grid";
 import FinalMap from "~/components/Map";
 
-import type { MarkerData } from "~/components/Map/DynamicMap";
+import type { MarkerData } from "~/components/Map/Map";
 
 export default function Home() {
   const { data, status } = api.studySpots.getNotValidated.useQuery(undefined, {
