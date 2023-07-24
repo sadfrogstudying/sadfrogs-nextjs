@@ -3,6 +3,9 @@ import MapControls from "./MapControls";
 import type { MarkerData } from "./Map";
 import Image from "../UI/Image";
 import { Button } from "../UI/Button";
+import { useEffect, useRef } from "react";
+import L from "leaflet";
+import { CopyIcon } from "lucide-react";
 
 const MapInfoPanel = ({
   selectedMarker,
@@ -11,59 +14,73 @@ const MapInfoPanel = ({
   selectedMarker: MarkerData | null;
   clearSelectedMarker: () => void;
 }) => {
+  const copyToClipboard = async (text: string) =>
+    await navigator.clipboard.writeText(text);
+
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Prevent user from dragging the map when clicking on the controls
+  useEffect(() => {
+    if (!panelRef.current) return;
+    L.DomEvent.disableClickPropagation(panelRef.current);
+  }, []);
+
   return (
-    <div className="absolute w-80 bg top-4 left-4 bg-white p-4 rounded-md font-mono space-y-6">
-      <h2 className="text-2xl font-serif tracking-tight md:text-4xl">
-        Sad Frogs Locator
-      </h2>
+    <div className="pointer-events-none absolute w-full flex justify-center bottom-8 md:top-4 md:bottom-auto md:left-4 md:w-fit">
+      <div
+        className="pointer-events-auto w-96 bg bg-white p-4 rounded-md font-mono space-y-6 mx-4 md:mx-0"
+        ref={panelRef}
+      >
+        <h2 className="text-2xl font-serif tracking-tight md:text-4xl">
+          Sad Frogs Locator
+        </h2>
 
-      <div className="space-y-4">
-        {!selectedMarker ? (
-          <p>
-            Use this map to find study spots near you. Click on a marker to see
-            more information about the study spot.
-          </p>
-        ) : (
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <Link href={`/study-spot/${selectedMarker.slug}`}>
-                {selectedMarker.name}
-              </Link>
-              <p>{selectedMarker.address}</p>
-              <p>lat: {selectedMarker.latlng[0]}</p>
-              <p>lng: {selectedMarker.latlng[1]}</p>
+        <div className="space-y-4">
+          {!selectedMarker ? (
+            <p>
+              Use this map to find study spots near you. Click on a marker to
+              see more information about the study spot.
+            </p>
+          ) : (
+            <div className="space-y-4 flex gap-4 items-end md:items-start md:flex-col">
+              {selectedMarker.image && (
+                <Image
+                  image={selectedMarker.image}
+                  alt={`Photo of ${selectedMarker.name}`}
+                  className="w-1/2 rounded overflow-hidden"
+                />
+              )}
+              <div className="space-y-1 w-1/2">
+                <Link
+                  href={`/study-spot/${selectedMarker.slug}`}
+                  className="hover:bg-gray-100 active:bg-gray-200 rounded-md w-full block"
+                >
+                  {selectedMarker.name}
+                </Link>
+                <p
+                  onClick={() => copyToClipboard(selectedMarker.address)}
+                  className="cursor-pointer hover:bg-gray-100 active:bg-gray-200 rounded-md"
+                >
+                  {selectedMarker.address}{" "}
+                  <CopyIcon className="h-2 w-2 inline" />
+                </p>
+              </div>
             </div>
-            {selectedMarker.image && (
-              <Image
-                image={selectedMarker.image}
-                alt={`Photo of ${selectedMarker.name}`}
-                className="w-40 rounded overflow-hidden"
-              />
-            )}
-          </div>
-        )}
-        <p>
-          For a larger map, click{" "}
-          <Link
-            href="/map"
-            className="underline border border-gray-100 p-2 rounded-md bg-gray-50 font-bold hover:bg-gray-100 active:bg-gray-200"
-          >
-            here
-          </Link>
-        </p>
+          )}
 
-        {selectedMarker && (
-          <Button
-            className="h-8"
-            variant="destructive"
-            onClick={clearSelectedMarker}
-          >
-            Clear
-          </Button>
-        )}
+          {selectedMarker && (
+            <Button
+              className="h-8"
+              variant="destructive"
+              onClick={clearSelectedMarker}
+            >
+              Clear
+            </Button>
+          )}
+        </div>
+
+        <MapControls />
       </div>
-
-      <MapControls />
     </div>
   );
 };
