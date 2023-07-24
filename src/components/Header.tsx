@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation";
 
 import dynamic from "next/dynamic";
 import { Button } from "./UI/Button";
+import MobileMenuSheet from "./MobileMenuSheet";
 const CreateStudySpotFormSheet = dynamic(
   () => import("~/components/StudySpot/CreateForm/CreateFormSheet"),
   {
@@ -24,7 +25,7 @@ const Header = () => {
   return (
     <header className="pointer-events-none fixed flex justify-between z-20 w-full rounded top-0 left-0">
       <h1
-        className={`pointer-events-auto text-3xl font-serif tracking-tight md:text-4xl flex justify-center items-center p-4 bg-white rounded-md m-0 md:m-4 ${
+        className={`pointer-events-auto text-2xl font-serif tracking-tight md:text-4xl flex justify-center items-center p-4 bg-white rounded-md m-0 md:m-4 ${
           isMapPage ? "md:invisible" : "visible"
         }`}
       >
@@ -32,7 +33,7 @@ const Header = () => {
       </h1>
       <div
         role="menubar"
-        className="flex p-4 z-20 gap-4 justify-center items-center font-mono md:m-4 rounded-md"
+        className="p-4 z-20 gap-4 justify-center items-center font-mono md:m-4 rounded-md hidden md:flex"
       >
         <Link href="/about" className="pointer-events-auto h-fit">
           About
@@ -44,6 +45,7 @@ const Header = () => {
         <span className="text-gray-300"> | </span>
         <CreateStudySpotFormSheet />
       </div>
+      <MobileMenuSheet className="block md:hidden" />
     </header>
   );
 };
