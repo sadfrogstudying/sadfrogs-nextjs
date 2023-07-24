@@ -25,7 +25,7 @@ const Header = () => {
   return (
     <header className="pointer-events-none fixed flex justify-between z-20 w-full rounded top-0 left-0">
       <h1
-        className={`pointer-events-auto text-2xl font-serif tracking-tight md:text-4xl flex justify-center items-center p-4 bg-white rounded-md m-0 md:m-4 ${
+        className={`pointer-events-auto text-2xl font-serif tracking-tight md:text-4xl flex justify-center items-center p-4 m-0 md:m-4 ${
           isMapPage ? "md:invisible" : "visible"
         }`}
       >

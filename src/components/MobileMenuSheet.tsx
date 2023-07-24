@@ -13,6 +13,7 @@ import { cn } from "~/lib/utils";
 
 function MobileMenuSheet({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -29,16 +30,25 @@ function MobileMenuSheet({ className }: { className?: string }) {
           Mobile Menu
         </SheetTitle>
         <nav className="flex flex-col ml-auto w-1/2 justify-end items-end">
-          {/* <h1
-            className={`pointer-events-auto font-serif tracking-tight text-3xl flex justify-center items-center p-4 bg-white rounded-md`}
+          <h1
+            onClick={close}
+            className={`pointer-events-auto font-serif tracking-tight text-3xl mb-4`}
           >
             <Link href="/">Sad Frogs Studying</Link>
-          </h1> */}
-          <Link href="/about" className="pointer-events-auto h-fit py-2">
+          </h1>
+          <Link
+            onClick={close}
+            href="/about"
+            className="pointer-events-auto h-fit py-2"
+          >
             About
           </Link>
 
-          <Link href="/map" className="pointer-events-auto h-fit py-2 mb-2">
+          <Link
+            onClick={close}
+            href="/map"
+            className="pointer-events-auto h-fit py-2 mb-2"
+          >
             Map
           </Link>
 
