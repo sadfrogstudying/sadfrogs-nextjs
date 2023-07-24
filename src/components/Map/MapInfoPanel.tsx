@@ -9,9 +9,11 @@ import { CopyIcon } from "lucide-react";
 const MapInfoPanel = ({
   selectedMarker,
   clearSelectedMarker,
+  setUserCoords,
 }: {
   selectedMarker: MarkerData | null;
   clearSelectedMarker: () => void;
+  setUserCoords: (latlng: L.LatLng) => void;
 }) => {
   const copyToClipboard = async (text: string) =>
     await navigator.clipboard.writeText(text);
@@ -90,6 +92,7 @@ const MapInfoPanel = ({
         <MapControls
           clearSelectedMarker={clearSelectedMarker}
           selectedMarker={!!selectedMarker}
+          setUserCoords={setUserCoords}
         />
       </div>
     </div>

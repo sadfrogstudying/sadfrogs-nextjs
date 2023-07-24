@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { Icon } from "leaflet";
-import type { MapOptions } from "leaflet";
+import L, { Icon } from "leaflet";
+import type { LatLng, MapOptions } from "leaflet";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import "leaflet/dist/leaflet.css";
@@ -11,6 +11,7 @@ import type { Image as ImageType } from "@prisma/client";
 import MapInfoPanel from "./MapInfoPanel";
 
 export type MarkerData = {
+  index: number;
   name: string;
   address: string;
   latlng: [number, number];
@@ -31,6 +32,7 @@ const FinalDynamicMap = ({
   ...props
 }: Props) => {
   const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
+  const [userCoords, setUserCoords] = useState<LatLng | null>(null);
 
   useEffect(() => {
     (function init() {
@@ -45,6 +47,30 @@ const FinalDynamicMap = ({
   }, []);
 
   const clearSelectedMarker = () => setSelectedMarker(null);
+
+  const defaultIcon = new L.Icon({
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    iconRetinaUrl: "leaflet/images/marker-icon-2x.png",
+    iconUrl: "leaflet/images/marker-icon.png",
+    shadowUrl: "leaflet/images/marker-shadow.png",
+  });
+
+  const selectedIcon = new L.Icon({
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    iconRetinaUrl: "leaflet/images/selected-marker-icon-2x.png",
+    iconUrl: "leaflet/images/selected-marker-icon.png",
+    shadowUrl: "leaflet/images/marker-shadow.png",
+  });
+
+  const userIcon = new L.Icon({
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    iconRetinaUrl: "leaflet/images/user-marker-icon-2x.png",
+    iconUrl: "leaflet/images/user-marker-icon.png",
+    shadowUrl: "leaflet/images/marker-shadow.png",
+  });
 
   return (
     <div
@@ -70,6 +96,19 @@ const FinalDynamicMap = ({
           <MapInfoPanel
             selectedMarker={selectedMarker}
             clearSelectedMarker={clearSelectedMarker}
+            setUserCoords={(latLng) => setUserCoords(latLng)}
+          />
+        )}
+
+        {userCoords && (
+          <Marker
+            position={userCoords}
+            icon={userIcon}
+            eventHandlers={{
+              click: () => {
+                setSelectedMarker(null);
+              },
+            }}
           />
         )}
 
@@ -79,6 +118,9 @@ const FinalDynamicMap = ({
               key={index}
               position={marker.latlng}
               autoPan
+              icon={
+                index === selectedMarker?.index ? selectedIcon : defaultIcon
+              }
               eventHandlers={{
                 click: () => {
                   setSelectedMarker(marker);

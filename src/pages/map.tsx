@@ -8,7 +8,8 @@ const MapPage = () => {
   });
 
   const markerData: MarkerData[] =
-    data?.map((studySpot) => ({
+    data?.map((studySpot, i) => ({
+      index: i,
       name: studySpot.name,
       address: studySpot.address,
       latlng: [studySpot.latitude, studySpot.longitude],

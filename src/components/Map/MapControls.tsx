@@ -1,23 +1,32 @@
-import { useMap } from "react-leaflet";
-import MapCurrentLocationButton from "./MapCurrentLocationButton";
+import { useMapEvents } from "react-leaflet";
 import { Button } from "../UI/Button";
 
 import { cn } from "~/lib/utils";
+import type { LatLng } from "leaflet";
 
 const MapControls = ({
   className,
   clearSelectedMarker,
   selectedMarker,
+  setUserCoords,
 }: {
   className?: string;
   clearSelectedMarker: () => void;
   selectedMarker: boolean;
+  setUserCoords: (latlng: LatLng) => void;
 }) => {
-  const map = useMap();
+  const map = useMapEvents({
+    locationfound(e) {
+      map.setView(e.latlng, 24);
+      setUserCoords && setUserCoords(e.latlng);
+    },
+  });
 
   return (
     <div className={cn("flex gap-2 font-mono", className)}>
-      <MapCurrentLocationButton className="h-8" />
+      <Button className="h-8" onClick={() => map.locate()}>
+        Current Location
+      </Button>
       <Button className="h-8" onClick={() => map.zoomIn()}>
         +
       </Button>
