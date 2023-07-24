@@ -28,7 +28,7 @@ function CreateStudySpotFormSheet() {
           Create
         </Button>
       </SheetTrigger>
-      <SheetContent className="pt-14">
+      <SheetContent className="pt-14 w-full">
         <div className="h-full w-full rounded-md overflow-scroll p-4">
           <div className="space-y-8 pr-4">
             <SheetHeader aria-hidden className="sr-only">

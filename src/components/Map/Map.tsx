@@ -82,7 +82,6 @@ const FinalDynamicMap = ({
       <MapContainer
         center={[-33.8721876, 151.2058977]}
         zoom={24}
-        scrollWheelZoom={false}
         className="h-full w-full"
         zoomControl={false}
         {...props}
@@ -104,8 +103,12 @@ const FinalDynamicMap = ({
           <Marker
             position={userCoords}
             icon={userIcon}
+            alt="Your location"
             eventHandlers={{
               click: () => {
+                setSelectedMarker(null);
+              },
+              keypress: () => {
                 setSelectedMarker(null);
               },
             }}
@@ -121,8 +124,12 @@ const FinalDynamicMap = ({
               icon={
                 index === selectedMarker?.index ? selectedIcon : defaultIcon
               }
+              alt={`Location of ${marker.name}`}
               eventHandlers={{
                 click: () => {
+                  setSelectedMarker(marker);
+                },
+                keypress: () => {
                   setSelectedMarker(marker);
                 },
               }}
