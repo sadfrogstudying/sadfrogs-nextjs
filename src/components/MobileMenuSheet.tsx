@@ -29,7 +29,7 @@ function MobileMenuSheet({ className }: { className?: string }) {
         <SheetTitle aria-hidden className="sr-only">
           Mobile Menu
         </SheetTitle>
-        <nav className="flex flex-col ml-auto w-1/2 justify-end items-end">
+        <nav className="flex flex-col ml-auto justify-end items-end">
           <h1
             onClick={close}
             className={`pointer-events-auto font-serif tracking-tight text-3xl mb-4`}
