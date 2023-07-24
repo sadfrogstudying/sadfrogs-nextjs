@@ -68,7 +68,7 @@ const MapInfoPanel = ({
                   {selectedMarker.name}
                 </Link>
                 <p
-                  onClick={() => copyToClipboard(selectedMarker.address)}
+                  onClick={() => void copyToClipboard(selectedMarker.address)}
                   className="cursor-pointer hover:bg-gray-100 active:bg-gray-200 rounded-md"
                 >
                   <CopyIcon
