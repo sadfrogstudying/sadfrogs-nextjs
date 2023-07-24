@@ -1,31 +1,40 @@
 import { Button } from "../UI/Button";
 import { useMapEvents } from "react-leaflet";
 
-import type { Dispatch, SetStateAction } from "react";
+import {
+  forwardRef,
+  type Dispatch,
+  type SetStateAction,
+  type InputHTMLAttributes,
+} from "react";
 import type { LatLng } from "leaflet";
 
-const MapCurrentLocationButton = ({
-  setUserCoords,
-}: {
-  setUserCoords?: Dispatch<SetStateAction<LatLng | null>>;
-}) => {
-  const map = useMapEvents({
-    locationfound(e) {
-      map.setView(e.latlng, 24);
-      setUserCoords && setUserCoords(e.latlng);
-    },
-  });
+type ButtonProps = InputHTMLAttributes<HTMLButtonElement>;
 
-  return (
-    <Button
-      className="absolute top-4 right-4 font-mono"
-      onClick={() => {
-        map.locate();
-      }}
-    >
-      Current Location
-    </Button>
-  );
-};
+interface Props extends ButtonProps {
+  setUserCoords?: Dispatch<SetStateAction<LatLng | null>>;
+}
+
+const MapCurrentLocationButton = forwardRef<HTMLButtonElement, Props>(
+  ({ setUserCoords, ...props }, ref) => {
+    const map = useMapEvents({
+      locationfound(e) {
+        map.setView(e.latlng, 24);
+        setUserCoords && setUserCoords(e.latlng);
+      },
+    });
+
+    return (
+      <Button
+        ref={ref}
+        className={props.className}
+        onClick={() => map.locate()}
+      >
+        Current Location
+      </Button>
+    );
+  }
+);
+MapCurrentLocationButton.displayName = "MapCurrentLocationButton";
 
 export default MapCurrentLocationButton;

@@ -19,7 +19,7 @@ const Loading = () => (
 const Header = () => {
   return (
     <>
-      <header className="fixed flex p-4 z-20 md:w-auto md:bg-white rounded">
+      <header className="fixed flex p-4 z-20 md:w-auto md:bg-white rounded top-4 left-4">
         <Link href="/">
           <h1 className="text-2xl font-serif tracking-tight md:text-4xl">
             Sad Frogs Studying
@@ -33,7 +33,11 @@ const Header = () => {
         <Link href="/about" className="h-fit">
           About
         </Link>
-
+        <span className="text-gray-300"> | </span>
+        <Link href="/map" className="h-fit">
+          Map
+        </Link>
+        <span className="text-gray-300"> | </span>
         <CreateStudySpotFormSheet />
       </div>
     </>

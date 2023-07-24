@@ -1,23 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { Icon } from "leaflet";
 import type { MapOptions } from "leaflet";
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  ZoomControl,
-} from "react-leaflet";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import "leaflet/dist/leaflet.css";
 
 import { cn } from "~/lib/utils";
-import Link from "next/link";
 import type { Image as ImageType } from "@prisma/client";
-import Image from "../UI/Image";
 import MapInfoPanel from "./MapInfoPanel";
-import MapCurrentLocationButton from "./MapCurrentLocationButton";
 
 export type MarkerData = {
   name: string;
@@ -25,14 +16,22 @@ export type MarkerData = {
   latlng: [number, number];
   image?: ImageType;
   slug: string;
-}[];
+};
 
 interface Props extends MapOptions {
   className?: string;
-  markerData: MarkerData;
+  infoPanel?: boolean;
+  allMarkerData: MarkerData[];
 }
 
-const FinalDynamicMap = ({ className, markerData, ...rest }: Props) => {
+const FinalDynamicMap = ({
+  className,
+  infoPanel = false,
+  allMarkerData,
+  ...props
+}: Props) => {
+  const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
+
   useEffect(() => {
     (function init() {
       Icon.Default.mergeOptions({
@@ -45,10 +44,12 @@ const FinalDynamicMap = ({ className, markerData, ...rest }: Props) => {
     })();
   }, []);
 
+  const clearSelectedMarker = () => setSelectedMarker(null);
+
   return (
     <div
       className={cn(
-        "w-full h-96 mb-4 rounded-md overflow-hidden border border-gray-200",
+        "w-full h-[30rem] mb-4 rounded-md overflow-hidden relative",
         className
       )}
     >
@@ -56,41 +57,34 @@ const FinalDynamicMap = ({ className, markerData, ...rest }: Props) => {
         center={[-33.8721876, 151.2058977]}
         zoom={24}
         scrollWheelZoom={false}
-        className="h-full w-full relative"
+        className="h-full w-full"
         zoomControl={false}
-        {...rest}
+        {...props}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
 
-        <MapInfoPanel />
-
-        <ZoomControl position="bottomleft" zoomInText="+" zoomOutText="-" />
-
-        <MapCurrentLocationButton />
+        {infoPanel && (
+          <MapInfoPanel
+            selectedMarker={selectedMarker}
+            clearSelectedMarker={clearSelectedMarker}
+          />
+        )}
 
         <MarkerClusterGroup chunkedLoading>
-          {markerData.map((marker, index) => (
-            <Marker key={index} position={marker.latlng} autoPan>
-              <Popup>
-                <div className="flex flex-col space-y-4">
-                  <div>
-                    <div className="font-semibold">{marker.name}</div>
-                    <div className="text-sm">{marker.address}</div>
-                    <Link href={`/study-spot/${marker.slug}`}></Link>
-                  </div>
-                  {marker.image && (
-                    <Image
-                      image={marker.image}
-                      alt={`Photo of ${marker.name}`}
-                      className="w-40 rounded overflow-hidden"
-                    />
-                  )}
-                </div>
-              </Popup>
-            </Marker>
+          {allMarkerData.map((marker, index) => (
+            <Marker
+              key={index}
+              position={marker.latlng}
+              autoPan
+              eventHandlers={{
+                click: () => {
+                  setSelectedMarker(marker);
+                },
+              }}
+            />
           ))}
         </MarkerClusterGroup>
       </MapContainer>
