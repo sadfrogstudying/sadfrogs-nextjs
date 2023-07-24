@@ -18,29 +18,25 @@ const Loading = () => (
 
 const Header = () => {
   return (
-    <>
-      <header className="fixed flex p-4 z-20 md:w-auto md:bg-white rounded top-4 left-4">
-        <Link href="/">
-          <h1 className="text-2xl font-serif tracking-tight md:text-4xl">
-            Sad Frogs Studying
-          </h1>
-        </Link>
-      </header>
+    <header className="pointer-events-none fixed flex justify-between z-20 w-full rounded top-0 left-0">
+      <h1 className="pointer-events-auto text-2xl font-serif tracking-tight md:text-4xl flex justify-center items-center p-4">
+        <Link href="/">Sad Frogs Studying</Link>
+      </h1>
       <div
         role="menubar"
-        className="flex fixed top-0 right-0 p-4 z-20 gap-4 justify-center items-center font-mono"
+        className="flex p-4 z-20 gap-4 justify-center items-center font-mono"
       >
-        <Link href="/about" className="h-fit">
+        <Link href="/about" className="pointer-events-auto h-fit">
           About
         </Link>
         <span className="text-gray-300"> | </span>
-        <Link href="/map" className="h-fit">
+        <Link href="/map" className="pointer-events-auto h-fit">
           Map
         </Link>
         <span className="text-gray-300"> | </span>
         <CreateStudySpotFormSheet />
       </div>
-    </>
+    </header>
   );
 };
 

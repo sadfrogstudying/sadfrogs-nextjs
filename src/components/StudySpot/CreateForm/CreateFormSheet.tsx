@@ -24,7 +24,9 @@ function CreateStudySpotFormSheet() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline">Create</Button>
+        <Button variant="outline" className="pointer-events-auto">
+          Create
+        </Button>
       </SheetTrigger>
       <SheetContent className="pt-14">
         <div className="h-full w-full rounded-md overflow-scroll p-4">
