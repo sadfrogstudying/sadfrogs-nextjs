@@ -4,7 +4,15 @@ import { Button } from "../UI/Button";
 
 import { cn } from "~/lib/utils";
 
-const MapControls = ({ className }: { className?: string }) => {
+const MapControls = ({
+  className,
+  clearSelectedMarker,
+  selectedMarker,
+}: {
+  className?: string;
+  clearSelectedMarker: () => void;
+  selectedMarker: boolean;
+}) => {
   const map = useMap();
 
   return (
@@ -15,6 +23,14 @@ const MapControls = ({ className }: { className?: string }) => {
       </Button>
       <Button className="h-8" onClick={() => map.zoomOut()}>
         -
+      </Button>
+      <Button
+        className="h-8"
+        variant="destructive"
+        onClick={clearSelectedMarker}
+        disabled={!selectedMarker}
+      >
+        Clear
       </Button>
     </div>
   );
