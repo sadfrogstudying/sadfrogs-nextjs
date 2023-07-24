@@ -61,7 +61,7 @@ const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between"
+            className="w-full justify-between bg-gray-100 text-lg sm:text-sm"
           >
             {selectedPlace ? (
               <span className="flex truncate items-center">
@@ -83,12 +83,13 @@ const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
           className="w-[var(--radix-popover-trigger-width)] p-0"
           align="start"
         >
-          <Command>
+          <Command className="font-mono">
             <CommandInput
               placeholder={!libraryReady ? "Loading..." : "Search location..."}
               onValueChange={(val) => onChange(val)}
               value={inputValue}
               disabled={!libraryReady}
+              className="text-lg sm:text-sm"
             />
             <CommandEmpty>No locations found.</CommandEmpty>
             {predictions.length > 0 && (
