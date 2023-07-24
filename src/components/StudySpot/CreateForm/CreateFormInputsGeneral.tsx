@@ -98,7 +98,7 @@ const CreateFormInputsGeneral = ({ form }: Props) => {
                 <FileInput
                   isSuccess={false}
                   setValue={(files) => form.setValue("images", files)}
-                  {...field}
+                  value={field.value}
                 />
               </FormControl>
             </FormItem>
