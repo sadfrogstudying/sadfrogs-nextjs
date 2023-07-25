@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import FullWidthCarouselSkeleton from "~/components/StudySpot/Hero/FullWidthCarouselSkeleton";
 import { Skeleton } from "~/components/UI/Skeleton";
+import EditFormSheet from "~/components/StudySpot/EditForm";
 
 const FullWidthHeroCarousel = dynamic(
   () => import("~/components/StudySpot/Hero/FullWidthCarousel"),
@@ -31,11 +32,14 @@ const StudySpotPage = () => {
 
   return (
     <main className="pb-4 h-fit">
-      <section className="flex-col-reverse pt-12 min-h-screen md:pt-0 mt-auto flex flex-col">
+      <section className="flex flex-col-reverse pt-12 min-h-screen md:pt-0 mt-auto">
         <div className="w-full h-fit p-4 space-y-4 md:w-96">
           {name ? (
             <>
-              <h1 className="text-3xl font-serif">{name}</h1>
+              <div className="flex gap-4">
+                <h1 className="text-3xl font-serif">{name}</h1>
+                {studySpot.data && <EditFormSheet studySpot={studySpot.data} />}
+              </div>
               <div className="italic font-mono">
                 {address
                   ? address
