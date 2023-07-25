@@ -8,9 +8,9 @@ import {
 
 import { Button } from "~/components/UI/Button";
 import { Form } from "~/components/UI/Form";
-import StudySpotInputsGeneral from "~/components/StudySpot/Form/InputsGeneral";
-import StudySpotInputsLocation from "~/components/StudySpot/Form/InputsLocation";
-import StudySpotInputsMisc from "~/components/StudySpot/Form/InputsMisc";
+import StudySpotInputsGeneral from "~/components/StudySpot/Form/Input/InputsGeneral";
+import StudySpotInputsLocation from "~/components/StudySpot/Form/Input/InputsLocation";
+import StudySpotInputsMisc from "~/components/StudySpot/Form/Input/InputsMisc";
 
 import type { StudySpotInputV2 } from "~/schemas/study-spots";
 import type { GetOneOutput } from "~/types/RouterOutputTypes";
