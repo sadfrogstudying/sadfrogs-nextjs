@@ -1,22 +1,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import dynamic from "next/dynamic";
-import { Button } from "./UI/Button";
 import MobileMenuSheet from "./MobileMenuSheet";
-const CreateStudySpotFormSheet = dynamic(
-  () => import("~/components/StudySpot/CreateForm/CreateFormSheet"),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  }
-);
-
-const Loading = () => (
-  <Button variant="outline" disabled>
-    Create
-  </Button>
-);
+import CreateStudySpotFormSheet from "./StudySpot/CreateForm";
 
 const Header = () => {
   const pathname = usePathname();
