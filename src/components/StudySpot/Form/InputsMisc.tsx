@@ -18,7 +18,7 @@ interface Props {
   form: UseFormReturn<StudySpotInputV2>;
 }
 
-const CreateFormInputsMisc = ({ form }: Props) => {
+const StudySpotInputsMisc = ({ form }: Props) => {
   return (
     <div className="space-y-8">
       <FormSectionHeader title="Miscellaneous" />
@@ -241,4 +241,4 @@ const CreateFormInputsMisc = ({ form }: Props) => {
   );
 };
 
-export default CreateFormInputsMisc;
+export default StudySpotInputsMisc;

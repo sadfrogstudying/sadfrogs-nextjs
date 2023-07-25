@@ -19,7 +19,7 @@ interface Props {
   form: UseFormReturn<StudySpotInputV2>;
 }
 
-const CreateFormInputsGeneral = ({ form }: Props) => {
+const StudySpotInputsGeneral = ({ form }: Props) => {
   return (
     <div className="space-y-8">
       <FormSectionHeader
@@ -147,4 +147,4 @@ const CreateFormInputsGeneral = ({ form }: Props) => {
   );
 };
 
-export default CreateFormInputsGeneral;
+export default StudySpotInputsGeneral;

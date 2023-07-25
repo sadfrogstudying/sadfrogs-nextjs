@@ -41,7 +41,7 @@ interface Props {
   form: UseFormReturn<StudySpotInputV2>;
 }
 
-const CreateFormInputsLocation = ({ form }: Props) => {
+const StudySpotInputsLocation = ({ form }: Props) => {
   const onSelectedPlaceReady = (place: PlaceResultPicked) => {
     const { place_id, address_components, formatted_address, geometry } = place;
 
@@ -196,4 +196,4 @@ const CreateFormInputsLocation = ({ form }: Props) => {
   );
 };
 
-export default CreateFormInputsLocation;
+export default StudySpotInputsLocation;

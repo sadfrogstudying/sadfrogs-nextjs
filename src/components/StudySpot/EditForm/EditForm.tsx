@@ -8,9 +8,9 @@ import {
 
 import { Button } from "~/components/UI/Button";
 import { Form } from "~/components/UI/Form";
-import CreateFormInputsGeneral from "~/components/StudySpot/CreateForm/CreateFormInputsGeneral";
-import CreateFormInputsLocation from "~/components/StudySpot/CreateForm/CreateFormInputsLocation";
-import CreateFormInputsMisc from "~/components/StudySpot/CreateForm/CreateFormInputsMisc";
+import StudySpotInputsGeneral from "~/components/StudySpot/Form/InputsGeneral";
+import StudySpotInputsLocation from "~/components/StudySpot/Form/InputsLocation";
+import StudySpotInputsMisc from "~/components/StudySpot/Form/InputsMisc";
 
 import type { StudySpotInputV2 } from "~/schemas/study-spots";
 import { GetOneOutput } from "~/types/RouterOutputTypes";
@@ -103,9 +103,9 @@ const EditStudySpotForm = ({
         }}
         className="space-y-16 m-auto font-mono"
       >
-        <CreateFormInputsGeneral form={form} />
-        <CreateFormInputsLocation form={form} />
-        <CreateFormInputsMisc form={form} />
+        <StudySpotInputsGeneral form={form} />
+        <StudySpotInputsLocation form={form} />
+        <StudySpotInputsMisc form={form} />
         <ul className="text-sm text-destructive">
           {zodErrorMessages.length !== 0 ? (
             <>
