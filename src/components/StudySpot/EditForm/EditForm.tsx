@@ -13,7 +13,7 @@ import StudySpotInputsLocation from "~/components/StudySpot/Form/InputsLocation"
 import StudySpotInputsMisc from "~/components/StudySpot/Form/InputsMisc";
 
 import type { StudySpotInputV2 } from "~/schemas/study-spots";
-import { GetOneOutput } from "~/types/RouterOutputTypes";
+import type { GetOneOutput } from "~/types/RouterOutputTypes";
 
 /**
  *

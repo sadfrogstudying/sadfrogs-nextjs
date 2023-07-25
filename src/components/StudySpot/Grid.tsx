@@ -2,7 +2,7 @@ import StudySpotGridItem from "~/components/StudySpot/GridItem";
 import StatusHandler from "../StatusHandler";
 
 import type { QueryStatus } from "@tanstack/react-query";
-import { GetNotValidatedOutput } from "~/types/RouterOutputTypes";
+import type { GetNotValidatedOutput } from "~/types/RouterOutputTypes";
 
 const StudySpotGrid = ({
   studySpots,
