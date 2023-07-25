@@ -8,7 +8,7 @@ import {
 import { useState } from "react";
 
 import Link from "next/link";
-import CreateStudySpotFormSheet from "./StudySpot/CreateForm/CreateFormSheet";
+import CreateStudySpotFormSheet from "./StudySpot/Form/CreateForm/CreateFormSheet";
 import { cn } from "~/lib/utils";
 
 function MobileMenuSheet({ className }: { className?: string }) {
