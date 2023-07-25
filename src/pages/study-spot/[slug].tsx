@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import FullWidthCarouselSkeleton from "~/components/StudySpot/Hero/FullWidthCarouselSkeleton";
 import { Skeleton } from "~/components/UI/Skeleton";
-import EditFormSheet from "~/components/StudySpot/EditForm";
+import EditFormSheet from "~/components/StudySpot/Form/EditForm";
 
 const FullWidthHeroCarousel = dynamic(
   () => import("~/components/StudySpot/Hero/FullWidthCarousel"),

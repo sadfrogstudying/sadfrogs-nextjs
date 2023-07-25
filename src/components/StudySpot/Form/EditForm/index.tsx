@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import { Button } from "~/components/UI/Button";
 
 const EditStudySpotFormSheet = dynamic(
-  () => import("~/components/StudySpot/EditForm/EditFormSheet"),
+  () => import("~/components/StudySpot/Form/EditForm/EditFormSheet"),
   {
     loading: () => <Loading />,
     ssr: false,

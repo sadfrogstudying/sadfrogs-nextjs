@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import { Button } from "~/components/UI/Button";
 
 const CreateStudySpotFormSheet = dynamic(
-  () => import("~/components/StudySpot/CreateForm/CreateFormSheet"),
+  () => import("~/components/StudySpot/Form/CreateForm/CreateFormSheet"),
   {
     loading: () => <Loading />,
     ssr: false,

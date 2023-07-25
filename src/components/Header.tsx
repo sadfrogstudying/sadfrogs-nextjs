@@ -2,7 +2,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import MobileMenuSheet from "./MobileMenuSheet";
-import CreateStudySpotFormSheet from "./StudySpot/CreateForm";
+import CreateStudySpotFormSheet from "./StudySpot/Form/CreateForm";
 
 const Header = () => {
   const pathname = usePathname();
