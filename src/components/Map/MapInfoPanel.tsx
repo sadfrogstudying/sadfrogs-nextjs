@@ -27,7 +27,7 @@ const MapInfoPanel = ({
   }, []);
 
   return (
-    <div className="pointer-events-none fixed w-full flex justify-center bottom-8 md:top-4 md:bottom-auto md:left-4 md:w-fit">
+    <div className="pointer-events-none fixed w-full flex justify-center bottom-8 md:top-4 md:bottom-auto md:left-4 md:w-fit cursor-default">
       <div
         className="pointer-events-auto w-96 bg bg-white p-4 rounded-md font-mono space-y-6 mx-4 md:mx-0"
         ref={panelRef}
