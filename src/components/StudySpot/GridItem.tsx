@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader } from "~/components/UI/Card";
 import Image from "~/components/UI/Image";
-import type { Prisma } from "@prisma/client";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
 import dynamic from "next/dynamic";
 import { Button } from "../UI/Button";
+import { GetOneOutput } from "~/types/RouterOutputTypes";
 
 const DeleteAlertDialog = dynamic(() => import("./DeleteAlertDialog"), {
   loading: () => <Loading />,
@@ -18,15 +18,7 @@ const Loading = () => (
   </Button>
 );
 
-const StudySpotGridItem = ({
-  studySpot,
-}: {
-  studySpot: Prisma.StudySpotGetPayload<{
-    include: {
-      images: true;
-    };
-  }>;
-}) => {
+const StudySpotGridItem = ({ studySpot }: { studySpot: GetOneOutput }) => {
   const { address, wifi, music, powerOutlets } = studySpot;
   const properties = Object.entries({ address, wifi, music, powerOutlets });
 
