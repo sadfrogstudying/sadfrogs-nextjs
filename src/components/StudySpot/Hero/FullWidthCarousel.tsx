@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 
-import type { Image as ImageType } from "@prisma/client";
 import useEmblaCarousel from "embla-carousel-react";
 
 import Image from "../../UI/Image";
 import { FullWidthCarouselThumb } from "./FullWidthCarouselThumb";
+import type { ImageOutput } from "~/types/RouterOutputTypes";
 
 type PropType = {
-  images: ImageType[];
+  images: ImageOutput[];
   name: string;
 };
 

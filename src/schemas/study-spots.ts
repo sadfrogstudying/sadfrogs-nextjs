@@ -30,7 +30,6 @@ const studySpotInputSchema = z.object({
       closingTime: z.string(),
     })
     .array()
-
     .optional(),
 
   // etiquette
@@ -76,7 +75,6 @@ const studySpotOutputSchema = z.object({
   images: z
     .object({
       id: z.number(),
-      studySpotId: z.number().nullable(),
       url: z.string(),
       dominantColour: z.string(),
       width: z.number(),

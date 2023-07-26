@@ -1,10 +1,10 @@
-import type { Image as ImageType } from "@prisma/client";
 import React from "react";
 import Image from "~/components/UI/Image";
+import type { ImageOutput } from "~/types/RouterOutputTypes";
 
 type PropType = {
   selected: boolean;
-  image: ImageType;
+  image: ImageOutput;
   index: number;
   onClick: () => void;
   name: string;

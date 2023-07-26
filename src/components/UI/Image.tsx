@@ -1,13 +1,11 @@
 import { useState } from "react";
-import type { Image as PrismaImageType } from "@prisma/client";
 import FutureImage from "next/image";
 
 import { cn } from "~/lib/utils";
-
-type ImageType = Omit<PrismaImageType, "id" | "studySpotId">;
+import type { ImageOutput } from "~/types/RouterOutputTypes";
 
 interface Props {
-  image: ImageType;
+  image: ImageOutput;
   alt: string;
   quality?: number;
   placeholder?: "blur" | "empty";
