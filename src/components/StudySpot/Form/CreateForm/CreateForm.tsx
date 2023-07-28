@@ -8,11 +8,12 @@ import {
 
 import { Button } from "~/components/UI/Button";
 import { Form } from "~/components/UI/Form";
-import StudySpotInputsGeneral from "~/components/StudySpot/Form/Input/InputsGeneral";
-import StudySpotInputsLocation from "~/components/StudySpot/Form/Input/InputsLocation";
-import StudySpotInputsMisc from "~/components/StudySpot/Form/Input/InputsMisc";
+import StudySpotInputsGeneral from "~/components/StudySpot/Form/CreateInputs/InputsGeneral";
+import StudySpotInputsLocation from "~/components/StudySpot/Form/CreateInputs/InputsLocation";
+import StudySpotInputsMisc from "~/components/StudySpot/Form/CreateInputs/InputsMisc";
+import StudySpotInputsImage from "~/components/StudySpot/Form/CreateInputs/InputsImage";
 
-import type { StudySpotInputV2 } from "~/schemas/study-spots";
+import type { StudySpotFormInputs } from "~/schemas/study-spots";
 
 const defaultValues = {
   name: "",
@@ -62,7 +63,7 @@ const defaultValues = {
  *
  */
 const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
-  const form = useForm<StudySpotInputV2>({
+  const form = useForm<StudySpotFormInputs>({
     defaultValues,
   });
 
@@ -133,6 +134,7 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         className="space-y-16 m-auto font-mono"
       >
         <StudySpotInputsGeneral form={form} />
+        <StudySpotInputsImage form={form} />
         <StudySpotInputsLocation form={form} />
         <StudySpotInputsMisc form={form} />
         <ul className="text-sm text-destructive">

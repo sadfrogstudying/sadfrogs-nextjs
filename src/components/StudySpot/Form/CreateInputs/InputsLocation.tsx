@@ -13,7 +13,7 @@ import {
 } from "~/components/UI/Form";
 import { Input } from "~/components/UI/Input";
 
-import type { StudySpotInputV2 } from "~/schemas/study-spots";
+import type { StudySpotFormInputs } from "~/schemas/study-spots";
 import { Button } from "~/components/UI/Button";
 import { ChevronsUpDown } from "lucide-react";
 import type { PlaceResultPicked } from "~/types/GoogleTypes";
@@ -38,7 +38,7 @@ const Loading = () => (
 );
 
 interface Props {
-  form: UseFormReturn<StudySpotInputV2>;
+  form: UseFormReturn<StudySpotFormInputs>;
 }
 
 const StudySpotInputsLocation = ({ form }: Props) => {

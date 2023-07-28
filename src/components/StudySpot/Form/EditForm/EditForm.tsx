@@ -8,12 +8,17 @@ import {
 
 import { Button } from "~/components/UI/Button";
 import { Form } from "~/components/UI/Form";
-import StudySpotInputsGeneral from "~/components/StudySpot/Form/Input/InputsGeneral";
-import StudySpotInputsLocation from "~/components/StudySpot/Form/Input/InputsLocation";
-import StudySpotInputsMisc from "~/components/StudySpot/Form/Input/InputsMisc";
+import StudySpotInputsGeneral from "~/components/StudySpot/Form/EditInputs/InputsGeneral";
+import StudySpotInputsImage from "~/components/StudySpot/Form/EditInputs/InputsImage";
+import StudySpotInputsLocation from "~/components/StudySpot/Form/EditInputs/InputsLocation";
+import StudySpotInputsMisc from "~/components/StudySpot/Form/EditInputs/InputsMisc";
 
-import type { StudySpotInputV2 } from "~/schemas/study-spots";
-import type { GetOneOutput } from "~/types/RouterOutputTypes";
+import type {
+  StudySpotFormInputs,
+  StudySpotQueryOutput,
+  PendingEditFormInputs,
+} from "~/schemas/study-spots";
+import { differenceWith, isEqual, toPairs } from "lodash";
 
 /**
  *
@@ -27,25 +32,48 @@ const EditStudySpotForm = ({
   studySpot,
 }: {
   onSuccess?: () => void;
-  studySpot: GetOneOutput;
+  studySpot: StudySpotQueryOutput;
 }) => {
-  const defaultValuesV2: StudySpotInputV2 = {
-    ...studySpot,
-    images: [],
-  };
-  const form = useForm<StudySpotInputV2>({
-    defaultValues: defaultValuesV2,
+  const form = useForm<PendingEditFormInputs>({
+    defaultValues: {
+      ...studySpot,
+      images: [],
+      imagesToDelete: [],
+    },
   });
 
-  const apiUtils = api.useContext();
+  const getChangedFormValues = () => {
+    const existingValues = studySpot; // 35
+    const newValues = form.getValues();
+
+    const changes = differenceWith(
+      toPairs(newValues),
+      toPairs(existingValues),
+      isEqual
+    );
+    const changesObj = Object.fromEntries(changes); // the only fields that changed
+
+    // checks if the keys in changesObj are a subset of StudySpotFormInputs
+    function partiallyConformsToStudySpotFormInputs(
+      obj: object
+    ): obj is Partial<StudySpotFormInputs> {
+      const changeKeys = Object.keys(changesObj);
+      return changeKeys.every((key) => key in obj);
+    }
+
+    if (!partiallyConformsToStudySpotFormInputs(changesObj)) return;
+
+    return changesObj;
+  };
+
   const {
-    mutate: createStudySpot,
+    mutate: createPendingEdit,
     error: createError,
     isLoading: createIsLoading,
-  } = api.studySpots.createOne.useMutation({
+  } = api.studySpots.createPendingEdit.useMutation({
     onSuccess: () => {
+      console.log("success");
       form.reset();
-      void apiUtils.studySpots.getNotValidated.invalidate();
       onSuccess?.();
     },
   });
@@ -57,19 +85,31 @@ const EditStudySpotForm = ({
   } = api.s3.getPresignedUrls.useMutation({
     onSuccess: async (presignedUrls) => {
       if (!presignedUrls.length) return;
-      const formValues = form.getValues();
+      const changesObj = getChangedFormValues();
+
+      if (!changesObj || !changesObj.images) return;
 
       const imageUrls = await uploadImagesToS3UsingPresignedUrls({
         presignedUrls: presignedUrls,
-        acceptedFiles: formValues.images,
+        acceptedFiles: changesObj.images,
       });
 
-      createStudySpot({
-        ...formValues,
+      createPendingEdit({
+        ...changesObj,
         images: imageUrls,
+        studySpotId: studySpot.id,
       });
     },
   });
+
+  const getPresignedUrlsHandler = () => {
+    const filesToSubmit = form.getValues("images").map((file) => ({
+      contentLength: file.size,
+      contentType: file.type,
+    }));
+
+    getPresignedUrls({ files: filesToSubmit });
+  };
 
   const {
     mutate: checkIfNameExists,
@@ -77,21 +117,39 @@ const EditStudySpotForm = ({
     isLoading: nameExistsLoading,
   } = api.studySpots.checkIfNameExists.useMutation({
     onSuccess: () => {
-      const filesToSubmit = form.getValues("images").map((file) => ({
-        contentLength: file.size,
-        contentType: file.type,
-      }));
+      const changesObj = getChangedFormValues();
+      if (changesObj?.images && changesObj.images.length !== 0)
+        return getPresignedUrlsHandler();
 
-      getPresignedUrls({ files: filesToSubmit });
+      return createPendingEdit({
+        ...changesObj,
+        images: [],
+        studySpotId: studySpot.id,
+      });
     },
   });
 
-  const submitHandler = form.handleSubmit((data) => {
-    checkIfNameExists({ name: data.name });
+  const submitHandler = form.handleSubmit(() => {
+    const existingValues = studySpot; // 35
+    const changesObj = getChangedFormValues();
+
+    if (!changesObj) return;
+
+    if (changesObj.name && changesObj.name !== existingValues.name)
+      return checkIfNameExists({ name: changesObj.name });
+
+    if (changesObj.images && changesObj.images.length !== 0)
+      return getPresignedUrlsHandler();
+
+    return createPendingEdit({
+      ...changesObj,
+      images: [],
+      studySpotId: studySpot.id,
+    });
   });
 
   const isLoading = createIsLoading || getUrlsIsLoading || nameExistsLoading;
-  const submitDisabled = isLoading || !form.watch("images").length;
+  const submitDisabled = isLoading;
   const zodErrorMessages = parseZodClientError(createError?.data?.zodError);
 
   return (
@@ -104,6 +162,7 @@ const EditStudySpotForm = ({
         className="space-y-16 m-auto font-mono"
       >
         <StudySpotInputsGeneral form={form} />
+        <StudySpotInputsImage form={form} existingImages={studySpot.images} />
         <StudySpotInputsLocation form={form} />
         <StudySpotInputsMisc form={form} />
         <ul className="text-sm text-destructive">

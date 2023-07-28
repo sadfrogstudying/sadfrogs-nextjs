@@ -11,11 +11,11 @@ import {
 } from "~/components/UI/Form";
 import { Input } from "~/components/UI/Input";
 
-import type { StudySpotInputV2 } from "~/schemas/study-spots";
+import type { StudySpotFormInputs } from "~/schemas/study-spots";
 import { Checkbox } from "~/components/UI/Checkbox";
 
 interface Props {
-  form: UseFormReturn<StudySpotInputV2>;
+  form: UseFormReturn<StudySpotFormInputs>;
 }
 
 const StudySpotInputsMisc = ({ form }: Props) => {

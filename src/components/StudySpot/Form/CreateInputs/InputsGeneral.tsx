@@ -11,12 +11,11 @@ import {
 } from "~/components/UI/Form";
 import { Input } from "~/components/UI/Input";
 import { Checkbox } from "~/components/UI/Checkbox";
-import FileInput from "~/components/UI/FileInput";
 
-import type { StudySpotInputV2 } from "~/schemas/study-spots";
+import type { StudySpotFormInputs } from "~/schemas/study-spots";
 
 interface Props {
-  form: UseFormReturn<StudySpotInputV2>;
+  form: UseFormReturn<StudySpotFormInputs>;
 }
 
 const StudySpotInputsGeneral = ({ form }: Props) => {
@@ -84,22 +83,6 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
               <FormLabel>Venue Type</FormLabel>
               <FormControl>
                 <Input placeholder={`Cafe`} {...field} minLength={1} required />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="images"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Images</FormLabel>
-              <FormControl>
-                <FileInput
-                  isSuccess={false}
-                  setValue={(files) => form.setValue("images", files)}
-                  value={field.value}
-                />
               </FormControl>
             </FormItem>
           )}

@@ -1,0 +1,53 @@
+import type { UseFormReturn } from "react-hook-form";
+
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormSectionHeader,
+} from "~/components/UI/Form";
+import FileInput from "~/components/UI/FileInput";
+
+import type { StudySpotFormInputs } from "~/schemas/study-spots";
+import type { ImageOutput } from "~/types/RouterOutputTypes";
+
+interface EditProps {
+  existingImages: ImageOutput[];
+}
+interface Props {
+  form: UseFormReturn<StudySpotFormInputs>;
+  edit?: EditProps;
+}
+
+const StudySpotInputsImage = ({ form }: Props) => {
+  return (
+    <div className="space-y-8">
+      <FormSectionHeader
+        title="Image"
+        description="Please add at least one image"
+      />
+
+      <div className="grid grid-cols-1 gap-4">
+        <FormField
+          control={form.control}
+          name="images"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Images</FormLabel>
+              <FormControl>
+                <FileInput
+                  isSuccess={false}
+                  setValue={(files) => form.setValue("images", files)}
+                  value={field.value}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default StudySpotInputsImage;
