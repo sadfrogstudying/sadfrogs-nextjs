@@ -150,11 +150,12 @@ model Image {
     studySpotId Int?
 
     pendingEditStudySpot   PendingEditStudySpot? @relation(fields: [pendingEditStudySpotId], references: [id], onDelete: Cascade)
-    pendingEditStudySpotId Int?                  @unique
+    pendingEditStudySpotId Int?
 
     pendingEditToDelete   PendingEditStudySpot? @relation(fields: [pendingEditToDeleteId], references: [id], name: "imagesToDelete")
     pendingEditToDeleteId Int?
 
     @@index([studySpotId])
+    @@index([pendingEditStudySpotId])
     @@index([pendingEditToDeleteId])
 }

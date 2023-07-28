@@ -16,7 +16,10 @@ const PendingEditsPage = () => {
       {status === "loading" && <div>Loading...</div>}
 
       {data?.map((pendingEdit) => (
-        <PendingEdit key={pendingEdit.name} pendingEdit={pendingEdit} />
+        <PendingEdit
+          key={pendingEdit.studySpot.name}
+          pendingEdit={pendingEdit}
+        />
       ))}
     </div>
   );
