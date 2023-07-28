@@ -29,6 +29,10 @@ const Header = () => {
           Map
         </Link>
         <span className="text-gray-300"> | </span>
+        <Link href="/pending-edits" className="pointer-events-auto h-fit">
+          Pending Edits
+        </Link>
+        <span className="text-gray-300"> | </span>
         <CreateStudySpotFormSheet />
       </div>
       <MobileMenuSheet className="block md:hidden" />
