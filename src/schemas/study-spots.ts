@@ -134,6 +134,73 @@ const pendingEditInputSchema = studySpotInputSchema.partial().extend({
 });
 
 const pendingEditOutputSchema = studySpotOutputSchema.partial().extend({
+  id: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+
+  // general (if people submit a study spot they must fill these out)
+  name: z.string().nullable(),
+  slug: z.string().nullable(),
+  rating: z.number().nullable(),
+  wifi: z.boolean().nullable(),
+  powerOutlets: z.boolean().nullable(),
+  noiseLevel: z.string().nullable(),
+  venueType: z.string().nullable(),
+  images: z
+    .object({
+      id: z.number(),
+      url: z.string(),
+      dominantColour: z.string(),
+      width: z.number(),
+      height: z.number(),
+      aspectRatio: z.number(),
+    })
+    .array(),
+
+  // location
+  placeId: z.string().nullable(),
+  latitude: z.number().nullable(),
+  longitude: z.number().nullable(),
+  address: z.string().nullable(),
+  country: z.string().nullable(),
+  city: z.string().nullable(),
+  state: z.string().nullable(),
+
+  // hours
+  openingHours: z
+    .object({
+      id: z.number(),
+      day: z.number(),
+      openingTime: z.string(),
+      closingTime: z.string(),
+    })
+    .array(),
+
+  // etiquette
+  canStudyForLong: z.string().nullable(),
+
+  // ambiance
+  vibe: z.string().nullable(),
+  comfort: z.string().nullable(),
+  views: z.string().nullable(),
+  sunlight: z.boolean().nullable(),
+  temperature: z.string().nullable(),
+  music: z.string().nullable(),
+  lighting: z.string().nullable(),
+
+  // crowdedness
+  distractions: z.string().nullable(),
+  crowdedness: z.string().nullable(),
+
+  // surroundings
+  naturalSurroundings: z.string().nullable(),
+  proximityToAmenities: z.string().nullable(),
+
+  // amenities
+  drinks: z.boolean().nullable(),
+  food: z.boolean().nullable(),
+  studyBreakFacilities: z.string().nullable(),
+
   studySpotId: z.number(),
   studySpot: z.object({
     name: z.string(),
