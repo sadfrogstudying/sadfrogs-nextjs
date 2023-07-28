@@ -24,6 +24,7 @@ const StudySpotPage = () => {
       slug,
     },
     {
+      refetchOnWindowFocus: false,
       enabled: !!slug,
     }
   );

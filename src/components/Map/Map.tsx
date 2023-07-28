@@ -7,7 +7,7 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import "leaflet/dist/leaflet.css";
 
 import { cn } from "~/lib/utils";
-import type { Image as ImageType } from "@prisma/client";
+import type { ImageOutput } from "~/types/RouterOutputTypes";
 import MapInfoPanel from "./MapInfoPanel";
 
 export type MarkerData = {
@@ -15,7 +15,7 @@ export type MarkerData = {
   name: string;
   address: string;
   latlng: [number, number];
-  image?: ImageType;
+  image?: ImageOutput;
   slug: string;
 };
 

@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 
 import dynamic from "next/dynamic";
 import { Button } from "../UI/Button";
-import { GetOneOutput } from "~/types/RouterOutputTypes";
+import type { GetOneOutput } from "~/types/RouterOutputTypes";
 
 const DeleteAlertDialog = dynamic(() => import("./DeleteAlertDialog"), {
   loading: () => <Loading />,
