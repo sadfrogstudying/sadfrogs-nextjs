@@ -128,8 +128,56 @@ const studySpotOutputSchema = z.object({
   studyBreakFacilities: z.string(),
 });
 
-type StudySpotInput = z.infer<typeof studySpotInputSchema>;
-type StudySpotInputV2 = Omit<StudySpotInput, "images"> & { images: File[] };
+const pendingEditInputSchema = studySpotInputSchema.partial().extend({
+  studySpotId: z.number().optional(),
+  imagesToDelete: z.number().array().optional(),
+});
 
-export { studySpotInputSchema, studySpotOutputSchema };
-export type { StudySpotInputV2 };
+const pendingEditOutputSchema = studySpotOutputSchema.partial().extend({
+  studySpotId: z.number(),
+  studySpot: z.object({
+    name: z.string(),
+    slug: z.string(),
+  }),
+  imagesToDelete: z
+    .object({
+      id: z.number(),
+      url: z.string(),
+      dominantColour: z.string(),
+      width: z.number(),
+      height: z.number(),
+      aspectRatio: z.number(),
+    })
+    .array(),
+});
+
+// Study Spot Types
+type StudySpotQueryInput = z.infer<typeof studySpotInputSchema>;
+type StudySpotFormInputs = Omit<StudySpotQueryInput, "images"> & {
+  images: File[];
+};
+type StudySpotQueryOutput = z.infer<typeof studySpotOutputSchema>;
+
+// Pending Study Spot Types
+type PendingEditQueryInput = z.infer<typeof pendingEditInputSchema>;
+type PendingEditFormInputs = Omit<PendingEditQueryInput, "images"> & {
+  images: File[];
+};
+type PendingEditQueryOutput = z.infer<typeof pendingEditOutputSchema>;
+
+export {
+  // Study Spot Schemas
+  studySpotInputSchema,
+  studySpotOutputSchema,
+  // Pending Study Spot Schemas
+  pendingEditInputSchema,
+  pendingEditOutputSchema,
+};
+export type {
+  // Study Spot Types
+  StudySpotFormInputs,
+  StudySpotQueryOutput,
+  // Pending Study Spot Types
+  PendingEditFormInputs,
+  PendingEditQueryOutput,
+};

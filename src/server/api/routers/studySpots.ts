@@ -9,6 +9,8 @@ import { getImagesMeta } from "~/utils/server-helpers";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "~/env.mjs";
 import {
+  pendingEditInputSchema,
+  pendingEditOutputSchema,
   studySpotInputSchema,
   studySpotOutputSchema,
 } from "~/schemas/study-spots";
@@ -291,5 +293,134 @@ export const studySpotsRouter = createTRPCRouter({
       });
 
       return studySpots.map((studySpot) => studySpot.slug);
+    }),
+  /**
+   *
+   * Pending Edits: Get all
+   *
+   */
+  getAllPendingEdits: publicProcedure
+    .meta({
+      openapi: { method: "GET", path: "/studyspots.getAllPendingEdits" },
+    })
+    .input(z.void())
+    .output(pendingEditOutputSchema.array())
+    .query(async ({ ctx }) => {
+      const allPendingEdits = await ctx.prisma.pendingEditStudySpot.findMany({
+        include: {
+          images: true,
+          openingHours: true,
+          imagesToDelete: true,
+          studySpot: {
+            select: {
+              name: true,
+              slug: true,
+            },
+          },
+        },
+      });
+
+      return allPendingEdits;
+    }),
+  /**
+   *
+   * Pending Edits: Create One
+   *
+   */
+  createPendingEdit: publicProcedure
+    .meta({
+      openapi: { method: "POST", path: "/studyspots.createPendingEdit" },
+    })
+    .input(pendingEditInputSchema)
+    .output(z.boolean())
+    .mutation(async ({ ctx, input }) => {
+      const { success } = await ratelimit.limit(ctx.ip);
+      if (!success)
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Too many requests",
+        });
+
+      try {
+        let newImages;
+        let slug;
+
+        if (input.images?.length !== 0 && input.images)
+          newImages = await getImagesMeta(input.images);
+        if (input.name)
+          slug = slugify(input.name, {
+            remove: /[*+~.()'"!:@]/g,
+            lower: true,
+            strict: true,
+          });
+
+        await ctx.prisma.pendingEditStudySpot.create({
+          data: {
+            name: input.name,
+            slug: slug,
+            wifi: input.wifi,
+            rating: input.rating,
+            powerOutlets: input.powerOutlets,
+            noiseLevel: input.noiseLevel,
+            venueType: input.venueType,
+
+            images: {
+              createMany: newImages && { data: newImages },
+            },
+
+            placeId: input.placeId,
+            latitude: input.latitude,
+            longitude: input.longitude,
+            address: input.address,
+            country: input.country,
+            city: input.city,
+            state: input.state,
+
+            openingHours: {
+              createMany: input.openingHours && {
+                data: input.openingHours,
+              },
+            },
+
+            canStudyForLong: input.canStudyForLong,
+
+            vibe: input.vibe,
+            comfort: input.comfort,
+            views: input.views,
+            sunlight: input.sunlight,
+            temperature: input.temperature,
+            music: input.music,
+            lighting: input.lighting,
+
+            distractions: input.distractions,
+            crowdedness: input.crowdedness,
+
+            naturalSurroundings: input.naturalSurroundings,
+            proximityToAmenities: input.proximityToAmenities,
+
+            drinks: input.drinks,
+            food: input.food,
+            studyBreakFacilities: input.studyBreakFacilities,
+
+            studySpot: {
+              connect: {
+                id: input.studySpotId,
+              },
+            },
+            imagesToDelete: {
+              connect: input.imagesToDelete?.map((id) => ({ id })),
+            },
+          },
+        });
+
+        return true;
+      } catch (error: unknown) {
+        if (error instanceof TRPCError) throw error;
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong creating a study spot",
+        });
+      }
     }),
 });
