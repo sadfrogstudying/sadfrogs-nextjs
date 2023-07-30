@@ -152,6 +152,13 @@ const EditStudySpotForm = ({
   const submitDisabled = isLoading;
   const zodErrorMessages = parseZodClientError(createError?.data?.zodError);
 
+  const getButtonText = () => {
+    if (createIsLoading) return "Creating...";
+    if (getUrlsIsLoading) return "Uploading images...";
+    if (nameExistsLoading) return "Checking name...";
+    return "Submit";
+  };
+
   return (
     <Form {...form}>
       <form
@@ -185,7 +192,7 @@ const EditStudySpotForm = ({
           disabled={submitDisabled}
           className="disabled:cursor-not-allowed"
         >
-          {isLoading ? "Creating..." : "Submit"}
+          {getButtonText()}
         </Button>
       </form>
     </Form>

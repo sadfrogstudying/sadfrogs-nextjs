@@ -423,4 +423,139 @@ export const studySpotsRouter = createTRPCRouter({
         });
       }
     }),
+  acceptPendingEdit: publicProcedure
+    .meta({
+      openapi: { method: "POST", path: "/studyspots.acceptPendingEdit" },
+    })
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const pendingEdit = await ctx.prisma.pendingEditStudySpot.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          images: true,
+          openingHours: true,
+          imagesToDelete: true,
+          studySpot: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      if (!pendingEdit) throw new TRPCError({ code: "NOT_FOUND" });
+
+      await ctx.prisma.$transaction([
+        ctx.prisma.studySpot.update({
+          where: {
+            id: pendingEdit.studySpot.id,
+          },
+          data: {
+            name: pendingEdit.name || undefined,
+            slug: pendingEdit.slug || undefined,
+            wifi: pendingEdit.wifi || undefined,
+            rating: pendingEdit.rating || undefined,
+            powerOutlets: pendingEdit.powerOutlets || undefined,
+            noiseLevel: pendingEdit.noiseLevel || undefined,
+            venueType: pendingEdit.venueType || undefined,
+            images: {
+              connect: pendingEdit.images.map((image) => ({ id: image.id })),
+              disconnect: pendingEdit.imagesToDelete.map((image) => ({
+                id: image.id,
+              })),
+            },
+
+            placeId: pendingEdit.placeId || undefined,
+            latitude: pendingEdit.latitude || undefined,
+            longitude: pendingEdit.longitude || undefined,
+            address: pendingEdit.address || undefined,
+            country: pendingEdit.country || undefined,
+            city: pendingEdit.city || undefined,
+            state: pendingEdit.state || undefined,
+
+            ...(pendingEdit.openingHours && {
+              openingHours: {
+                createMany: {
+                  data: pendingEdit.openingHours || undefined,
+                },
+              },
+            }),
+
+            canStudyForLong: pendingEdit.canStudyForLong || undefined,
+
+            vibe: pendingEdit.vibe || undefined,
+            comfort: pendingEdit.comfort || undefined,
+            views: pendingEdit.views || undefined,
+            sunlight: pendingEdit.sunlight || undefined,
+            temperature: pendingEdit.temperature || undefined,
+            music: pendingEdit.music || undefined,
+            lighting: pendingEdit.lighting || undefined,
+
+            distractions: pendingEdit.distractions || undefined,
+            crowdedness: pendingEdit.crowdedness || undefined,
+
+            naturalSurroundings: pendingEdit.naturalSurroundings || undefined,
+            proximityToAmenities: pendingEdit.proximityToAmenities || undefined,
+
+            drinks: pendingEdit.drinks || undefined,
+            food: pendingEdit.food || undefined,
+            studyBreakFacilities: pendingEdit.studyBreakFacilities || undefined,
+          },
+        }),
+        ctx.prisma.pendingEditStudySpot.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            images: {
+              set: [],
+            },
+            imagesToDelete: {
+              set: [],
+            },
+          },
+        }),
+        ctx.prisma.pendingEditStudySpot.delete({
+          where: {
+            id: input.id,
+          },
+        }),
+      ]);
+
+      if (pendingEdit.imagesToDelete.length > 0) {
+        // Delete uploaded images in s3
+        const { s3 } = ctx;
+        try {
+          await Promise.all(
+            pendingEdit.imagesToDelete.map(async (image) => {
+              const key = image.url.split(".com/")[1]; // extract filename from s3 url, as long as not nested in folders
+              const bucketParams = { Bucket: env.BUCKET_NAME, Key: key };
+              const data = await s3.send(new DeleteObjectCommand(bucketParams));
+              console.log("Success. Object deleted.", data);
+              return data; // For unit tests.
+            })
+          );
+        } catch (err) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Error deleting image from bucket",
+          });
+        }
+
+        await Promise.all(
+          pendingEdit.imagesToDelete.map(async (image) => {
+            await ctx.prisma.image.delete({
+              where: {
+                id: image.id,
+              },
+            });
+          })
+        );
+      }
+
+      return true;
+    }),
 });

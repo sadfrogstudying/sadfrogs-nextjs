@@ -68,7 +68,7 @@ model StudySpot {
 }
 
 model PendingEditStudySpot {
-    id        Int      @id @default(autoincrement())
+    id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -135,7 +135,7 @@ model OpeningHours {
     StudySpot              StudySpot?            @relation(fields: [studySpotId], references: [id], onDelete: Cascade)
     studySpotId            Int?                  @unique
     pendingEditStudySpot   PendingEditStudySpot? @relation(fields: [pendingEditStudySpotId], references: [id])
-    pendingEditStudySpotId Int?                  @unique
+    pendingEditStudySpotId String?               @unique
 }
 
 model Image {
@@ -150,10 +150,10 @@ model Image {
     studySpotId Int?
 
     pendingEditStudySpot   PendingEditStudySpot? @relation(fields: [pendingEditStudySpotId], references: [id], onDelete: Cascade)
-    pendingEditStudySpotId Int?
+    pendingEditStudySpotId String?
 
     pendingEditToDelete   PendingEditStudySpot? @relation(fields: [pendingEditToDeleteId], references: [id], name: "imagesToDelete")
-    pendingEditToDeleteId Int?
+    pendingEditToDeleteId String?
 
     @@index([studySpotId])
     @@index([pendingEditStudySpotId])

@@ -24,15 +24,15 @@ const Header = () => {
         <Link href="/about" className="pointer-events-auto h-fit">
           About
         </Link>
-        <span className="text-gray-300"> | </span>
+        <span> | </span>
         <Link href="/map" className="pointer-events-auto h-fit">
           Map
         </Link>
-        <span className="text-gray-300"> | </span>
+        <span> | </span>
         <Link href="/pending-edits" className="pointer-events-auto h-fit">
           Pending Edits
         </Link>
-        <span className="text-gray-300"> | </span>
+        <span> | </span>
         <CreateStudySpotFormSheet />
       </div>
       <MobileMenuSheet className="block md:hidden" />

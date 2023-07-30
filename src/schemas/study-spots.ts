@@ -129,12 +129,13 @@ const studySpotOutputSchema = z.object({
 });
 
 const pendingEditInputSchema = studySpotInputSchema.partial().extend({
+  images: z.string().array(),
   studySpotId: z.number().optional(),
   imagesToDelete: z.number().array().optional(),
 });
 
 const pendingEditOutputSchema = studySpotOutputSchema.partial().extend({
-  id: z.number(),
+  id: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
 
