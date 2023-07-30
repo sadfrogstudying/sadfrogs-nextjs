@@ -6,8 +6,6 @@ import slugify from "slugify";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { deleteImagesFromBucket, getImagesMeta } from "~/utils/server-helpers";
-import { DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { env } from "~/env.mjs";
 import {
   pendingEditInputSchema,
   pendingEditOutputSchema,
@@ -312,8 +310,6 @@ export const studySpotsRouter = createTRPCRouter({
           },
         },
       });
-
-      console.log(allPendingEdits);
 
       return allPendingEdits;
     }),
