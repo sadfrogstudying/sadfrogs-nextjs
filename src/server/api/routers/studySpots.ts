@@ -5,7 +5,7 @@ import slugify from "slugify";
 
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
-import { getImagesMeta } from "~/utils/server-helpers";
+import { deleteImagesFromBucket, getImagesMeta } from "~/utils/server-helpers";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "~/env.mjs";
 import {
@@ -240,22 +240,7 @@ export const studySpotsRouter = createTRPCRouter({
 
       // Delete uploaded images in s3
       const { s3 } = ctx;
-      try {
-        await Promise.all(
-          deletedStudySpot.images.map(async (image) => {
-            const key = image.url.split(".com/")[1]; // extract filename from s3 url, as long as not nested in folders
-            const bucketParams = { Bucket: env.BUCKET_NAME, Key: key };
-            const data = await s3.send(new DeleteObjectCommand(bucketParams));
-            console.log("Success. Object deleted.", data);
-            return data; // For unit tests.
-          })
-        );
-      } catch (err) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Error deleting image from bucket",
-        });
-      }
+      await deleteImagesFromBucket(deletedStudySpot.images, s3);
 
       // Delete associated images
       await ctx.prisma.image.deleteMany({
@@ -525,22 +510,10 @@ export const studySpotsRouter = createTRPCRouter({
         ]);
 
         const { s3 } = ctx;
-        try {
-          await Promise.all(
-            pendingImagesToDelete.map(async ({ image }) => {
-              const key = image.url.split(".com/")[1]; // extract filename from s3 url, as long as not nested in folders
-              const bucketParams = { Bucket: env.BUCKET_NAME, Key: key };
-              const data = await s3.send(new DeleteObjectCommand(bucketParams));
-              console.log("Success. Object deleted.", data);
-              return data; // For unit tests.
-            })
-          );
-        } catch (err) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Error deleting image from bucket",
-          });
-        }
+        await deleteImagesFromBucket(
+          pendingImagesToDelete.map(({ image }) => image),
+          s3
+        );
       }
 
       // UPDATE EXISTING STUDY SPOT
@@ -662,23 +635,12 @@ export const studySpotsRouter = createTRPCRouter({
             },
           },
         });
+
         const { s3 } = ctx;
-        try {
-          await Promise.all(
-            pendingImagesToAdd.map(async ({ image }) => {
-              const key = image.url.split(".com/")[1]; // extract filename from s3 url, as long as not nested in folders
-              const bucketParams = { Bucket: env.BUCKET_NAME, Key: key };
-              const data = await s3.send(new DeleteObjectCommand(bucketParams));
-              console.log("Success. Object deleted.", data);
-              return data; // For unit tests.
-            })
-          );
-        } catch (err) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Error deleting image from bucket",
-          });
-        }
+        await deleteImagesFromBucket(
+          pendingImagesToAdd.map(({ image }) => image),
+          s3
+        );
       }
 
       if (pendingImagesToDelete.length > 0) {

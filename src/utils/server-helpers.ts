@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import axios, { AxiosError } from "axios";
 import sharp from "sharp";
 import { env } from "~/env.mjs";
+import { type S3, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 const componentToHex = (c: number) => {
   const hex = c.toString(16);
@@ -86,6 +87,32 @@ export const getImagesMeta = async (input: string[]) => {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: errorString,
+    });
+  }
+};
+
+/**
+ * @description deletes images from bucket
+ * @param images array of objects that have image urls
+ */
+export const deleteImagesFromBucket = async <T extends { url: string }>(
+  images: T[],
+  s3: S3
+) => {
+  try {
+    await Promise.all(
+      images.map(async (image) => {
+        const key = image.url.split(".com/")[1]; // extract filename from s3 url, as long as not nested in folders
+        const bucketParams = { Bucket: env.BUCKET_NAME, Key: key };
+        const data = await s3.send(new DeleteObjectCommand(bucketParams));
+        console.log("Success. Object deleted.", data);
+        return data; // For unit tests.
+      })
+    );
+  } catch (error) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Error deleting image from bucket",
     });
   }
 };
