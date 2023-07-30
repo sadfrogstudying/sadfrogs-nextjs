@@ -35,14 +35,6 @@ const PendingEdit = ({
 }) => {
   const images = pendingEdit.pendingImagesToAdd;
   const imagesToDelete = pendingEdit.pendingImagesToDelete;
-  const apiUtils = api.useContext();
-
-  const { mutate: acceptEdit, isLoading } =
-    api.studySpots.acceptPendingEdit.useMutation({
-      onSuccess: () => {
-        void apiUtils.studySpots.getAllPendingEdits.invalidate();
-      },
-    });
 
   return (
     <div className="border border-gray-100 rounded-md">
@@ -51,14 +43,8 @@ const PendingEdit = ({
           Edit request for {pendingEdit.studySpot.name}
         </Link>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            disabled={isLoading}
-            onClick={() => acceptEdit({ id: pendingEdit.id })}
-          >
-            {isLoading ? "Loading..." : "Confirm"}
-          </Button>
-          <Button variant="outline">Deny</Button>
+          <AcceptEditButton pendingEditId={pendingEdit.id} />
+          <DeclineEditButton pendingEditId={pendingEdit.id} />
         </div>
       </h3>
 
@@ -128,5 +114,45 @@ const PendingEdit = ({
         </div>
       </div>
     </div>
+  );
+};
+
+const AcceptEditButton = ({ pendingEditId }: { pendingEditId: string }) => {
+  const apiUtils = api.useContext();
+  const { mutate: acceptEdit, isLoading } =
+    api.studySpots.acceptPendingEdit.useMutation({
+      onSuccess: () => {
+        void apiUtils.studySpots.getAllPendingEdits.invalidate();
+      },
+    });
+
+  return (
+    <Button
+      variant="outline"
+      disabled={isLoading}
+      onClick={() => acceptEdit({ id: pendingEditId })}
+    >
+      {isLoading ? "Loading..." : "Accept Edit"}
+    </Button>
+  );
+};
+
+const DeclineEditButton = ({ pendingEditId }: { pendingEditId: string }) => {
+  const apiUtils = api.useContext();
+  const { mutate: declineEdit, isLoading } =
+    api.studySpots.declinePendingEdit.useMutation({
+      onSuccess: () => {
+        void apiUtils.studySpots.getAllPendingEdits.invalidate();
+      },
+    });
+
+  return (
+    <Button
+      variant="outline"
+      disabled={isLoading}
+      onClick={() => declineEdit({ id: pendingEditId })}
+    >
+      {isLoading ? "Loading..." : "Decline Edit"}
+    </Button>
   );
 };

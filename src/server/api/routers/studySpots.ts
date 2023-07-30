@@ -459,6 +459,7 @@ export const studySpotsRouter = createTRPCRouter({
       openapi: { method: "POST", path: "/studyspots.acceptPendingEdit" },
     })
     .input(z.object({ id: z.string() }))
+    .output(z.boolean())
     .mutation(async ({ ctx, input }) => {
       const pendingEdit = await ctx.prisma.pendingEdit.findUnique({
         where: {
@@ -599,6 +600,94 @@ export const studySpotsRouter = createTRPCRouter({
           studyBreakFacilities: pendingEdit.studyBreakFacilities || undefined,
         },
       });
+
+      // REMOVE PENDING EDITS
+      await ctx.prisma.pendingEdit.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return true;
+    }),
+  declinePendingEdit: publicProcedure
+    .meta({
+      openapi: { method: "POST", path: "/studyspots.declinePendingEdit" },
+    })
+    .input(z.object({ id: z.string() }))
+    .output(z.boolean())
+    .mutation(async ({ ctx, input }) => {
+      const pendingEdit = await ctx.prisma.pendingEdit.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          pendingImagesToAdd: {
+            select: {
+              pendingEditId: true,
+              image: true,
+            },
+          },
+          pendingImagesToDelete: {
+            select: {
+              pendingEditId: true,
+              image: true,
+            },
+          },
+          openingHours: true,
+          studySpot: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      if (!pendingEdit) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const { pendingImagesToAdd, pendingImagesToDelete } = pendingEdit;
+
+      // REMOVE IMAGES
+      if (pendingImagesToAdd.length > 0) {
+        await ctx.prisma.pendingImagesToAdd.deleteMany({
+          where: {
+            pendingEditId: pendingEdit.id,
+          },
+        });
+        await ctx.prisma.image.deleteMany({
+          where: {
+            id: {
+              in: pendingImagesToAdd.map(({ image }) => image.id),
+            },
+          },
+        });
+        const { s3 } = ctx;
+        try {
+          await Promise.all(
+            pendingImagesToAdd.map(async ({ image }) => {
+              const key = image.url.split(".com/")[1]; // extract filename from s3 url, as long as not nested in folders
+              const bucketParams = { Bucket: env.BUCKET_NAME, Key: key };
+              const data = await s3.send(new DeleteObjectCommand(bucketParams));
+              console.log("Success. Object deleted.", data);
+              return data; // For unit tests.
+            })
+          );
+        } catch (err) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Error deleting image from bucket",
+          });
+        }
+      }
+
+      if (pendingImagesToDelete.length > 0) {
+        await ctx.prisma.pendingImagesToDelete.deleteMany({
+          where: {
+            pendingEditId: pendingEdit.id,
+          },
+        });
+      }
 
       // REMOVE PENDING EDITS
       await ctx.prisma.pendingEdit.delete({
