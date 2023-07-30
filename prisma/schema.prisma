@@ -64,10 +64,10 @@ model StudySpot {
     food                 Boolean @default(false)
     studyBreakFacilities String  @default("")
 
-    pendingEditStudySpot PendingEditStudySpot[]
+    pendingEditStudySpot PendingEdit[]
 }
 
-model PendingEditStudySpot {
+model PendingEdit {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -80,7 +80,6 @@ model PendingEditStudySpot {
     powerOutlets Boolean?
     noiseLevel   String?
     venueType    String?
-    images       Image[] // if StudySpot is deleted, all images are deleted (default behavior)
 
     // location
     placeId   String?
@@ -122,20 +121,21 @@ model PendingEditStudySpot {
     studySpot   StudySpot @relation(fields: [studySpotId], references: [id])
     studySpotId Int
 
-    imagesToDelete Image[] @relation(name: "imagesToDelete")
+    pendingImagesToAdd    PendingImagesToAdd[]
+    pendingImagesToDelete PendingImagesToDelete[]
 
     @@index([studySpotId])
 }
 
 model OpeningHours {
-    id                     Int                   @id @default(autoincrement())
-    day                    Int
-    openingTime            String
-    closingTime            String
-    StudySpot              StudySpot?            @relation(fields: [studySpotId], references: [id], onDelete: Cascade)
-    studySpotId            Int?                  @unique
-    pendingEditStudySpot   PendingEditStudySpot? @relation(fields: [pendingEditStudySpotId], references: [id])
-    pendingEditStudySpotId String?               @unique
+    id            Int          @id @default(autoincrement())
+    day           Int
+    openingTime   String
+    closingTime   String
+    StudySpot     StudySpot?   @relation(fields: [studySpotId], references: [id], onDelete: Cascade)
+    studySpotId   Int?         @unique
+    pendingEdit   PendingEdit? @relation(fields: [pendingEditId], references: [id])
+    pendingEditId String?      @unique
 }
 
 model Image {
@@ -149,13 +149,32 @@ model Image {
     studySpot   StudySpot? @relation(fields: [studySpotId], references: [id], onDelete: Cascade)
     studySpotId Int?
 
-    pendingEditStudySpot   PendingEditStudySpot? @relation(fields: [pendingEditStudySpotId], references: [id], onDelete: Cascade)
-    pendingEditStudySpotId String?
-
-    pendingEditToDelete   PendingEditStudySpot? @relation(fields: [pendingEditToDeleteId], references: [id], name: "imagesToDelete")
-    pendingEditToDeleteId String?
+    pendingImagesToAdd    PendingImagesToAdd[]
+    pendingImagesToDelete PendingImagesToDelete[]
 
     @@index([studySpotId])
-    @@index([pendingEditStudySpotId])
-    @@index([pendingEditToDeleteId])
+}
+
+model PendingImagesToAdd {
+    image   Image @relation(fields: [imageId], references: [id])
+    imageId Int // relation scalar field (used in the `@relation` attribute above)
+
+    pendingEdit   PendingEdit? @relation(fields: [pendingEditId], references: [id])
+    pendingEditId String
+
+    @@id([imageId, pendingEditId])
+    @@index([imageId])
+    @@index([pendingEditId])
+}
+
+model PendingImagesToDelete {
+    image   Image @relation(fields: [imageId], references: [id])
+    imageId Int // relation scalar field (used in the `@relation` attribute above)
+
+    pendingEdit   PendingEdit? @relation(fields: [pendingEditId], references: [id])
+    pendingEditId String
+
+    @@id([imageId, pendingEditId])
+    @@index([imageId])
+    @@index([pendingEditId])
 }

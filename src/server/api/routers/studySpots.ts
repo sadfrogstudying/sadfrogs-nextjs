@@ -306,11 +306,19 @@ export const studySpotsRouter = createTRPCRouter({
     .input(z.void())
     .output(pendingEditOutputSchema.array())
     .query(async ({ ctx }) => {
-      const allPendingEdits = await ctx.prisma.pendingEditStudySpot.findMany({
+      const allPendingEdits = await ctx.prisma.pendingEdit.findMany({
         include: {
-          images: true,
+          pendingImagesToAdd: {
+            select: {
+              image: true,
+            },
+          },
+          pendingImagesToDelete: {
+            select: {
+              image: true,
+            },
+          },
           openingHours: true,
-          imagesToDelete: true,
           studySpot: {
             select: {
               name: true,
@@ -319,6 +327,8 @@ export const studySpotsRouter = createTRPCRouter({
           },
         },
       });
+
+      console.log(allPendingEdits);
 
       return allPendingEdits;
     }),
@@ -342,19 +352,15 @@ export const studySpotsRouter = createTRPCRouter({
         });
 
       try {
-        let newImages;
-        let slug;
-
-        if (input.images?.length !== 0 && input.images)
-          newImages = await getImagesMeta(input.images);
-        if (input.name)
-          slug = slugify(input.name, {
+        const slug =
+          input.name &&
+          slugify(input.name, {
             remove: /[*+~.()'"!:@]/g,
             lower: true,
             strict: true,
           });
 
-        await ctx.prisma.pendingEditStudySpot.create({
+        const newPendingEdit = await ctx.prisma.pendingEdit.create({
           data: {
             name: input.name,
             slug: slug,
@@ -363,10 +369,6 @@ export const studySpotsRouter = createTRPCRouter({
             powerOutlets: input.powerOutlets,
             noiseLevel: input.noiseLevel,
             venueType: input.venueType,
-
-            images: {
-              createMany: newImages && { data: newImages },
-            },
 
             placeId: input.placeId,
             latitude: input.latitude,
@@ -407,11 +409,40 @@ export const studySpotsRouter = createTRPCRouter({
                 id: input.studySpotId,
               },
             },
-            imagesToDelete: {
-              connect: input.imagesToDelete?.map((id) => ({ id })),
-            },
           },
         });
+
+        if (input.images && input.images?.length !== 0) {
+          const newImages = await getImagesMeta(input.images);
+
+          await ctx.prisma.image.createMany({
+            data: newImages,
+          });
+
+          const newlyAddedImages = await ctx.prisma.image.findMany({
+            where: {
+              url: {
+                in: input.images,
+              },
+            },
+          });
+
+          await ctx.prisma.pendingImagesToAdd.createMany({
+            data: newlyAddedImages.map((image) => ({
+              pendingEditId: newPendingEdit.id,
+              imageId: image.id,
+            })),
+          });
+        }
+
+        if (input.imagesToDelete?.length !== 0 && input.imagesToDelete) {
+          await ctx.prisma.pendingImagesToDelete.createMany({
+            data: input.imagesToDelete.map((imageId) => ({
+              pendingEditId: newPendingEdit.id,
+              imageId: imageId,
+            })),
+          });
+        }
 
         return true;
       } catch (error: unknown) {
@@ -429,14 +460,24 @@ export const studySpotsRouter = createTRPCRouter({
     })
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const pendingEdit = await ctx.prisma.pendingEditStudySpot.findUnique({
+      const pendingEdit = await ctx.prisma.pendingEdit.findUnique({
         where: {
           id: input.id,
         },
         include: {
-          images: true,
+          pendingImagesToAdd: {
+            select: {
+              pendingEditId: true,
+              image: true,
+            },
+          },
+          pendingImagesToDelete: {
+            select: {
+              pendingEditId: true,
+              image: true,
+            },
+          },
           openingHours: true,
-          imagesToDelete: true,
           studySpot: {
             select: {
               id: true,
@@ -448,89 +489,44 @@ export const studySpotsRouter = createTRPCRouter({
 
       if (!pendingEdit) throw new TRPCError({ code: "NOT_FOUND" });
 
-      await ctx.prisma.$transaction([
-        ctx.prisma.studySpot.update({
+      const { pendingImagesToAdd, pendingImagesToDelete } = pendingEdit;
+
+      // REMOVE IMAGES
+      if (pendingImagesToAdd.length > 0) {
+        await ctx.prisma.pendingImagesToAdd.deleteMany({
           where: {
-            id: pendingEdit.studySpot.id,
+            pendingEditId: pendingEdit.id,
           },
-          data: {
-            name: pendingEdit.name || undefined,
-            slug: pendingEdit.slug || undefined,
-            wifi: pendingEdit.wifi || undefined,
-            rating: pendingEdit.rating || undefined,
-            powerOutlets: pendingEdit.powerOutlets || undefined,
-            noiseLevel: pendingEdit.noiseLevel || undefined,
-            venueType: pendingEdit.venueType || undefined,
-            images: {
-              connect: pendingEdit.images.map((image) => ({ id: image.id })),
-              disconnect: pendingEdit.imagesToDelete.map((image) => ({
-                id: image.id,
-              })),
-            },
-
-            placeId: pendingEdit.placeId || undefined,
-            latitude: pendingEdit.latitude || undefined,
-            longitude: pendingEdit.longitude || undefined,
-            address: pendingEdit.address || undefined,
-            country: pendingEdit.country || undefined,
-            city: pendingEdit.city || undefined,
-            state: pendingEdit.state || undefined,
-
-            ...(pendingEdit.openingHours && {
-              openingHours: {
-                createMany: {
-                  data: pendingEdit.openingHours || undefined,
+        });
+      }
+      if (pendingImagesToDelete.length > 0) {
+        await ctx.prisma.$transaction([
+          ctx.prisma.pendingImagesToDelete.deleteMany({
+            where: {
+              OR: [
+                { pendingEditId: pendingEdit.id },
+                // if another pending edit has the same image, delete it
+                {
+                  imageId: {
+                    in: pendingImagesToDelete.map(({ image }) => image.id),
+                  },
                 },
+              ],
+            },
+          }),
+          ctx.prisma.image.deleteMany({
+            where: {
+              id: {
+                in: pendingImagesToDelete.map(({ image }) => image.id),
               },
-            }),
-
-            canStudyForLong: pendingEdit.canStudyForLong || undefined,
-
-            vibe: pendingEdit.vibe || undefined,
-            comfort: pendingEdit.comfort || undefined,
-            views: pendingEdit.views || undefined,
-            sunlight: pendingEdit.sunlight || undefined,
-            temperature: pendingEdit.temperature || undefined,
-            music: pendingEdit.music || undefined,
-            lighting: pendingEdit.lighting || undefined,
-
-            distractions: pendingEdit.distractions || undefined,
-            crowdedness: pendingEdit.crowdedness || undefined,
-
-            naturalSurroundings: pendingEdit.naturalSurroundings || undefined,
-            proximityToAmenities: pendingEdit.proximityToAmenities || undefined,
-
-            drinks: pendingEdit.drinks || undefined,
-            food: pendingEdit.food || undefined,
-            studyBreakFacilities: pendingEdit.studyBreakFacilities || undefined,
-          },
-        }),
-        ctx.prisma.pendingEditStudySpot.update({
-          where: {
-            id: input.id,
-          },
-          data: {
-            images: {
-              set: [],
             },
-            imagesToDelete: {
-              set: [],
-            },
-          },
-        }),
-        ctx.prisma.pendingEditStudySpot.delete({
-          where: {
-            id: input.id,
-          },
-        }),
-      ]);
+          }),
+        ]);
 
-      if (pendingEdit.imagesToDelete.length > 0) {
-        // Delete uploaded images in s3
         const { s3 } = ctx;
         try {
           await Promise.all(
-            pendingEdit.imagesToDelete.map(async (image) => {
+            pendingImagesToDelete.map(async ({ image }) => {
               const key = image.url.split(".com/")[1]; // extract filename from s3 url, as long as not nested in folders
               const bucketParams = { Bucket: env.BUCKET_NAME, Key: key };
               const data = await s3.send(new DeleteObjectCommand(bucketParams));
@@ -544,17 +540,72 @@ export const studySpotsRouter = createTRPCRouter({
             message: "Error deleting image from bucket",
           });
         }
-
-        await Promise.all(
-          pendingEdit.imagesToDelete.map(async (image) => {
-            await ctx.prisma.image.delete({
-              where: {
-                id: image.id,
-              },
-            });
-          })
-        );
       }
+
+      // UPDATE EXISTING STUDY SPOT
+      await ctx.prisma.studySpot.update({
+        where: {
+          id: pendingEdit.studySpot.id,
+        },
+        data: {
+          name: pendingEdit.name || undefined,
+          slug: pendingEdit.slug || undefined,
+          wifi: pendingEdit.wifi || undefined,
+          rating: pendingEdit.rating || undefined,
+          powerOutlets: pendingEdit.powerOutlets || undefined,
+          noiseLevel: pendingEdit.noiseLevel || undefined,
+          venueType: pendingEdit.venueType || undefined,
+          images: {
+            connect: pendingImagesToAdd.map(({ image }) => ({ id: image.id })),
+            disconnect: pendingImagesToDelete.map(({ image }) => ({
+              id: image.id,
+            })),
+          },
+
+          placeId: pendingEdit.placeId || undefined,
+          latitude: pendingEdit.latitude || undefined,
+          longitude: pendingEdit.longitude || undefined,
+          address: pendingEdit.address || undefined,
+          country: pendingEdit.country || undefined,
+          city: pendingEdit.city || undefined,
+          state: pendingEdit.state || undefined,
+
+          ...(pendingEdit.openingHours && {
+            openingHours: {
+              createMany: {
+                data: pendingEdit.openingHours || undefined,
+              },
+            },
+          }),
+
+          canStudyForLong: pendingEdit.canStudyForLong || undefined,
+
+          vibe: pendingEdit.vibe || undefined,
+          comfort: pendingEdit.comfort || undefined,
+          views: pendingEdit.views || undefined,
+          sunlight: pendingEdit.sunlight || undefined,
+          temperature: pendingEdit.temperature || undefined,
+          music: pendingEdit.music || undefined,
+          lighting: pendingEdit.lighting || undefined,
+
+          distractions: pendingEdit.distractions || undefined,
+          crowdedness: pendingEdit.crowdedness || undefined,
+
+          naturalSurroundings: pendingEdit.naturalSurroundings || undefined,
+          proximityToAmenities: pendingEdit.proximityToAmenities || undefined,
+
+          drinks: pendingEdit.drinks || undefined,
+          food: pendingEdit.food || undefined,
+          studyBreakFacilities: pendingEdit.studyBreakFacilities || undefined,
+        },
+      });
+
+      // REMOVE PENDING EDITS
+      await ctx.prisma.pendingEdit.delete({
+        where: {
+          id: input.id,
+        },
+      });
 
       return true;
     }),

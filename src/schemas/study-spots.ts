@@ -129,7 +129,7 @@ const studySpotOutputSchema = z.object({
 });
 
 const pendingEditInputSchema = studySpotInputSchema.partial().extend({
-  images: z.string().array(),
+  images: z.string().array().optional(),
   studySpotId: z.number().optional(),
   imagesToDelete: z.number().array().optional(),
 });
@@ -147,16 +147,6 @@ const pendingEditOutputSchema = studySpotOutputSchema.partial().extend({
   powerOutlets: z.boolean().nullable(),
   noiseLevel: z.string().nullable(),
   venueType: z.string().nullable(),
-  images: z
-    .object({
-      id: z.number(),
-      url: z.string(),
-      dominantColour: z.string(),
-      width: z.number(),
-      height: z.number(),
-      aspectRatio: z.number(),
-    })
-    .array(),
 
   // location
   placeId: z.string().nullable(),
@@ -207,14 +197,29 @@ const pendingEditOutputSchema = studySpotOutputSchema.partial().extend({
     name: z.string(),
     slug: z.string(),
   }),
-  imagesToDelete: z
+
+  pendingImagesToAdd: z
     .object({
-      id: z.number(),
-      url: z.string(),
-      dominantColour: z.string(),
-      width: z.number(),
-      height: z.number(),
-      aspectRatio: z.number(),
+      image: z.object({
+        id: z.number(),
+        url: z.string(),
+        dominantColour: z.string(),
+        width: z.number(),
+        height: z.number(),
+        aspectRatio: z.number(),
+      }),
+    })
+    .array(),
+  pendingImagesToDelete: z
+    .object({
+      image: z.object({
+        id: z.number(),
+        url: z.string(),
+        dominantColour: z.string(),
+        width: z.number(),
+        height: z.number(),
+        aspectRatio: z.number(),
+      }),
     })
     .array(),
 });
