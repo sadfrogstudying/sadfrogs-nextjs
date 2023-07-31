@@ -29,10 +29,6 @@ const Header = () => {
           Map
         </Link>
         <span> | </span>
-        <Link href="/pending-edits" className="pointer-events-auto h-fit">
-          Pending Edits
-        </Link>
-        <span> | </span>
         <CreateStudySpotFormSheet />
       </div>
       <div className="font-mono m-4 block md:hidden">
