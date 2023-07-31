@@ -18,7 +18,7 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="p-4 pt-24">
+      <main className="p-4 pt-20 md:pt-24 md:px-8">
         <StudySpotGrid studySpots={data} status={status} />
       </main>
     </>

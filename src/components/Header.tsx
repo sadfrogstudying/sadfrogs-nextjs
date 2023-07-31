@@ -35,7 +35,9 @@ const Header = () => {
         <span> | </span>
         <CreateStudySpotFormSheet />
       </div>
-      <MobileMenuSheet className="block md:hidden" />
+      <div className="font-mono m-4 block md:hidden">
+        <MobileMenuSheet />
+      </div>
     </header>
   );
 };

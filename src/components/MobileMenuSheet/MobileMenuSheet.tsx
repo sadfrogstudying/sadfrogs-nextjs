@@ -8,7 +8,7 @@ import {
 import { useState } from "react";
 
 import Link from "next/link";
-import CreateStudySpotFormSheet from "./StudySpot/Form/CreateForm/CreateFormSheet";
+import CreateStudySpotFormSheet from "../StudySpot/Form/CreateForm/CreateFormSheet";
 import { cn } from "~/lib/utils";
 
 function MobileMenuSheet({ className }: { className?: string }) {
@@ -20,7 +20,7 @@ function MobileMenuSheet({ className }: { className?: string }) {
       <SheetTrigger asChild>
         <Button
           variant="outline"
-          className={cn("pointer-events-auto font-mono m-4", className)}
+          className={cn("pointer-events-auto", className)}
         >
           Menu
         </Button>
