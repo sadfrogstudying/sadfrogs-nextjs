@@ -1,13 +1,8 @@
 import Head from "next/head";
-import { api } from "~/utils/api";
 
 import StudySpotGrid from "~/components/StudySpot/Grid";
 
 export default function Home() {
-  const { data, status } = api.studySpots.getNotValidated.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-  });
-
   return (
     <>
       <Head>
@@ -18,8 +13,8 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="p-4 pt-20 md:pt-24 md:px-8">
-        <StudySpotGrid studySpots={data} status={status} />
+      <main className="p-4 pt-20 md:pt-24 md:px-8 space-y-4">
+        <StudySpotGrid />
       </main>
     </>
   );

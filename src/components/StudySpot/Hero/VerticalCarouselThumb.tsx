@@ -1,6 +1,6 @@
-import type { Image as ImageType } from "@prisma/client";
 import React from "react";
 import Image from "~/components/UI/Image";
+import type { Image as ImageType } from "~/schemas/study-spots";
 
 type PropType = {
   selected: boolean;

@@ -1,10 +1,10 @@
 import React from "react";
 import Image from "~/components/UI/Image";
-import type { ImageOutput } from "~/types/RouterOutputTypes";
+import type { Image as ImageType } from "~/schemas/study-spots";
 
 type PropType = {
   selected: boolean;
-  image: ImageOutput;
+  image: ImageType;
   index: number;
   onClick: () => void;
   name: string;

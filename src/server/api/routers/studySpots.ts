@@ -7,10 +7,12 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { deleteImagesFromBucket, getImagesMeta } from "~/utils/server-helpers";
 import {
+  getNotValidatedForMapOutputSchema,
+  getNotValidatedOutputSchema,
   pendingEditInputSchema,
   pendingEditOutputSchema,
   studySpotInputSchema,
-  studySpotOutputSchema,
+  studySpotSchema,
 } from "~/schemas/study-spots";
 
 const ratelimit = new Ratelimit({
@@ -27,14 +29,31 @@ export const studySpotsRouter = createTRPCRouter({
    */
   getAll: publicProcedure
     .meta({ openapi: { method: "GET", path: "/studyspots.getAll" } })
-    .input(z.void())
-    .output(studySpotOutputSchema.array())
-    .query(async ({ ctx }) => {
+    .input(
+      z.object({
+        cursor: z.number().nullish(),
+      })
+    )
+    .output(getNotValidatedOutputSchema)
+    .query(async ({ ctx, input }) => {
       const studySpots = await ctx.prisma.studySpot.findMany({
-        where: {
-          isValidated: true,
+        ...(input.cursor && { skip: 1, cursor: { id: input.cursor } }),
+
+        take: 2,
+        orderBy: {
+          createdAt: "desc",
         },
-        include: {
+        where: {
+          isValidated: false,
+        },
+        select: {
+          name: true,
+          slug: true,
+          id: true,
+          address: true,
+          wifi: true,
+          music: true,
+          powerOutlets: true,
           images: true,
           openingHours: true,
         },
@@ -49,15 +68,64 @@ export const studySpotsRouter = createTRPCRouter({
    */
   getNotValidated: publicProcedure
     .meta({ openapi: { method: "GET", path: "/studyspots.getNotValidated" } })
-    .input(z.void())
-    .output(studySpotOutputSchema.array())
-    .query(async ({ ctx }) => {
+    .input(
+      z.object({
+        cursor: z.number().nullish(),
+      })
+    )
+    .output(getNotValidatedOutputSchema)
+    .query(async ({ ctx, input }) => {
       const studySpots = await ctx.prisma.studySpot.findMany({
+        ...(input.cursor && { skip: 1, cursor: { id: input.cursor } }),
+
+        take: 2,
+        orderBy: {
+          createdAt: "desc",
+        },
         where: {
           isValidated: false,
         },
-        include: {
+        select: {
+          name: true,
+          slug: true,
+          id: true,
+          address: true,
+          wifi: true,
+          music: true,
+          powerOutlets: true,
           images: true,
+          openingHours: true,
+        },
+      });
+
+      return studySpots;
+    }),
+  /**
+   *
+   * Get not validated
+   *
+   */
+  getNotValidatedForMap: publicProcedure
+    .meta({
+      openapi: { method: "GET", path: "/studyspots.getNotValidatedForMap" },
+    })
+    .input(z.void())
+    .output(getNotValidatedForMapOutputSchema)
+    .query(async ({ ctx }) => {
+      const studySpots = await ctx.prisma.studySpot.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          isValidated: false,
+        },
+        select: {
+          name: true,
+          address: true,
+          latitude: true,
+          longitude: true,
+          slug: true,
+          images: { take: 1 },
           openingHours: true,
         },
       });
@@ -160,7 +228,7 @@ export const studySpotsRouter = createTRPCRouter({
   getOne: publicProcedure
     .meta({ openapi: { method: "GET", path: "/studyspots.getOne" } })
     .input(z.object({ slug: z.string() }))
-    .output(studySpotOutputSchema)
+    .output(studySpotSchema)
     .query(async ({ ctx, input }) => {
       const studySpot = await ctx.prisma.studySpot.findUnique({
         where: {

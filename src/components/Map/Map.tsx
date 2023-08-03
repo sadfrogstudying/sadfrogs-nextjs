@@ -7,15 +7,15 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import "leaflet/dist/leaflet.css";
 
 import { cn } from "~/lib/utils";
-import type { ImageOutput } from "~/types/RouterOutputTypes";
 import MapInfoPanel from "./MapInfoPanel";
+import type { Image } from "~/schemas/study-spots";
 
 export type MarkerData = {
   index: number;
   name: string;
   address: string;
   latlng: [number, number];
-  image?: ImageOutput;
+  image?: Image;
   slug: string;
 };
 

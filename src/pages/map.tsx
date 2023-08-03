@@ -3,7 +3,7 @@ import type { MarkerData } from "~/components/Map/Map";
 import { api } from "~/utils/api";
 
 const MapPage = () => {
-  const { data } = api.studySpots.getNotValidated.useQuery(undefined, {
+  const { data } = api.studySpots.getNotValidatedForMap.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
 

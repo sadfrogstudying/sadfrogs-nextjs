@@ -9,11 +9,10 @@ import {
 } from "~/components/UI/Form";
 import FileInput from "~/components/UI/FileInput";
 
-import type { StudySpotFormInputs } from "~/schemas/study-spots";
-import type { ImageOutput } from "~/types/RouterOutputTypes";
+import type { Image, StudySpotFormInputs } from "~/schemas/study-spots";
 
 interface EditProps {
-  existingImages: ImageOutput[];
+  existingImages: Image[];
 }
 interface Props {
   form: UseFormReturn<StudySpotFormInputs>;

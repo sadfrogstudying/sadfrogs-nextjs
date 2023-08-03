@@ -1,7 +1,20 @@
 import * as z from "zod";
 
+const imageSchema = z.object({
+  id: z.number(),
+  url: z.string(),
+  dominantColour: z.string(),
+  width: z.number(),
+  height: z.number(),
+  aspectRatio: z.number(),
+});
+const openingHoursSchema = z.object({
+  id: z.number(),
+  day: z.number(),
+  openingTime: z.string(),
+  closingTime: z.string(),
+});
 const studySpotInputSchema = z.object({
-  // general (if people submit a study spot they must fill these out)
   name: z.string().min(1),
   rating: z.number(),
   wifi: z.boolean(),
@@ -12,8 +25,6 @@ const studySpotInputSchema = z.object({
     .string()
     .array()
     .min(1, { message: "At least one image is required." }),
-
-  // location
   placeId: z.string().optional(),
   latitude: z.number().optional(),
   longitude: z.number().optional(),
@@ -21,21 +32,8 @@ const studySpotInputSchema = z.object({
   country: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
-
-  // hours
-  openingHours: z
-    .object({
-      day: z.number(),
-      openingTime: z.string(),
-      closingTime: z.string(),
-    })
-    .array()
-    .optional(),
-
-  // etiquette
+  openingHours: openingHoursSchema.array().optional(),
   canStudyForLong: z.string().optional(),
-
-  // ambiance
   vibe: z.string().optional(),
   comfort: z.string().optional(),
   views: z.string().optional(),
@@ -43,47 +41,27 @@ const studySpotInputSchema = z.object({
   temperature: z.string().optional(),
   music: z.string().optional(),
   lighting: z.string().optional(),
-
-  // crowdedness
   distractions: z.string().optional(),
   crowdedness: z.string().optional(),
-
-  // surroundings
   naturalSurroundings: z.string().optional(),
   proximityToAmenities: z.string().optional(),
-
-  // amenities
   drinks: z.boolean().optional(),
   food: z.boolean().optional(),
   studyBreakFacilities: z.string().optional(),
 });
-
-const studySpotOutputSchema = z.object({
+const studySpotSchema = z.object({
   id: z.number(),
   createdAt: z.date(),
   updatedAt: z.date(),
   isValidated: z.boolean(),
   slug: z.string(),
-
-  // general (if people submit a study spot they must fill these out)
   name: z.string(),
   rating: z.number(),
   wifi: z.boolean(),
   powerOutlets: z.boolean(),
   noiseLevel: z.string(),
   venueType: z.string(),
-  images: z
-    .object({
-      id: z.number(),
-      url: z.string(),
-      dominantColour: z.string(),
-      width: z.number(),
-      height: z.number(),
-      aspectRatio: z.number(),
-    })
-    .array(),
-
-  // location
+  images: imageSchema.array(),
   placeId: z.string(),
   latitude: z.number(),
   longitude: z.number(),
@@ -91,21 +69,8 @@ const studySpotOutputSchema = z.object({
   country: z.string(),
   city: z.string(),
   state: z.string(),
-
-  // hours
-  openingHours: z
-    .object({
-      id: z.number(),
-      day: z.number(),
-      openingTime: z.string(),
-      closingTime: z.string(),
-    })
-    .array(),
-
-  // etiquette
+  openingHours: openingHoursSchema.array(),
   canStudyForLong: z.string(),
-
-  // ambiance
   vibe: z.string(),
   comfort: z.string(),
   views: z.string(),
@@ -113,33 +78,50 @@ const studySpotOutputSchema = z.object({
   temperature: z.string(),
   music: z.string(),
   lighting: z.string(),
-
-  // crowdedness
   distractions: z.string(),
   crowdedness: z.string(),
-
-  // surroundings
   naturalSurroundings: z.string(),
   proximityToAmenities: z.string(),
-
-  // amenities
   drinks: z.boolean(),
   food: z.boolean(),
   studyBreakFacilities: z.string(),
 });
 
+// Router Output Schemas
+const getValidatedOutputSchema = studySpotSchema
+  .pick({
+    name: true,
+    slug: true,
+    id: true,
+    address: true,
+    wifi: true,
+    music: true,
+    powerOutlets: true,
+    images: true,
+    openingHours: true,
+  })
+  .array();
+const getNotValidatedOutputSchema = getValidatedOutputSchema;
+const getNotValidatedForMapOutputSchema = studySpotSchema
+  .pick({
+    name: true,
+    address: true,
+    latitude: true,
+    longitude: true,
+    slug: true,
+    images: true,
+    openingHours: true,
+  })
+  .array();
 const pendingEditInputSchema = studySpotInputSchema.partial().extend({
   images: z.string().array().optional(),
   studySpotId: z.number().optional(),
   imagesToDelete: z.number().array().optional(),
 });
-
-const pendingEditOutputSchema = studySpotOutputSchema.partial().extend({
+const pendingEditOutputSchema = studySpotSchema.partial().extend({
   id: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-
-  // general (if people submit a study spot they must fill these out)
   name: z.string().nullable(),
   slug: z.string().nullable(),
   rating: z.number().nullable(),
@@ -147,8 +129,6 @@ const pendingEditOutputSchema = studySpotOutputSchema.partial().extend({
   powerOutlets: z.boolean().nullable(),
   noiseLevel: z.string().nullable(),
   venueType: z.string().nullable(),
-
-  // location
   placeId: z.string().nullable(),
   latitude: z.number().nullable(),
   longitude: z.number().nullable(),
@@ -156,21 +136,8 @@ const pendingEditOutputSchema = studySpotOutputSchema.partial().extend({
   country: z.string().nullable(),
   city: z.string().nullable(),
   state: z.string().nullable(),
-
-  // hours
-  openingHours: z
-    .object({
-      id: z.number(),
-      day: z.number(),
-      openingTime: z.string(),
-      closingTime: z.string(),
-    })
-    .array(),
-
-  // etiquette
+  openingHours: openingHoursSchema.array(),
   canStudyForLong: z.string().nullable(),
-
-  // ambiance
   vibe: z.string().nullable(),
   comfort: z.string().nullable(),
   views: z.string().nullable(),
@@ -178,26 +145,15 @@ const pendingEditOutputSchema = studySpotOutputSchema.partial().extend({
   temperature: z.string().nullable(),
   music: z.string().nullable(),
   lighting: z.string().nullable(),
-
-  // crowdedness
   distractions: z.string().nullable(),
   crowdedness: z.string().nullable(),
-
-  // surroundings
   naturalSurroundings: z.string().nullable(),
   proximityToAmenities: z.string().nullable(),
-
-  // amenities
   drinks: z.boolean().nullable(),
   food: z.boolean().nullable(),
   studyBreakFacilities: z.string().nullable(),
-
   studySpotId: z.number(),
-  studySpot: z.object({
-    name: z.string(),
-    slug: z.string(),
-  }),
-
+  studySpot: z.object({ name: z.string(), slug: z.string() }),
   pendingImagesToAdd: z
     .object({
       image: z.object({
@@ -224,14 +180,16 @@ const pendingEditOutputSchema = studySpotOutputSchema.partial().extend({
     .array(),
 });
 
-// Study Spot Types
 type StudySpotQueryInput = z.infer<typeof studySpotInputSchema>;
 type StudySpotFormInputs = Omit<StudySpotQueryInput, "images"> & {
   images: File[];
 };
-type StudySpotQueryOutput = z.infer<typeof studySpotOutputSchema>;
-
-// Pending Study Spot Types
+type GetOneOutput = z.infer<typeof studySpotSchema>;
+type GetNotValidatedOutput = z.infer<typeof getNotValidatedOutputSchema>;
+type GetNotValidatedElementOutput = z.infer<
+  typeof getNotValidatedOutputSchema.element
+>;
+type Image = z.infer<typeof imageSchema>;
 type PendingEditQueryInput = z.infer<typeof pendingEditInputSchema>;
 type PendingEditFormInputs = Omit<PendingEditQueryInput, "images"> & {
   images: File[];
@@ -241,16 +199,20 @@ type PendingEditQueryOutput = z.infer<typeof pendingEditOutputSchema>;
 export {
   // Study Spot Schemas
   studySpotInputSchema,
-  studySpotOutputSchema,
+  studySpotSchema,
+  getValidatedOutputSchema,
+  getNotValidatedOutputSchema,
+  getNotValidatedForMapOutputSchema,
   // Pending Study Spot Schemas
   pendingEditInputSchema,
   pendingEditOutputSchema,
 };
 export type {
-  // Study Spot Types
   StudySpotFormInputs,
-  StudySpotQueryOutput,
-  // Pending Study Spot Types
+  GetOneOutput,
+  GetNotValidatedOutput,
+  GetNotValidatedElementOutput,
+  Image,
   PendingEditFormInputs,
   PendingEditQueryOutput,
 };

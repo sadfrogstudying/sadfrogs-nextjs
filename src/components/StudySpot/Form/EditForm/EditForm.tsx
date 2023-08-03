@@ -15,7 +15,7 @@ import StudySpotInputsMisc from "~/components/StudySpot/Form/EditInputs/InputsMi
 
 import type {
   StudySpotFormInputs,
-  StudySpotQueryOutput,
+  GetOneOutput,
   PendingEditFormInputs,
 } from "~/schemas/study-spots";
 import { differenceWith, isEqual, toPairs } from "lodash";
@@ -32,7 +32,7 @@ const EditStudySpotForm = ({
   studySpot,
 }: {
   onSuccess?: () => void;
-  studySpot: StudySpotQueryOutput;
+  studySpot: GetOneOutput;
 }) => {
   const form = useForm<PendingEditFormInputs>({
     defaultValues: {

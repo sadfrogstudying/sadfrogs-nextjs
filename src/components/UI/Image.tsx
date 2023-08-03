@@ -2,10 +2,10 @@ import { useState } from "react";
 import FutureImage from "next/image";
 
 import { cn } from "~/lib/utils";
-import type { ImageOutput } from "~/types/RouterOutputTypes";
+import type { Image as ImageType } from "~/schemas/study-spots";
 
 interface Props {
-  image: ImageOutput;
+  image: ImageType;
   alt: string;
   quality?: number;
   placeholder?: "blur" | "empty";

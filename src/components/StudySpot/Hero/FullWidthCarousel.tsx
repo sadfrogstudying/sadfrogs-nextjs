@@ -4,10 +4,10 @@ import useEmblaCarousel from "embla-carousel-react";
 
 import Image from "../../UI/Image";
 import { FullWidthCarouselThumb } from "./FullWidthCarouselThumb";
-import type { ImageOutput } from "~/types/RouterOutputTypes";
+import type { Image as ImageType } from "~/schemas/study-spots";
 
 type PropType = {
-  images: ImageOutput[];
+  images: ImageType[];
   name: string;
 };
 

@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 
 import dynamic from "next/dynamic";
 import { Button } from "../UI/Button";
-import type { GetOneOutput } from "~/types/RouterOutputTypes";
+import type { GetNotValidatedElementOutput } from "~/schemas/study-spots";
 
 const DeleteAlertDialog = dynamic(() => import("./DeleteAlertDialog"), {
   loading: () => <Loading />,
@@ -18,19 +18,23 @@ const Loading = () => (
   </Button>
 );
 
-const StudySpotGridItem = ({ studySpot }: { studySpot: GetOneOutput }) => {
-  const { address, wifi, music, powerOutlets } = studySpot;
+const StudySpotGridItem = ({
+  studySpot,
+}: {
+  studySpot: GetNotValidatedElementOutput;
+}) => {
+  const { name, slug, id, address, wifi, music, powerOutlets } = studySpot;
   const properties = Object.entries({ address, wifi, music, powerOutlets });
 
   return (
     <Card className="flex flex-col gap-4 border-0 shadow-none w-full font-mono text-sm justify-end">
       <CardHeader className="p-0 w-full">
         {studySpot.images[0] && (
-          <Link tabIndex={-1} href={`/study-spot/${studySpot.slug}`}>
+          <Link tabIndex={-1} href={`/study-spot/${slug}`}>
             <Image
               image={{ ...studySpot.images[0] }}
               key={studySpot.images[0].url}
-              alt={`Image of ${studySpot.name}`}
+              alt={`Image of ${name}`}
               objectFit="contain"
               className="rounded-md overflow-hidden w-4/5"
             />
@@ -38,11 +42,8 @@ const StudySpotGridItem = ({ studySpot }: { studySpot: GetOneOutput }) => {
         )}
       </CardHeader>
       <CardContent className="space-y-4 p-0 w-29 border-y border-gray-400 py-4 flex flex-col">
-        <Link
-          className="hover:underline"
-          href={`/study-spot/${studySpot.slug}`}
-        >
-          {studySpot.name}
+        <Link className="hover:underline" href={`/study-spot/${slug}`}>
+          {name}
         </Link>
         <div>
           Otters are carnivorous mammals in the subfamily Lutrinae. The 13
@@ -58,7 +59,7 @@ const StudySpotGridItem = ({ studySpot }: { studySpot: GetOneOutput }) => {
           ))}
         </div>
 
-        <DeleteAlertDialog id={studySpot.id} />
+        <DeleteAlertDialog id={id} />
       </CardContent>
     </Card>
   );

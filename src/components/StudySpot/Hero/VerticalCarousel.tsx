@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 
-import type { Image as ImageType } from "@prisma/client";
 import useEmblaCarousel from "embla-carousel-react";
 
 import Image from "../../UI/Image";
 import { VerticalThumb } from "./VerticalCarouselThumb";
+import type { Image as ImageType } from "~/schemas/study-spots";
 
 type PropType = {
   images: ImageType[];

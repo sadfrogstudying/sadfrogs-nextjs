@@ -19,9 +19,12 @@ import {
   DialogTrigger,
 } from "~/components/UI/Dialog";
 
-import type { PendingEditFormInputs } from "~/schemas/study-spots";
+import type {
+  Image as ImageType,
+  PendingEditFormInputs,
+} from "~/schemas/study-spots";
 import { Button } from "~/components/UI/Button";
-import type { ImageOutput } from "~/types/RouterOutputTypes";
+
 import Image from "~/components/UI/Image";
 import { useState } from "react";
 import { Trash } from "lucide-react";
@@ -29,7 +32,7 @@ import { ScrollArea } from "~/components/UI/ScrollArea";
 
 interface Props {
   form: UseFormReturn<PendingEditFormInputs>;
-  existingImages: ImageOutput[];
+  existingImages: ImageType[];
 }
 
 const StudySpotInputsImage = ({ form, existingImages }: Props) => {
@@ -70,7 +73,7 @@ const EditImages = ({
   existingImages,
   form,
 }: {
-  existingImages?: ImageOutput[];
+  existingImages?: ImageType[];
   form: UseFormReturn<PendingEditFormInputs>;
 }) => {
   const [open, setOpen] = useState(false);

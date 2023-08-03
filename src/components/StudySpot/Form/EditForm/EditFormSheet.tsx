@@ -11,7 +11,8 @@ import { useState } from "react";
 
 import dynamic from "next/dynamic";
 import { Separator } from "~/components/UI/Seperator";
-import type { GetOneOutput } from "~/types/RouterOutputTypes";
+import type { GetOneOutput } from "~/schemas/study-spots";
+
 const EditStudySpotForm = dynamic(() => import("./EditForm"), {
   loading: () => <Loading />,
   ssr: false,
