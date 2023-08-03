@@ -2,11 +2,12 @@ import * as z from "zod";
 
 const imageSchema = z.object({
   id: z.number(),
-  url: z.string(),
+  name: z.string(),
   dominantColour: z.string(),
   width: z.number(),
   height: z.number(),
   aspectRatio: z.number(),
+  url: z.string(),
 });
 const openingHoursSchema = z.object({
   id: z.number(),
@@ -154,30 +155,8 @@ const pendingEditOutputSchema = studySpotSchema.partial().extend({
   studyBreakFacilities: z.string().nullable(),
   studySpotId: z.number(),
   studySpot: z.object({ name: z.string(), slug: z.string() }),
-  pendingImagesToAdd: z
-    .object({
-      image: z.object({
-        id: z.number(),
-        url: z.string(),
-        dominantColour: z.string(),
-        width: z.number(),
-        height: z.number(),
-        aspectRatio: z.number(),
-      }),
-    })
-    .array(),
-  pendingImagesToDelete: z
-    .object({
-      image: z.object({
-        id: z.number(),
-        url: z.string(),
-        dominantColour: z.string(),
-        width: z.number(),
-        height: z.number(),
-        aspectRatio: z.number(),
-      }),
-    })
-    .array(),
+  pendingImagesToAdd: imageSchema.array(),
+  pendingImagesToDelete: imageSchema.array(),
 });
 
 type StudySpotQueryInput = z.infer<typeof studySpotInputSchema>;

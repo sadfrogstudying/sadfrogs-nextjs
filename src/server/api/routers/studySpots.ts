@@ -14,6 +14,7 @@ import {
   studySpotInputSchema,
   studySpotSchema,
 } from "~/schemas/study-spots";
+import { env } from "~/env.mjs";
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -59,7 +60,19 @@ export const studySpotsRouter = createTRPCRouter({
         },
       });
 
-      return studySpots;
+      const studySpotsWithSignedImageUrls = studySpots.map((studySpot) => {
+        return {
+          ...studySpot,
+          images: studySpot.images.map((image) => {
+            return {
+              ...image,
+              url: `${env.CLOUDFRONT_URL}/${image.name}`,
+            };
+          }),
+        };
+      });
+
+      return studySpotsWithSignedImageUrls;
     }),
   /**
    *
@@ -98,7 +111,19 @@ export const studySpotsRouter = createTRPCRouter({
         },
       });
 
-      return studySpots;
+      const studySpotsWithSignedImageUrls = studySpots.map((studySpot) => {
+        return {
+          ...studySpot,
+          images: studySpot.images.map((image) => {
+            return {
+              ...image,
+              url: `${env.CLOUDFRONT_URL}/${image.name}`,
+            };
+          }),
+        };
+      });
+
+      return studySpotsWithSignedImageUrls;
     }),
   /**
    *
@@ -130,7 +155,19 @@ export const studySpotsRouter = createTRPCRouter({
         },
       });
 
-      return studySpots;
+      const studySpotsWithSignedImageUrls = studySpots.map((studySpot) => {
+        return {
+          ...studySpot,
+          images: studySpot.images.map((image) => {
+            return {
+              ...image,
+              url: `${env.CLOUDFRONT_URL}/${image.name}`,
+            };
+          }),
+        };
+      });
+
+      return studySpotsWithSignedImageUrls;
     }),
   /**
    *
@@ -149,8 +186,10 @@ export const studySpotsRouter = createTRPCRouter({
           message: "Too many requests",
         });
 
+      const { s3 } = ctx;
+
       try {
-        const newImages = await getImagesMeta(input.images);
+        const newImages = await getImagesMeta(input.images, s3);
         const slug = slugify(input.name, {
           remove: /[*+~.()'"!:@]/g,
           lower: true,
@@ -245,7 +284,17 @@ export const studySpotsRouter = createTRPCRouter({
           code: "NOT_FOUND",
         });
 
-      return studySpot;
+      const studySpotWithSignedImageUrls = {
+        ...studySpot,
+        images: studySpot.images.map((image) => {
+          return {
+            ...image,
+            url: `${env.CLOUDFRONT_URL}/${image.name}`,
+          };
+        }),
+      };
+
+      return studySpotWithSignedImageUrls;
     }),
   /** Throws an error if name exists */
   checkIfNameExists: publicProcedure
@@ -293,7 +342,7 @@ export const studySpotsRouter = createTRPCRouter({
         include: {
           images: {
             select: {
-              url: true,
+              name: true,
             },
           },
         },
@@ -387,7 +436,25 @@ export const studySpotsRouter = createTRPCRouter({
         },
       });
 
-      return allPendingEdits;
+      const allPendingEditsWithSignedImageUrls = allPendingEdits.map((edit) => {
+        return {
+          ...edit,
+          pendingImagesToAdd: edit.pendingImagesToAdd.map(({ image }) => {
+            return {
+              ...image,
+              url: `${env.CLOUDFRONT_URL}/${image.name}`,
+            };
+          }),
+          pendingImagesToDelete: edit.pendingImagesToDelete.map(({ image }) => {
+            return {
+              ...image,
+              url: `${env.CLOUDFRONT_URL}/${image.name}`,
+            };
+          }),
+        };
+      });
+
+      return allPendingEditsWithSignedImageUrls;
     }),
   /**
    *
@@ -469,8 +536,10 @@ export const studySpotsRouter = createTRPCRouter({
           },
         });
 
+        // Images to add
         if (input.images && input.images?.length !== 0) {
-          const newImages = await getImagesMeta(input.images);
+          const { s3 } = ctx;
+          const newImages = await getImagesMeta(input.images, s3);
 
           await ctx.prisma.image.createMany({
             data: newImages,
@@ -478,8 +547,8 @@ export const studySpotsRouter = createTRPCRouter({
 
           const newlyAddedImages = await ctx.prisma.image.findMany({
             where: {
-              url: {
-                in: input.images,
+              name: {
+                in: newImages.map((image) => image.name),
               },
             },
           });
@@ -492,6 +561,7 @@ export const studySpotsRouter = createTRPCRouter({
           });
         }
 
+        // Images to remove
         if (input.imagesToDelete?.length !== 0 && input.imagesToDelete) {
           await ctx.prisma.pendingImagesToDelete.createMany({
             data: input.imagesToDelete.map((imageId) => ({

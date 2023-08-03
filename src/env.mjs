@@ -19,6 +19,7 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
     BUCKET_NAME: z.string(),
+    CLOUDFRONT_URL: z.string(),
     REGION: z.string(),
   },
 
@@ -49,6 +50,7 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     BUCKET_NAME: process.env.BUCKET_NAME,
+    CLOUDFRONT_URL: process.env.CLOUDFRONT_URL,
     REGION: process.env.REGION,
     NEXT_PUBLIC_GOOGLE_MAPS_API_KEY:
       process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,

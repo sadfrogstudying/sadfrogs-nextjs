@@ -5,7 +5,6 @@ import { env } from "~/env.mjs";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuidv4 } from "uuid";
-import { extension } from "mime-types";
 
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
@@ -93,8 +92,6 @@ export const s3Router = createTRPCRouter({
       const { s3 } = ctx;
 
       const signedUrlPromises = input.files.map(async (file) => {
-        const fileExtension = extension(file.contentType) || "";
-
         if (file.contentLength > 1024 * 1024 * 2)
           throw new TRPCError({
             code: "PAYLOAD_TOO_LARGE",
@@ -103,7 +100,7 @@ export const s3Router = createTRPCRouter({
 
         const putObjectCommand = new PutObjectCommand({
           Bucket: env.BUCKET_NAME,
-          Key: `${uuidv4()}.${fileExtension}`,
+          Key: uuidv4(),
           ContentType: file.contentType,
           ContentLength: file.contentLength,
         });

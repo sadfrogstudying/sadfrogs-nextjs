@@ -11,7 +11,11 @@ export const uploadImagesToS3UsingPresignedUrls = async ({
 }) => {
   try {
     const promises = presignedUrls.map(async (url, i) => {
-      const res = await axios.put(url, acceptedFiles[i]);
+      const res = await axios.put(url, acceptedFiles[i], {
+        headers: {
+          "Content-Type": acceptedFiles[i]?.type,
+        },
+      });
 
       console.log(res);
       console.log("Successfully uploaded ", acceptedFiles[i]?.name);

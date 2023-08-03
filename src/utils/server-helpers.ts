@@ -2,7 +2,12 @@ import { TRPCError } from "@trpc/server";
 import axios, { AxiosError } from "axios";
 import sharp from "sharp";
 import { env } from "~/env.mjs";
-import { type S3, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import {
+  type S3,
+  DeleteObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const componentToHex = (c: number) => {
   const hex = c.toString(16);
@@ -14,10 +19,10 @@ const rgbToHex = (r: number, g: number, b: number) => {
 };
 
 /**
- * @description this function also serves to validate that the images are from the bucket and not some other dog
+ * @description uses sharp to get image metadata.  Also serves to validate that the images are from the bucket and not some other dog
  * @param input array of image urls
  */
-export const getImagesMeta = async (input: string[]) => {
+export const getImagesMeta = async (input: string[], s3: S3) => {
   interface Response {
     request: {
       host: string;
@@ -34,15 +39,31 @@ export const getImagesMeta = async (input: string[]) => {
 
     const allImagesWithMeta = await Promise.all(
       input.map(async (url) => {
-        if (url.startsWith(`${env.BUCKET_NAME}.s3.${env.REGION}`))
+        const bucketPath = `https://${env.BUCKET_NAME}.s3.${env.REGION}.amazonaws.com/`;
+
+        if (!url.startsWith(bucketPath))
           throw new TRPCError({
             code: "UNPROCESSABLE_CONTENT",
             message: "Image url is not from the bucket",
           });
 
+        const splitUrl = url.split("?")[0] || "";
+        const imageName = splitUrl.substring(bucketPath.length);
+
+        const createGetSignedUrl = async (s3: S3, objectName: string) => {
+          const getObjectParams = {
+            Bucket: env.BUCKET_NAME,
+            Key: objectName,
+          };
+          const command = new GetObjectCommand(getObjectParams);
+          return await getSignedUrl(s3, command, { expiresIn: 3600 });
+        };
+
+        const signedUrl = await createGetSignedUrl(s3, imageName);
+
         // Download Image & use Buffer as Input
         const response = await axios<Record<string, never>, Response>({
-          url,
+          url: signedUrl,
           responseType: "arraybuffer",
         });
 
@@ -63,7 +84,7 @@ export const getImagesMeta = async (input: string[]) => {
           });
 
         return {
-          url,
+          name: imageName,
           width: width,
           height: height,
           aspectRatio: aspectRatio,
@@ -75,6 +96,8 @@ export const getImagesMeta = async (input: string[]) => {
     return allImagesWithMeta;
   } catch (error) {
     const errorString = "Something went wrong getting image metadata";
+
+    if (error instanceof TRPCError) throw error;
 
     if (error instanceof AxiosError) {
       if (error.code === "ECONNREFUSED")
@@ -95,15 +118,14 @@ export const getImagesMeta = async (input: string[]) => {
  * @description deletes images from bucket
  * @param images array of objects that have image urls
  */
-export const deleteImagesFromBucket = async <T extends { url: string }>(
+export const deleteImagesFromBucket = async <T extends { name: string }>(
   images: T[],
   s3: S3
 ) => {
   try {
     await Promise.all(
       images.map(async (image) => {
-        const key = image.url.split(".com/")[1]; // extract filename from s3 url, as long as not nested in folders
-        const bucketParams = { Bucket: env.BUCKET_NAME, Key: key };
+        const bucketParams = { Bucket: env.BUCKET_NAME, Key: image.name };
         const data = await s3.send(new DeleteObjectCommand(bucketParams));
         console.log("Success. Object deleted.", data);
         return data; // For unit tests.

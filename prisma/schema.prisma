@@ -140,7 +140,7 @@ model OpeningHours {
 
 model Image {
     id             Int    @id @default(autoincrement())
-    url            String @unique
+    name           String @unique
     dominantColour String @default("#fff")
     aspectRatio    Float
     height         Int

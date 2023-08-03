@@ -30,6 +30,9 @@ const config = {
       {
         hostname: "sadfrogs.s3.ap-southeast-2.amazonaws.com",
       },
+      {
+        hostname: "dh0bdxvf05sxo.cloudfront.net",
+      },
     ],
   },
 };
