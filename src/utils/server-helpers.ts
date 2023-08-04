@@ -50,20 +50,11 @@ export const getImagesMeta = async (input: string[], s3: S3) => {
         const splitUrl = url.split("?")[0] || "";
         const imageName = splitUrl.substring(bucketPath.length);
 
-        const createGetSignedUrl = async (s3: S3, objectName: string) => {
-          const getObjectParams = {
-            Bucket: env.BUCKET_NAME,
-            Key: objectName,
-          };
-          const command = new GetObjectCommand(getObjectParams);
-          return await getSignedUrl(s3, command, { expiresIn: 3600 });
-        };
-
-        const signedUrl = await createGetSignedUrl(s3, imageName);
+        const imageUrl = `${env.CLOUDFRONT_URL}/${imageName}`;
 
         // Download Image & use Buffer as Input
         const response = await axios<Record<string, never>, Response>({
-          url: signedUrl,
+          url: imageUrl,
           responseType: "arraybuffer",
         });
 
