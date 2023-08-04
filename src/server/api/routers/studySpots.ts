@@ -186,10 +186,8 @@ export const studySpotsRouter = createTRPCRouter({
           message: "Too many requests",
         });
 
-      const { s3 } = ctx;
-
       try {
-        const newImages = await getImagesMeta(input.images, s3);
+        const newImages = await getImagesMeta(input.images);
         const slug = slugify(input.name, {
           remove: /[*+~.()'"!:@]/g,
           lower: true,
@@ -538,8 +536,7 @@ export const studySpotsRouter = createTRPCRouter({
 
         // Images to add
         if (input.images && input.images?.length !== 0) {
-          const { s3 } = ctx;
-          const newImages = await getImagesMeta(input.images, s3);
+          const newImages = await getImagesMeta(input.images);
 
           await ctx.prisma.image.createMany({
             data: newImages,

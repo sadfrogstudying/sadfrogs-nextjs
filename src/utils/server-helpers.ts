@@ -2,12 +2,7 @@ import { TRPCError } from "@trpc/server";
 import axios, { AxiosError } from "axios";
 import sharp from "sharp";
 import { env } from "~/env.mjs";
-import {
-  type S3,
-  DeleteObjectCommand,
-  GetObjectCommand,
-} from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { type S3, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 const componentToHex = (c: number) => {
   const hex = c.toString(16);
@@ -22,7 +17,7 @@ const rgbToHex = (r: number, g: number, b: number) => {
  * @description uses sharp to get image metadata.  Also serves to validate that the images are from the bucket and not some other dog
  * @param input array of image urls
  */
-export const getImagesMeta = async (input: string[], s3: S3) => {
+export const getImagesMeta = async (input: string[]) => {
   interface Response {
     request: {
       host: string;
