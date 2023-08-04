@@ -2,12 +2,15 @@ import { prisma } from "../src/server/db";
 import slugify from "slugify";
 
 async function main() {
-  /** 
-   * Uncomment this to delete all data in the database
-    await prisma.studySpot.deleteMany();
-    await prisma.location.deleteMany();
-    await prisma.image.deleteMany();
-  */
+  /**
+  Comment this out to wipe database
+  await prisma.openingHours.deleteMany();
+  await prisma.pendingImagesToAdd.deleteMany();
+  await prisma.pendingImagesToDelete.deleteMany();
+  await prisma.pendingEdit.deleteMany();
+  await prisma.image.deleteMany();
+  await prisma.studySpot.deleteMany();
+   */
 
   return;
 
