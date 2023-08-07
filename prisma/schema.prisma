@@ -11,6 +11,17 @@ generator client {
     provider = "prisma-client-js"
 }
 
+model User {
+    id          String @id @default(cuid())
+    username    String @unique
+    email       String @unique
+    description String @default("")
+    image       Image?
+    imageId     Int?
+
+    @@index([email])
+}
+
 model StudySpot {
     id          Int      @id @default(autoincrement())
     createdAt   DateTime @default(now())
@@ -141,6 +152,7 @@ model OpeningHours {
 model Image {
     id             Int    @id @default(autoincrement())
     name           String @unique
+    url            String @unique
     dominantColour String @default("#fff")
     aspectRatio    Float
     height         Int
@@ -151,6 +163,8 @@ model Image {
 
     pendingImagesToAdd    PendingImagesToAdd[]
     pendingImagesToDelete PendingImagesToDelete[]
+    user                  User?                   @relation(fields: [userId], references: [id])
+    userId                String?                 @unique // relation scalar field (used in the `@relation` attribute above)
 
     @@index([studySpotId])
 }

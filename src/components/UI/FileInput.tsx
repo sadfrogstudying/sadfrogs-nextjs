@@ -9,31 +9,48 @@ interface Props {
   setValue: (file: File[]) => void;
   value: File[];
   isSuccess: boolean;
+  maxFiles?: number;
 }
 
-const FileInput = ({ setValue, value, isSuccess, ...props }: Props) => {
-  const [error, setError] = React.useState<string | null>(null);
+const FileInput = ({
+  setValue,
+  value,
+  isSuccess,
+  maxFiles = 8,
+  ...props
+}: Props) => {
+  const [error, setError] = React.useState<string[]>([]);
   const [compressionProgress, setCompressionProgress] = React.useState<
     number[]
   >([]);
 
-  const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
-    useDropzone({
-      maxFiles: 8,
-      maxSize: 30000000, // 10mb
-      accept: {
-        "image/png": [".png"],
-        "image/jpeg": [".jpeg", ".jpg"],
-        "image/webp": [".webp"],
-      },
-      onDrop: (acceptedFiles) => {
-        void compressImages(acceptedFiles);
-      },
-    });
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive,
+    acceptedFiles,
+    fileRejections,
+  } = useDropzone({
+    maxFiles: maxFiles,
+    maxSize: 30000000, // 10mb
+    accept: {
+      "image/png": [".png"],
+      "image/jpeg": [".jpeg", ".jpg"],
+      "image/webp": [".webp"],
+    },
+    onDrop: (acceptedFiles) => {
+      void compressImages(acceptedFiles);
+    },
+  });
+
+  const fileRejectionErrors = fileRejections.flatMap(({ errors }) => {
+    return errors.flatMap(({ message }) => message);
+  });
+  const fileRejectionUniqueErrors = Array.from(new Set(fileRejectionErrors));
 
   const compressImages = async (acceptedFiles: File[]) => {
     setValue([]);
-    setError(null);
+    setError([]);
     setCompressionProgress(Array(acceptedFiles.length).fill(0));
     try {
       const compressedFilePromises = acceptedFiles.map(
@@ -42,7 +59,7 @@ const FileInput = ({ setValue, value, isSuccess, ...props }: Props) => {
       const compressedFiles = await Promise.all(compressedFilePromises);
       setValue(compressedFiles);
     } catch (error) {
-      if (error instanceof Error) void setError(error.message);
+      if (error instanceof Error) void setError([error.message]);
     }
     setCompressionProgress([]);
   };
@@ -126,6 +143,11 @@ const FileInput = ({ setValue, value, isSuccess, ...props }: Props) => {
       ) : null}
 
       {error && <p className="text-sm text-red-500">{error}</p>}
+      {fileRejectionUniqueErrors.length ? (
+        <p className="text-sm text-red-500">
+          {fileRejectionUniqueErrors.join(", ")}
+        </p>
+      ) : null}
       <p className="text-sm text-gray-400">
         * Only png, jpeg, and webp files are allowed & max file size is 10mb.
       </p>

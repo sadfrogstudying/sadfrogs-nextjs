@@ -14,7 +14,6 @@ import {
   studySpotInputSchema,
   studySpotSchema,
 } from "~/schemas/study-spots";
-import { env } from "~/env.mjs";
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -32,7 +31,7 @@ export const studySpotsRouter = createTRPCRouter({
     .meta({ openapi: { method: "GET", path: "/studyspots.getAll" } })
     .input(
       z.object({
-        cursor: z.number().nullish(),
+        cursor: z.number().optional(),
       })
     )
     .output(getNotValidatedOutputSchema)
@@ -60,19 +59,7 @@ export const studySpotsRouter = createTRPCRouter({
         },
       });
 
-      const studySpotsWithSignedImageUrls = studySpots.map((studySpot) => {
-        return {
-          ...studySpot,
-          images: studySpot.images.map((image) => {
-            return {
-              ...image,
-              url: `${env.CLOUDFRONT_URL}/${image.name}`,
-            };
-          }),
-        };
-      });
-
-      return studySpotsWithSignedImageUrls;
+      return studySpots;
     }),
   /**
    *
@@ -83,7 +70,7 @@ export const studySpotsRouter = createTRPCRouter({
     .meta({ openapi: { method: "GET", path: "/studyspots.getNotValidated" } })
     .input(
       z.object({
-        cursor: z.number().nullish(),
+        cursor: z.number().optional(),
       })
     )
     .output(getNotValidatedOutputSchema)
@@ -111,19 +98,7 @@ export const studySpotsRouter = createTRPCRouter({
         },
       });
 
-      const studySpotsWithSignedImageUrls = studySpots.map((studySpot) => {
-        return {
-          ...studySpot,
-          images: studySpot.images.map((image) => {
-            return {
-              ...image,
-              url: `${env.CLOUDFRONT_URL}/${image.name}`,
-            };
-          }),
-        };
-      });
-
-      return studySpotsWithSignedImageUrls;
+      return studySpots;
     }),
   /**
    *
@@ -155,19 +130,7 @@ export const studySpotsRouter = createTRPCRouter({
         },
       });
 
-      const studySpotsWithSignedImageUrls = studySpots.map((studySpot) => {
-        return {
-          ...studySpot,
-          images: studySpot.images.map((image) => {
-            return {
-              ...image,
-              url: `${env.CLOUDFRONT_URL}/${image.name}`,
-            };
-          }),
-        };
-      });
-
-      return studySpotsWithSignedImageUrls;
+      return studySpots;
     }),
   /**
    *
@@ -282,17 +245,7 @@ export const studySpotsRouter = createTRPCRouter({
           code: "NOT_FOUND",
         });
 
-      const studySpotWithSignedImageUrls = {
-        ...studySpot,
-        images: studySpot.images.map((image) => {
-          return {
-            ...image,
-            url: `${env.CLOUDFRONT_URL}/${image.name}`,
-          };
-        }),
-      };
-
-      return studySpotWithSignedImageUrls;
+      return studySpot;
     }),
   /** Throws an error if name exists */
   checkIfNameExists: publicProcedure
@@ -414,6 +367,7 @@ export const studySpotsRouter = createTRPCRouter({
 
       const allPendingEdits = await ctx.prisma.pendingEdit.findMany({
         include: {
+          openingHours: true,
           pendingImagesToAdd: {
             select: {
               image: true,
@@ -424,7 +378,6 @@ export const studySpotsRouter = createTRPCRouter({
               image: true,
             },
           },
-          openingHours: true,
           studySpot: {
             select: {
               name: true,
@@ -434,25 +387,7 @@ export const studySpotsRouter = createTRPCRouter({
         },
       });
 
-      const allPendingEditsWithSignedImageUrls = allPendingEdits.map((edit) => {
-        return {
-          ...edit,
-          pendingImagesToAdd: edit.pendingImagesToAdd.map(({ image }) => {
-            return {
-              ...image,
-              url: `${env.CLOUDFRONT_URL}/${image.name}`,
-            };
-          }),
-          pendingImagesToDelete: edit.pendingImagesToDelete.map(({ image }) => {
-            return {
-              ...image,
-              url: `${env.CLOUDFRONT_URL}/${image.name}`,
-            };
-          }),
-        };
-      });
-
-      return allPendingEditsWithSignedImageUrls;
+      return allPendingEdits;
     }),
   /**
    *

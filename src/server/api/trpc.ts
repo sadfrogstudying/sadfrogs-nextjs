@@ -12,9 +12,28 @@ import superjson from "superjson";
 import type { OpenApiMeta } from "trpc-openapi";
 import { ZodError } from "zod";
 import { prisma } from "~/server/db";
-import { getSession } from "@auth0/nextjs-auth0";
-import type { NextApiRequest } from "next";
+import { type Claims, getSession } from "@auth0/nextjs-auth0";
 import { s3 } from "../aws/s3";
+
+import { createRemoteJWKSet, jwtVerify } from "jose";
+import { env } from "~/env.mjs";
+import axios, { type AxiosResponse } from "axios";
+
+async function authenticateRequest(token: string) {
+  // Load public key from authentication provider
+  const jwks = createRemoteJWKSet(
+    new URL(`${env.AUTH0_BASE_URL}/.well-known/jwks.json`)
+  );
+  try {
+    // Verify the given token
+    const result = await jwtVerify(token.replace("Bearer ", ""), jwks);
+    console.log(result);
+    return true;
+  } catch (e) {
+    console.error("Authentication failed: Token could not be verified");
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+}
 
 /**
  * 1. CONTEXT
@@ -33,20 +52,43 @@ import { s3 } from "../aws/s3";
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const { req, res } = opts;
 
-  const session = await getSession(req, res);
-  const user = session?.user;
+  interface UserInfo {
+    sub: string;
+    email: string;
+    email_verified: boolean;
+  }
 
-  const parseIp = (req: NextApiRequest) => {
-    const header = req.headers["x-forwarded-for"];
-    const ip = Array.isArray(header) ? header[0] : req.socket?.remoteAddress;
-    return ip || "";
-  };
+  // ip address
+  const header = req.headers["x-forwarded-for"];
+  const ip = Array.isArray(header) ? header[0] : req.socket?.remoteAddress;
+
+  let user: Claims | UserInfo | undefined;
+
+  // mobile authentication
+
+  const token = req.headers.authorization;
+  if (token) {
+    await authenticateRequest(token);
+    const { data }: AxiosResponse<UserInfo> = await axios.get(
+      `${env.AUTH0_BASE_URL}/userinfo`,
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+
+    user = data;
+  }
+  // web authentication
+  const session = await getSession(req, res);
+  user = session?.user;
 
   return {
     s3,
     prisma,
     currentUser: user,
-    ip: parseIp(req),
+    ip: ip || "",
   };
 };
 

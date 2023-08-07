@@ -155,8 +155,8 @@ const pendingEditOutputSchema = studySpotSchema.partial().extend({
   studyBreakFacilities: z.string().nullable(),
   studySpotId: z.number(),
   studySpot: z.object({ name: z.string(), slug: z.string() }),
-  pendingImagesToAdd: imageSchema.array(),
-  pendingImagesToDelete: imageSchema.array(),
+  pendingImagesToAdd: z.object({ image: imageSchema }).array(),
+  pendingImagesToDelete: z.object({ image: imageSchema }).array(),
 });
 
 type StudySpotQueryInput = z.infer<typeof studySpotInputSchema>;

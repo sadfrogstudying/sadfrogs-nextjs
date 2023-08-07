@@ -71,6 +71,7 @@ export const getImagesMeta = async (input: string[]) => {
 
         return {
           name: imageName,
+          url: `${env.CLOUDFRONT_URL}/${imageName}`,
           width: width,
           height: height,
           aspectRatio: aspectRatio,
