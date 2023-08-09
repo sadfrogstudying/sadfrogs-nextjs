@@ -108,8 +108,8 @@ model PendingEdit {
     studySpot   StudySpot @relation(fields: [studySpotId], references: [id])
     studySpotId Int
 
-    pendingImagesToAdd    PendingImagesToAdd[]
-    pendingImagesToDelete PendingImagesToDelete[]
+    pendingImagesToAdd    PendingImageToAdd[]
+    pendingImagesToDelete PendingImageToDelete[]
 
     @@index([studySpotId])
     @@index([authorId])
@@ -144,14 +144,14 @@ model Image {
     studySpot   StudySpot? @relation(fields: [studySpotId], references: [id], onDelete: Cascade)
     studySpotId Int?
 
-    pendingEditImagesToAdd    PendingImagesToAdd[]
-    pendingEditImagesToDelete PendingImagesToDelete[]
+    pendingEditImagesToAdd    PendingImageToAdd[]
+    pendingEditImagesToDelete PendingImageToDelete[]
 
     @@index([studySpotId])
     @@index([authorId])
 }
 
-model PendingImagesToAdd {
+model PendingImageToAdd {
     image   Image @relation(fields: [imageId], references: [id])
     imageId Int
 
@@ -163,7 +163,7 @@ model PendingImagesToAdd {
     @@index([pendingEditId])
 }
 
-model PendingImagesToDelete {
+model PendingImageToDelete {
     image   Image @relation(fields: [imageId], references: [id])
     imageId Int
 
