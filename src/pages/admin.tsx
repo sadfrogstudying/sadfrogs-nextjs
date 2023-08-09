@@ -111,7 +111,7 @@ const PendingEdit = ({
             <div className="space-y-2 p-4 border border-green-500 rounded-md bg-green-50">
               <h4 className="font-bold text-green-400">Images to add:</h4>
               <div className="flex gap-4">
-                {images.map((image) => (
+                {images.map(({ image }) => (
                   <Image
                     className="h-40 w-auto rounded-md overflow-hidden"
                     image={image}
@@ -127,7 +127,7 @@ const PendingEdit = ({
             <div className="space-y-2 p-4 border border-red-500 rounded-md bg-red-50">
               <h4 className="font-bold text-red-500">Images to delete:</h4>
               <div className="flex gap-4">
-                {imagesToDelete.map((image) => (
+                {imagesToDelete.map(({ image }) => (
                   <Image
                     className="h-40 w-auto rounded-md overflow-hidden"
                     image={image}

@@ -1,8 +1,8 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Button } from "~/components/UI/Button";
 import Image from "~/components/UI/Image";
-import CreateUserForm from "~/components/User/CreateUserForm";
 import { api } from "~/utils/api";
+import CreateUserForm from "~/components/User/CreateUserForm";
 
 const PrivatePage = () => {
   const { user, error, isLoading } = useUser();
