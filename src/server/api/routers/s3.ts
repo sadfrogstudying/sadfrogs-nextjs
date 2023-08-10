@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, privateProcedure, publicProcedure } from "../trpc";
 import { env } from "~/env.mjs";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -60,7 +60,7 @@ export const s3Router = createTRPCRouter({
    *
    * @params an array of all the contentTypes of the files we want to upload
    */
-  getPresignedUrls: publicProcedure
+  getPresignedUrls: privateProcedure
     .meta({ openapi: { method: "POST", path: "/s3.getPresignedUrls" } })
     .input(
       z.object({

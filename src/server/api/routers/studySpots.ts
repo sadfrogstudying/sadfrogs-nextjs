@@ -1,6 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import slugify from "slugify";
 
 import { Ratelimit } from "@upstash/ratelimit";
@@ -248,7 +252,7 @@ export const studySpotsRouter = createTRPCRouter({
       return studySpot;
     }),
   /** Throws an error if name exists */
-  checkIfNameExists: publicProcedure
+  checkIfNameExists: privateProcedure
     .meta({
       openapi: { method: "POST", path: "/studyspots.checkIfNameExists" },
     })
@@ -368,11 +372,7 @@ export const studySpotsRouter = createTRPCRouter({
       const allPendingEdits = await ctx.prisma.pendingEdit.findMany({
         include: {
           openingHours: true,
-          pendingImagesToAdd: {
-            select: {
-              image: true,
-            },
-          },
+          pendingImagesToAdd: true,
           pendingImagesToDelete: {
             select: {
               image: true,
@@ -394,7 +394,7 @@ export const studySpotsRouter = createTRPCRouter({
    * Pending Edits: Create One
    *
    */
-  createPendingEdit: publicProcedure
+  createPendingEdit: privateProcedure
     .meta({
       openapi: { method: "POST", path: "/studyspots.createPendingEdit" },
     })
@@ -409,6 +409,7 @@ export const studySpotsRouter = createTRPCRouter({
         });
 
       try {
+        const newImages = input.images && (await getImagesMeta(input.images));
         const slug =
           input.name &&
           slugify(input.name, {
@@ -423,6 +424,11 @@ export const studySpotsRouter = createTRPCRouter({
             slug: slug,
             wifi: input.wifi,
             rating: input.rating,
+            author: {
+              connect: {
+                email: ctx.currentUser.email,
+              },
+            },
             powerOutlets: input.powerOutlets,
             noiseLevel: input.noiseLevel,
             venueType: input.venueType,
@@ -461,6 +467,14 @@ export const studySpotsRouter = createTRPCRouter({
             food: input.food,
             studyBreakFacilities: input.studyBreakFacilities,
 
+            ...(newImages && {
+              pendingImagesToAdd: {
+                createMany: {
+                  data: newImages,
+                },
+              },
+            }),
+
             studySpot: {
               connect: {
                 id: input.studySpotId,
@@ -469,33 +483,9 @@ export const studySpotsRouter = createTRPCRouter({
           },
         });
 
-        // Images to add
-        if (input.images && input.images?.length !== 0) {
-          const newImages = await getImagesMeta(input.images);
-
-          await ctx.prisma.image.createMany({
-            data: newImages,
-          });
-
-          const newlyAddedImages = await ctx.prisma.image.findMany({
-            where: {
-              name: {
-                in: newImages.map((image) => image.name),
-              },
-            },
-          });
-
-          await ctx.prisma.pendingImagesToAdd.createMany({
-            data: newlyAddedImages.map((image) => ({
-              pendingEditId: newPendingEdit.id,
-              imageId: image.id,
-            })),
-          });
-        }
-
         // Images to remove
         if (input.imagesToDelete?.length !== 0 && input.imagesToDelete) {
-          await ctx.prisma.pendingImagesToDelete.createMany({
+          await ctx.prisma.pendingImageToDelete.createMany({
             data: input.imagesToDelete.map((imageId) => ({
               pendingEditId: newPendingEdit.id,
               imageId: imageId,
@@ -513,7 +503,7 @@ export const studySpotsRouter = createTRPCRouter({
         });
       }
     }),
-  acceptPendingEdit: publicProcedure
+  acceptPendingEdit: privateProcedure
     .meta({
       openapi: { method: "POST", path: "/studyspots.acceptPendingEdit" },
     })
@@ -527,14 +517,19 @@ export const studySpotsRouter = createTRPCRouter({
         include: {
           pendingImagesToAdd: {
             select: {
+              id: true,
               pendingEditId: true,
-              image: true,
             },
           },
           pendingImagesToDelete: {
             select: {
               pendingEditId: true,
-              image: true,
+              image: {
+                select: {
+                  name: true,
+                  id: true,
+                },
+              },
             },
           },
           openingHours: true,
@@ -552,16 +547,9 @@ export const studySpotsRouter = createTRPCRouter({
       const { pendingImagesToAdd, pendingImagesToDelete } = pendingEdit;
 
       // REMOVE IMAGES
-      if (pendingImagesToAdd.length > 0) {
-        await ctx.prisma.pendingImagesToAdd.deleteMany({
-          where: {
-            pendingEditId: pendingEdit.id,
-          },
-        });
-      }
       if (pendingImagesToDelete.length > 0) {
         await ctx.prisma.$transaction([
-          ctx.prisma.pendingImagesToDelete.deleteMany({
+          ctx.prisma.pendingImageToDelete.deleteMany({
             where: {
               OR: [
                 { pendingEditId: pendingEdit.id },
@@ -604,7 +592,7 @@ export const studySpotsRouter = createTRPCRouter({
           noiseLevel: pendingEdit.noiseLevel || undefined,
           venueType: pendingEdit.venueType || undefined,
           images: {
-            connect: pendingImagesToAdd.map(({ image }) => ({ id: image.id })),
+            connect: pendingImagesToAdd.map((image) => ({ id: image.id })),
             disconnect: pendingImagesToDelete.map(({ image }) => ({
               id: image.id,
             })),
@@ -657,7 +645,7 @@ export const studySpotsRouter = createTRPCRouter({
 
       return true;
     }),
-  declinePendingEdit: publicProcedure
+  declinePendingEdit: privateProcedure
     .meta({
       openapi: { method: "POST", path: "/studyspots.declinePendingEdit" },
     })
@@ -672,7 +660,8 @@ export const studySpotsRouter = createTRPCRouter({
           pendingImagesToAdd: {
             select: {
               pendingEditId: true,
-              image: true,
+              id: true,
+              name: true,
             },
           },
           pendingImagesToDelete: {
@@ -697,7 +686,7 @@ export const studySpotsRouter = createTRPCRouter({
 
       // REMOVE IMAGES
       if (pendingImagesToAdd.length > 0) {
-        await ctx.prisma.pendingImagesToAdd.deleteMany({
+        await ctx.prisma.image.deleteMany({
           where: {
             pendingEditId: pendingEdit.id,
           },
@@ -705,20 +694,20 @@ export const studySpotsRouter = createTRPCRouter({
         await ctx.prisma.image.deleteMany({
           where: {
             id: {
-              in: pendingImagesToAdd.map(({ image }) => image.id),
+              in: pendingImagesToAdd.map((image) => image.id),
             },
           },
         });
 
         const { s3 } = ctx;
         await deleteImagesFromBucket(
-          pendingImagesToAdd.map(({ image }) => image),
+          pendingImagesToAdd.map((image) => image),
           s3
         );
       }
 
       if (pendingImagesToDelete.length > 0) {
-        await ctx.prisma.pendingImagesToDelete.deleteMany({
+        await ctx.prisma.pendingImageToDelete.deleteMany({
           where: {
             pendingEditId: pendingEdit.id,
           },

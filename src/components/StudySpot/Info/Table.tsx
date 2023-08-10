@@ -1,12 +1,13 @@
-import type { StudySpot } from "@prisma/client";
 import { useEffect, useState } from "react";
+import type { GetOneOutput } from "~/schemas/study-spots";
 
-const InfoTable = ({ studySpot }: { studySpot?: StudySpot }) => {
+const InfoTable = ({ studySpot }: { studySpot?: GetOneOutput }) => {
   const propertyEntries = Object.entries(studySpot || {});
   return (
     <div className="flex w-full pt-12">
-      <div className="w-full w-1/2 border-t border-gray-200">
+      <div className="w-1/2 border-t border-gray-200">
         {propertyEntries.map(([label, value]) => {
+          if (value == null) return null;
           return (
             <Row
               label={label.toString()}

@@ -1,3 +1,4 @@
+import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Login from "~/components/Login";
@@ -7,6 +8,7 @@ import type { PendingEditQueryOutput } from "~/schemas/study-spots";
 import { api } from "~/utils/api";
 
 const PendingEditsPage = () => {
+  const { user } = useUser();
   const [token, setToken] = useState("");
   const { data, isLoading, isSuccess, status } =
     api.studySpots.getAllPendingEdits.useQuery(
@@ -14,6 +16,7 @@ const PendingEditsPage = () => {
       {
         refetchOnWindowFocus: false,
         retry: 1,
+        enabled: !!user,
       }
     );
 
@@ -111,7 +114,7 @@ const PendingEdit = ({
             <div className="space-y-2 p-4 border border-green-500 rounded-md bg-green-50">
               <h4 className="font-bold text-green-400">Images to add:</h4>
               <div className="flex gap-4">
-                {images.map(({ image }) => (
+                {images.map((image) => (
                   <Image
                     className="h-40 w-auto rounded-md overflow-hidden"
                     image={image}

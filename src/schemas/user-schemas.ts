@@ -13,7 +13,7 @@ const imageSchema = z.object({
 const getCurrentUserOutput = z.object({
   id: z.string(),
   username: z.string(),
-  image: imageSchema.nullable(),
+  profilePicture: imageSchema.nullable(),
   description: z.string(),
   email: z.string(),
 });

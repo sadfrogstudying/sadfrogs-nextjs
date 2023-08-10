@@ -12,6 +12,7 @@ const PrivatePage = () => {
       { email: user?.email || "" },
       {
         retry: 0,
+        refetchOnWindowFocus: false,
         enabled: !!user,
       }
     );
@@ -32,10 +33,10 @@ const PrivatePage = () => {
             <div>{currentUser.username}</div>
             <div>{currentUser.email}</div>
             <div>{currentUser.description}</div>
-            {currentUser.image && (
+            {currentUser.profilePicture && (
               <Image
                 alt={`Profile picture of ${currentUser.username}`}
-                image={currentUser.image}
+                image={currentUser.profilePicture}
                 className="aspect-square overflow-hidden rounded-full w-24 h-24 object-cover border"
               />
             )}

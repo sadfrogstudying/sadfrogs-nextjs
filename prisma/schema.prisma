@@ -108,7 +108,7 @@ model PendingEdit {
     studySpot   StudySpot @relation(fields: [studySpotId], references: [id])
     studySpotId Int
 
-    pendingImagesToAdd    PendingImageToAdd[]
+    pendingImagesToAdd    Image[]
     pendingImagesToDelete PendingImageToDelete[]
 
     @@index([studySpotId])
@@ -116,10 +116,11 @@ model PendingEdit {
 }
 
 model OpeningHours {
-    id            Int          @id @default(autoincrement())
-    day           Int
-    openingTime   String
-    closingTime   String
+    id          Int    @id @default(autoincrement())
+    day         Int
+    openingTime String
+    closingTime String
+
     StudySpot     StudySpot?   @relation(fields: [studySpotId], references: [id], onDelete: Cascade)
     studySpotId   Int?         @unique
     pendingEdit   PendingEdit? @relation(fields: [pendingEditId], references: [id])
@@ -135,31 +136,23 @@ model Image {
     height         Int
     width          Int
 
-    user   User?   @relation("ProfilePicture", fields: [userId], references: [id], onDelete: Cascade)
-    userId String? @unique
-
-    author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
-    authorId String?
-
-    studySpot   StudySpot? @relation(fields: [studySpotId], references: [id], onDelete: Cascade)
-    studySpotId Int?
-
-    pendingEditImagesToAdd    PendingImageToAdd[]
+    // Recap: 
+    // when user deleted, delete profile picture
+    // When user deleted, don't delete authored images
+    // When study spot deleted, delete images
+    // When pendingEdit deleted, don't delete images
+    user                      User?                  @relation("ProfilePicture", fields: [userId], references: [id], onDelete: Cascade)
+    userId                    String?                @unique
+    author                    User?                  @relation(fields: [authorId], references: [id], onDelete: SetNull)
+    authorId                  String?
+    studySpot                 StudySpot?             @relation(fields: [studySpotId], references: [id], onDelete: Cascade)
+    studySpotId               Int?
+    pendingEdit               PendingEdit?           @relation(fields: [pendingEditId], references: [id], onDelete: SetNull)
+    pendingEditId             String?
     pendingEditImagesToDelete PendingImageToDelete[]
 
     @@index([studySpotId])
     @@index([authorId])
-}
-
-model PendingImageToAdd {
-    image   Image @relation(fields: [imageId], references: [id])
-    imageId Int
-
-    pendingEdit   PendingEdit? @relation(fields: [pendingEditId], references: [id])
-    pendingEditId String
-
-    @@id([imageId, pendingEditId])
-    @@index([imageId])
     @@index([pendingEditId])
 }
 
@@ -167,7 +160,7 @@ model PendingImageToDelete {
     image   Image @relation(fields: [imageId], references: [id])
     imageId Int
 
-    pendingEdit   PendingEdit? @relation(fields: [pendingEditId], references: [id])
+    pendingEdit   PendingEdit @relation(fields: [pendingEditId], references: [id])
     pendingEditId String
 
     @@id([imageId, pendingEditId])

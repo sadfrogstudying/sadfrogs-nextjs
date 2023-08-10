@@ -25,12 +25,12 @@ export const userRouter = createTRPCRouter({
           username: input.username,
           email: ctx.currentUser.email,
           description: input.description,
-          image: {
+          profilePicture: {
             create: newImage,
           },
         },
         include: {
-          image: true,
+          profilePicture: true,
         },
       });
 
@@ -50,7 +50,7 @@ export const userRouter = createTRPCRouter({
           email: input.email,
         },
         include: {
-          image: true,
+          profilePicture: true,
         },
       });
 
