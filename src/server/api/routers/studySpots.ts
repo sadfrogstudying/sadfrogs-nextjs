@@ -165,6 +165,11 @@ export const studySpotsRouter = createTRPCRouter({
           data: {
             name: input.name,
             slug: slug,
+            author: {
+              connect: {
+                email: ctx.currentUser?.email,
+              },
+            },
             wifi: input.wifi,
             rating: input.rating,
             powerOutlets: input.powerOutlets,
