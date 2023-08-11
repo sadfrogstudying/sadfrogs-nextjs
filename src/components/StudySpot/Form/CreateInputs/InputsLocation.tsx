@@ -9,14 +9,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormSectionHeader,
 } from "~/components/UI/Form";
 import { Input } from "~/components/UI/Input";
 
 import type { StudySpotFormInputs } from "~/schemas/study-spots";
 import { Button } from "~/components/UI/Button";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronDown, ChevronUp, ChevronsUpDown } from "lucide-react";
 import type { PlaceResultPicked } from "~/types/GoogleTypes";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "~/components/UI/collapsible";
+import { Separator } from "~/components/UI/Seperator";
+import { useState } from "react";
 
 const LocationSearchInput = dynamic(
   () => import("~/components/LocationSearch"),
@@ -63,136 +69,151 @@ const StudySpotInputsLocation = ({ form }: Props) => {
     form.setValue("address", formatted_address, setValueOptions);
   };
 
-  return (
-    <div className="space-y-8">
-      <FormSectionHeader title="Location" />
+  const [open, setOpen] = useState(false);
 
-      <div className="space-y-8">
-        <FormField
-          control={form.control}
-          name="images"
-          render={() => (
-            <FormItem>
-              <FormLabel>Location</FormLabel>
-              <FormControl>
-                <LocationSearchInput
-                  onSelectedPlaceReady={onSelectedPlaceReady}
-                />
-              </FormControl>
-              <FormDescription>
-                You can use this input to assist in filling location details.
-              </FormDescription>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="placeId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Place ID</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter placeId" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is the unique identifier for the location.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <FormField
-            control={form.control}
-            name="latitude"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Latitude</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter latitude"
-                    {...field}
-                    type="number"
-                    onChange={(event) => field.onChange(+event.target.value)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="longitude"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Longitude</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter longitude"
-                    {...field}
-                    type="number"
-                    onChange={(event) => field.onChange(+event.target.value)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="address"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Address</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter Address" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="country"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Country</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter Country" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="city"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>City</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter City" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="state"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>State</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter State" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+  return (
+    <Collapsible
+      className="space-y-8"
+      open={open}
+      onClick={() => setOpen((prev) => !prev)}
+    >
+      <CollapsibleTrigger className="w-full text-left">
+        <div>
+          <h3 className="text-2xl font-bold mb-1 flex gap-4">
+            Location {open ? <ChevronUp /> : <ChevronDown />}
+          </h3>
+          <p className="text-sm text-muted-foreground">Optional Information</p>
+          <Separator className="mt-3" />
         </div>
-      </div>
-    </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="space-y-8">
+          <FormField
+            control={form.control}
+            name="images"
+            render={() => (
+              <FormItem>
+                <FormLabel>Location</FormLabel>
+                <FormControl>
+                  <LocationSearchInput
+                    onSelectedPlaceReady={onSelectedPlaceReady}
+                  />
+                </FormControl>
+                <FormDescription>
+                  You can use this input to assist in filling location details.
+                </FormDescription>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="placeId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Place ID</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter placeId" {...field} />
+                </FormControl>
+                <FormDescription>
+                  This is the unique identifier for the location.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <FormField
+              control={form.control}
+              name="latitude"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Latitude</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter latitude"
+                      {...field}
+                      type="number"
+                      onChange={(event) => field.onChange(+event.target.value)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="longitude"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Longitude</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter longitude"
+                      {...field}
+                      type="number"
+                      onChange={(event) => field.onChange(+event.target.value)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter Address" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Country</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter Country" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="city"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>City</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter City" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="state"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>State</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter State" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
 

@@ -152,13 +152,20 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           {nameExistsError?.message && <li>{nameExistsError?.message}</li>}
           {getUrlsError?.message && <li>{getUrlsError?.message}</li>}
         </ul>
-        <Button
-          type="submit"
-          disabled={submitDisabled}
-          className="disabled:cursor-not-allowed"
-        >
-          {isLoading ? "Creating..." : "Submit"}
-        </Button>
+        <div className="space-y-4 pb-4">
+          <Button
+            type="submit"
+            disabled={submitDisabled}
+            className="disabled:cursor-not-allowed"
+          >
+            {isLoading ? "Creating..." : "Submit"}
+          </Button>
+          {submitDisabled && (
+            <p className="text-sm bg-orange-100 rounded px-2">
+              Please fill out the general and image sections.
+            </p>
+          )}
+        </div>
       </form>
     </Form>
   );
