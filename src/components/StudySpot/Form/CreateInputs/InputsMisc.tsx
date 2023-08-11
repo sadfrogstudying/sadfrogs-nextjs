@@ -17,7 +17,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "~/components/UI/collapsible";
+} from "~/components/UI/Collapsible";
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Separator } from "~/components/UI/Seperator";

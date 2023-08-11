@@ -20,7 +20,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "~/components/UI/collapsible";
+} from "~/components/UI/Collapsible";
 import { Separator } from "~/components/UI/Seperator";
 import { useState } from "react";
 
