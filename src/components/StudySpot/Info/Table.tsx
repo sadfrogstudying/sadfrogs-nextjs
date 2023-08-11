@@ -23,10 +23,12 @@ const InfoTable = ({ studySpot }: { studySpot?: GetOneOutput }) => {
       <div className="w-1/2 border-t border-gray-200">
         {propertyEntriesFiltered.map(([label, value]) => {
           if (value == null) return null;
+          if (typeof value === "object") return null;
+
           return (
             <Row
               label={label.toString()}
-              value={value.toString()}
+              value={value}
               key={label.toString()}
             />
           );
@@ -103,6 +105,10 @@ const Row = ({
     setInt(getRandomInt(shadesOfOj.length));
   }, [shadesOfOj.length]);
   const color = shadesOfOj[int] || "";
+  const parseBoolean = (value: boolean) => {
+    if (!!value) return "Yes";
+    return "No";
+  };
 
   return (
     <div className="flex border-b border-gray-200 w-full text-sm">
@@ -112,7 +118,7 @@ const Row = ({
           {readableKeys[label]}:{" "}
         </strong>{" "}
         <div className="font-mono break-normal w-96">
-          {typeof value === "boolean" ? value.toString() : value}
+          {typeof value === "boolean" ? parseBoolean(value) : value}
         </div>
       </div>
     </div>

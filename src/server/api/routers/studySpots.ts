@@ -414,7 +414,8 @@ export const studySpotsRouter = createTRPCRouter({
         });
 
       try {
-        const newImages = input.images && (await getImagesMeta(input.images));
+        const newImages =
+          input.images?.length && (await getImagesMeta(input.images));
         const slug =
           input.name &&
           slugify(input.name, {

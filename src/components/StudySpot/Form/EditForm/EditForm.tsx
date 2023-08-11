@@ -14,7 +14,6 @@ import StudySpotInputsLocation from "~/components/StudySpot/Form/EditInputs/Inpu
 import StudySpotInputsMisc from "~/components/StudySpot/Form/EditInputs/InputsMisc";
 
 import type {
-  StudySpotFormInputs,
   GetOneOutput,
   PendingEditFormInputs,
 } from "~/schemas/study-spots";
@@ -56,7 +55,7 @@ const EditStudySpotForm = ({
     // checks if the keys in changesObj are a subset of StudySpotFormInputs
     function partiallyConformsToStudySpotFormInputs(
       obj: object
-    ): obj is Partial<StudySpotFormInputs> {
+    ): obj is Partial<PendingEditFormInputs> {
       const changeKeys = Object.keys(changesObj);
       return changeKeys.every((key) => key in obj);
     }
