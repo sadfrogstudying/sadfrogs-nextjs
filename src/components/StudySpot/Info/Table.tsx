@@ -1,12 +1,27 @@
 import { useEffect, useState } from "react";
 import type { GetOneOutput } from "~/schemas/study-spots";
 
+const keysToIgnore = [
+  "id",
+  "createdAt",
+  "updatedAt",
+  "isValidated",
+  "slug",
+  "placeId",
+  "latitude",
+  "longitude",
+  "images",
+];
+
 const InfoTable = ({ studySpot }: { studySpot?: GetOneOutput }) => {
   const propertyEntries = Object.entries(studySpot || {});
+  const propertyEntriesFiltered = propertyEntries.filter(
+    ([key]) => !keysToIgnore.includes(key)
+  );
   return (
     <div className="flex w-full pt-12">
       <div className="w-1/2 border-t border-gray-200">
-        {propertyEntries.map(([label, value]) => {
+        {propertyEntriesFiltered.map(([label, value]) => {
           if (value == null) return null;
           return (
             <Row
@@ -22,6 +37,44 @@ const InfoTable = ({ studySpot }: { studySpot?: GetOneOutput }) => {
 };
 
 export default InfoTable;
+
+const readableKeys: Record<string, string> = {
+  id: "Id",
+  createdAt: "Created At",
+  updatedAt: "Updated At",
+  isValidated: "Is Validated",
+  slug: "Slug",
+  name: "Name",
+  rating: "Rating",
+  wifi: "Wifi",
+  powerOutlets: "Power Outlets",
+  noiseLevel: "Noise Level",
+  venueType: "Venue Type",
+  images: "Images",
+  placeId: "Place Id",
+  latitude: "Latitude",
+  longitude: "Longitude",
+  address: "Address",
+  country: "Country",
+  city: "City",
+  state: "State",
+  openingHours: "Opening Hours",
+  canStudyForLong: "Can Study For Long",
+  vibe: "Vibe",
+  comfort: "Comfort",
+  views: "Views",
+  sunlight: "Sunlight",
+  temperature: "Temperature",
+  music: "Music",
+  lighting: "Lighting",
+  distractions: "Distractions",
+  crowdedness: "Crowdedness",
+  naturalSurroundings: "Natural Surroundings",
+  proximityToAmenities: "Proximity To Amenities",
+  drinks: "Drinks",
+  food: "Food",
+  studyBreakFacilities: "Study Break Facilities",
+};
 
 const Row = ({
   label,
@@ -55,7 +108,9 @@ const Row = ({
     <div className="flex border-b border-gray-200 w-full text-sm">
       <div className={`w-2 mr-2 ${color}`} />
       <div className="flex flex-wrap items-start justify-start py-1">
-        <strong className="font-mono break-normal w-80">{label}: </strong>{" "}
+        <strong className="font-mono break-normal w-80">
+          {readableKeys[label]}:{" "}
+        </strong>{" "}
         <div className="font-mono break-normal w-96">
           {typeof value === "boolean" ? value.toString() : value}
         </div>
@@ -63,95 +118,3 @@ const Row = ({
     </div>
   );
 };
-
-// const dummyStudySpot = [
-//   { label: "Rating", name: "rating", value: 4.5 },
-//   { label: "Can study for long", name: "canStudyForLong", value: true },
-//   { label: "Views", name: "views", value: "City skyline" },
-//   { label: "Interior", name: "interior", value: "Modern and minimalist" },
-//   { label: "Temperature", name: "temperature", value: "Comfortably cool" },
-//   { label: "Hours", name: "hours", value: "9 AM - 10 PM" },
-//   {
-//     label: "Comfort",
-//     name: "comfort",
-//     value: "Ergonomic chairs and adjustable desks",
-//   },
-//   { label: "Rating New", name: "noiseLevel", value: "Quiet" },
-//   { label: "Noise Level", name: "lighting", value: "Bright and adjustable" },
-//   {
-//     label: "Lighting",
-//     name: "seatingOptions",
-//     value: ["Desks", "Chairs", "Sofas"],
-//   },
-//   { label: "Seating Options", name: "wifiAvailability", value: true },
-//   { label: "Wi-Fi Availability", name: "powerOutlets", value: true },
-//   { label: "Power Outlets", name: "refreshments", value: true },
-//   {
-//     label: "Refreshments",
-//     name: "studyResources",
-//     value: "Wide range of books and online databases",
-//   },
-//   { label: "Study Resources", name: "distractions", value: "Minimal" },
-//   { label: "Distractions", name: "accessibility", value: true },
-//   {
-//     label: "Accessibility",
-//     name: "privacy",
-//     value: "Private study rooms available",
-//   },
-//   { label: "Privacy", name: "crowdedness", value: "Moderately crowded" },
-//   {
-//     label: "Crowdedness",
-//     name: "security",
-//     value: "24/7 surveillance and access control",
-//   },
-//   { label: "Security", name: "environment", value: "Relaxed and cozy" },
-//   {
-//     label: "Environment",
-//     name: "proximityToAmenities",
-//     value: "Walking distance to cafes and restaurants",
-//   },
-//   { label: "Proximity to Amenities", name: "studyRooms", value: true },
-//   { label: "Study Rooms", name: "groupStudyFacilities", value: true },
-//   {
-//     label: "Group Study Facilities",
-//     name: "whiteboardOrChalkboard",
-//     value: true,
-//   },
-//   {
-//     label: "Whiteboard or Chalkboard",
-//     name: "naturalSurroundings",
-//     value: "Adjacent to a beautiful park",
-//   },
-//   { label: "Natural Surroundings", name: "silentZones", value: true },
-//   {
-//     label: "Silent Zones",
-//     name: "studyProgramsOrCourses",
-//     value: "Offers specialized study courses",
-//   },
-//   {
-//     label: "Study Programs or Courses",
-//     name: "musicPolicy",
-//     value: "Soft background music allowed",
-//   },
-//   { label: "Music Policy", name: "studyEventsOrMeetups", value: true },
-//   {
-//     label: "Study Events or Meetups",
-//     name: "accessibilityToFood",
-//     value: "On-site cafe with a variety of food options",
-//   },
-//   {
-//     label: "Accessibility to Food",
-//     name: "studyBreakFacilities",
-//     value: "Recreation room with games and relaxation area",
-//   },
-//   {
-//     label: "Study Break Facilities",
-//     name: "studySupportServices",
-//     value: true,
-//   },
-//   {
-//     label: "Study Support Services",
-//     name: "studyMaterialsForRent",
-//     value: true,
-//   },
-// ];
