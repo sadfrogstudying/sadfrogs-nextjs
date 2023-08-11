@@ -59,40 +59,38 @@ const Header = () => {
           <Link href="/about" className="pointer-events-auto h-fit">
             About
           </Link>
-          <span> - </span>
+          <span> | </span>
           <Link href="/map" className="pointer-events-auto h-fit">
             Map
           </Link>
-          <span> - </span>
+          <span> | </span>
+
+          {!user ? (
+            <a
+              href="/api/auth/login"
+              className={`h-fit ${
+                isLoading
+                  ? "pointer-events-none opacity-70"
+                  : "pointer-events-auto"
+              }`}
+            >
+              Login / Register
+            </a>
+          ) : (
+            <Link href="/account" className="pointer-events-auto h-fit">
+              Account
+            </Link>
+          )}
+
+          <span> | </span>
 
           {currentUser ? (
             <CreateStudySpotFormSheet disabled={!currentUser} />
           ) : (
             <Loading />
           )}
-
-          {!user ? (
-            <Button asChild>
-              {/* eslint-disable */}
-              <a
-                href="/api/auth/login"
-                className={`h-fit ${
-                  isLoading
-                    ? "pointer-events-none opacity-70"
-                    : "pointer-events-auto"
-                }`}
-              >
-                Login
-              </a>
-            </Button>
-          ) : (
-            <Button asChild disabled={isLoading || !currentUser}>
-              <Link href="/account" className="pointer-events-auto h-fit">
-                Account
-              </Link>
-            </Button>
-          )}
         </div>
+
         <div className="font-mono m-4 block md:hidden">
           <MobileMenuSheet />
         </div>
