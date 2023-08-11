@@ -33,7 +33,7 @@ const Header = () => {
   const { user, isLoading } = useUser();
 
   const { data: currentUser, isFetched } = api.user.getCurrentUser.useQuery(
-    { email: user?.email || "" },
+    undefined,
     {
       retry: 0,
       refetchOnWindowFocus: false,

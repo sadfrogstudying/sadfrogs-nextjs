@@ -8,14 +8,11 @@ const PrivatePage = () => {
   const { user, error, isLoading } = useUser();
 
   const { data: currentUser, isLoading: currentUserLoading } =
-    api.user.getCurrentUser.useQuery(
-      { email: user?.email || "" },
-      {
-        retry: 0,
-        refetchOnWindowFocus: false,
-        enabled: !!user,
-      }
-    );
+    api.user.getCurrentUser.useQuery(undefined, {
+      retry: 0,
+      refetchOnWindowFocus: false,
+      enabled: !!user,
+    });
 
   if (isLoading) return <Wrapper>Loading...</Wrapper>;
   if (error) return <Wrapper>{error.message}</Wrapper>;

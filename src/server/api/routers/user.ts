@@ -38,16 +38,12 @@ export const userRouter = createTRPCRouter({
     }),
   getCurrentUser: privateProcedure
     .meta({ openapi: { method: "POST", path: "/user.getCurrentUser" } })
-    .input(
-      z.object({
-        email: z.string(),
-      })
-    )
+    .input(z.void())
     .output(getCurrentUserOutput.nullable())
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx }) => {
       const user = await ctx.prisma.user.findUnique({
         where: {
-          email: input.email,
+          email: ctx.currentUser.email,
         },
         include: {
           profilePicture: true,
