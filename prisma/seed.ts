@@ -11,7 +11,7 @@ async function main() {
   await prisma.image.deleteMany();
   await prisma.studySpot.deleteMany();
   await prisma.user.deleteMany();
-   */
+  */
 
   return;
 

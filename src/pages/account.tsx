@@ -34,19 +34,23 @@ const PrivatePage = () => {
             <div>{currentUser.email}</div>
             <div>{currentUser.description}</div>
             {currentUser.profilePicture && (
-              <Image
-                alt={`Profile picture of ${currentUser.username}`}
-                image={currentUser.profilePicture}
-                className="aspect-square overflow-hidden rounded-full w-24 h-24 object-cover border"
-              />
+              <div className="aspect-square overflow-hidden rounded-full w-24 h-24 object-cover border mt-4">
+                <Image
+                  alt={`Profile picture of ${currentUser.username}`}
+                  image={currentUser.profilePicture}
+                  className="w-full h-full object-cover"
+                  objectFit="cover"
+                />
+              </div>
             )}
+            <Button asChild>
+              {/* eslint-disable */}
+              <a href="/api/auth/logout" className="mt-4">
+                Logout
+              </a>
+            </Button>
           </div>
         )}
-        <div>Welcome {user.name}!</div>
-        <Button asChild>
-          {/* eslint-disable */}
-          <a href="/api/auth/logout">Logout</a>
-        </Button>
       </Wrapper>
     );
   }

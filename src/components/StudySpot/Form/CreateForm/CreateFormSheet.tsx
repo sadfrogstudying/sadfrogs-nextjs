@@ -18,14 +18,22 @@ const CreateStudySpotForm = dynamic(() => import("./CreateForm"), {
 
 const Loading = () => <div className="font-mono">Loading the form...</div>;
 
-function CreateStudySpotFormSheet() {
+function CreateStudySpotFormSheet({
+  disabled = false,
+}: {
+  disabled?: boolean;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" className="pointer-events-auto">
-          Create
+        <Button
+          variant="outline"
+          className="pointer-events-auto"
+          disabled={disabled}
+        >
+          Create Spot
         </Button>
       </SheetTrigger>
       <SheetContent className="pt-14 w-full overflow-scroll">

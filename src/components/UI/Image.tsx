@@ -56,7 +56,7 @@ const Image = ({
     >
       {placeholder === "empty" && (
         <div
-          className={`${placeholderOpacity} absolute inset-0 z-10 ease-in duration-500 w-fit h-full`}
+          className={`${placeholderOpacity} absolute inset-0 z-10 ease-in duration-500 w-full h-full`}
           style={{
             aspectRatio: aspectRatio,
             backgroundColor: dominantColour,
@@ -71,7 +71,7 @@ const Image = ({
         onLoadingComplete={doFadeIn}
         placeholder={placeholder}
         quality={quality || undefined}
-        className={`w-fit h-full ${imageOpacity} ${objectFitOptions[objectFit]} ease-out duration-500`}
+        className={`w-full h-full ${imageOpacity} ${objectFitOptions[objectFit]} ease-out duration-500`}
       />
     </div>
   );

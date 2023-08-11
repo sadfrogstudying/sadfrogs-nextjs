@@ -176,7 +176,7 @@ const FormSectionHeader = ({
   return (
     <>
       <div>
-        <h3 className="text-2xl font-regular mb-1">{title}</h3>
+        <h3 className="text-2xl font-bold mb-1">{title}</h3>
         {description && (
           <p className="text-sm text-muted-foreground">{description}</p>
         )}

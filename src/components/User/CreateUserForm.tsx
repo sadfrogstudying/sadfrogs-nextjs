@@ -31,7 +31,7 @@ type FormInput = Omit<CreateUserInput, "image"> & {
   image: File[];
 };
 
-const CreateUserForm = () => {
+const CreateUserForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const form = useForm<FormInput>({
     defaultValues,
   });
@@ -45,6 +45,7 @@ const CreateUserForm = () => {
   } = api.user.createUser.useMutation({
     onSuccess: () => {
       void apiUtils.user.getCurrentUser.invalidate();
+      onSuccess?.();
       form.reset();
     },
   });
@@ -99,9 +100,8 @@ const CreateUserForm = () => {
           e.preventDefault();
           void submitHandler();
         }}
-        className="space-y-16 m-auto font-mono bg-gray-200 p-4 rounded-md w-96"
       >
-        <div className="grid grid-cols-1 gap-4">
+        <div className="space-y-4">
           <FormSectionHeader
             title="Create an account"
             description="Use this form to create an account"
