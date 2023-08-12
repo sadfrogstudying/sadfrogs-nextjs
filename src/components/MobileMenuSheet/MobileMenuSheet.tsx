@@ -8,8 +8,8 @@ import {
 import { useState } from "react";
 
 import Link from "next/link";
-import CreateStudySpotFormSheet from "../StudySpot/Form/CreateForm/CreateFormSheet";
 import { cn } from "~/lib/utils";
+import Navigation from "../Navigation";
 
 function MobileMenuSheet({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
@@ -29,30 +29,14 @@ function MobileMenuSheet({ className }: { className?: string }) {
         <SheetTitle aria-hidden className="sr-only">
           Mobile Menu
         </SheetTitle>
-        <nav className="flex flex-col ml-auto justify-end items-end">
+        <nav className="flex flex-col ml-auto justify-end items-end space-y-2">
           <h1
             onClick={close}
             className={`pointer-events-auto font-serif tracking-tight text-3xl mb-4`}
           >
             <Link href="/">Sad Frogs Studying</Link>
           </h1>
-          <Link
-            onClick={close}
-            href="/about"
-            className="pointer-events-auto h-fit py-2"
-          >
-            About
-          </Link>
-
-          <Link
-            onClick={close}
-            href="/map"
-            className="pointer-events-auto h-fit py-2 mb-2"
-          >
-            Map
-          </Link>
-
-          <CreateStudySpotFormSheet />
+          <Navigation forMobile />
         </nav>
       </SheetContent>
     </Sheet>
