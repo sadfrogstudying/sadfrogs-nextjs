@@ -18,13 +18,8 @@ import {
   type GetOneOutput,
   type PendingEditFormInputs,
 } from "~/schemas/study-spots";
-import { FileListImagesSchema } from "~/schemas/utility";
 import { differenceWith, isEqual, toPairs } from "lodash";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const createPendingEditFormInputSchema = creatependingEditInputSchema.extend({
-  images: FileListImagesSchema,
-});
 
 /**
  *
@@ -41,7 +36,7 @@ const EditStudySpotForm = ({
   studySpot: GetOneOutput;
 }) => {
   const form = useForm<PendingEditFormInputs>({
-    resolver: zodResolver(createPendingEditFormInputSchema),
+    resolver: zodResolver(creatependingEditInputSchema),
     defaultValues: {
       ...studySpot,
       images: [],

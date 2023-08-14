@@ -5,6 +5,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
   FormSectionHeader,
 } from "~/components/UI/Form";
 import FileInput from "~/components/UI/FileInput";
@@ -57,6 +58,7 @@ const StudySpotInputsImage = ({ form, existingImages }: Props) => {
                   value={field.value}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
