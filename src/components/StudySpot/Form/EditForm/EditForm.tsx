@@ -14,12 +14,17 @@ import StudySpotInputsLocation from "~/components/StudySpot/Form/EditInputs/Inpu
 import StudySpotInputsMisc from "~/components/StudySpot/Form/EditInputs/InputsMisc";
 
 import {
-  pendingEditInputSchema,
+  creatependingEditInputSchema,
   type GetOneOutput,
   type PendingEditFormInputs,
 } from "~/schemas/study-spots";
+import { FileListImagesSchema } from "~/schemas/utility";
 import { differenceWith, isEqual, toPairs } from "lodash";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+const createPendingEditFormInputSchema = creatependingEditInputSchema.extend({
+  images: FileListImagesSchema,
+});
 
 /**
  *
@@ -36,7 +41,7 @@ const EditStudySpotForm = ({
   studySpot: GetOneOutput;
 }) => {
   const form = useForm<PendingEditFormInputs>({
-    resolver: zodResolver(pendingEditInputSchema),
+    resolver: zodResolver(createPendingEditFormInputSchema),
     defaultValues: {
       ...studySpot,
       images: [],
@@ -163,13 +168,7 @@ const EditStudySpotForm = ({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          void submitHandler();
-        }}
-        className="space-y-16 m-auto font-mono"
-      >
+      <form onSubmit={submitHandler} className="space-y-16 m-auto font-mono">
         <StudySpotInputsGeneral form={form} />
         <StudySpotInputsImage form={form} existingImages={studySpot.images} />
         <StudySpotInputsLocation form={form} />

@@ -34,7 +34,7 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} minLength={1} required />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -48,8 +48,8 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
               <FormLabel>Rating</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="0"
                   {...field}
+                  placeholder="0"
                   type="number"
                   onChange={(event) => field.onChange(+event.target.value)}
                 />
@@ -65,12 +65,7 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
             <FormItem>
               <FormLabel>Noise Level</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Loud at peak hours"
-                  {...field}
-                  minLength={2}
-                  required
-                />
+                <Input placeholder="Loud at peak hours" {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -82,7 +77,7 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
             <FormItem>
               <FormLabel>Venue Type</FormLabel>
               <FormControl>
-                <Input placeholder={`Cafe`} {...field} minLength={1} required />
+                <Input placeholder="Cafe" {...field} />
               </FormControl>
             </FormItem>
           )}

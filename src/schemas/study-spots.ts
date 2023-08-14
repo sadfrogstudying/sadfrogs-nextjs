@@ -15,13 +15,13 @@ const openingHoursSchema = z.object({
   openingTime: z.string(),
   closingTime: z.string(),
 });
-const studySpotInputSchema = z.object({
-  name: z.string().min(1),
+const createOneInputSchema = z.object({
+  name: z.string().min(1, { message: "Required" }),
   rating: z.number().max(5),
   wifi: z.boolean(),
   powerOutlets: z.boolean(),
-  noiseLevel: z.string().min(1),
-  venueType: z.string().min(1),
+  noiseLevel: z.string().min(1, { message: "Required" }),
+  venueType: z.string().min(1, { message: "Required" }),
   images: z
     .string()
     .array()
@@ -114,7 +114,7 @@ const getNotValidatedForMapOutputSchema = studySpotSchema
     openingHours: true,
   })
   .array();
-const pendingEditInputSchema = studySpotInputSchema.partial().extend({
+const creatependingEditInputSchema = createOneInputSchema.partial().extend({
   images: z.string().array().optional(),
   studySpotId: z.number().optional(),
   imagesToDelete: z.number().array().optional(),
@@ -159,7 +159,7 @@ const pendingEditOutputSchema = studySpotSchema.partial().extend({
   pendingImagesToDelete: z.object({ image: imageSchema }).array(),
 });
 
-type StudySpotQueryInput = z.infer<typeof studySpotInputSchema>;
+type StudySpotQueryInput = z.infer<typeof createOneInputSchema>;
 type StudySpotFormInputs = Omit<StudySpotQueryInput, "images"> & {
   images: File[];
 };
@@ -169,7 +169,7 @@ type GetNotValidatedElementOutput = z.infer<
   typeof getNotValidatedOutputSchema.element
 >;
 type Image = z.infer<typeof imageSchema>;
-type PendingEditQueryInput = z.infer<typeof pendingEditInputSchema>;
+type PendingEditQueryInput = z.infer<typeof creatependingEditInputSchema>;
 type PendingEditFormInputs = Omit<PendingEditQueryInput, "images"> & {
   images: File[];
 };
@@ -177,13 +177,13 @@ type PendingEditQueryOutput = z.infer<typeof pendingEditOutputSchema>;
 
 export {
   // Study Spot Schemas
-  studySpotInputSchema,
+  createOneInputSchema,
   studySpotSchema,
   getValidatedOutputSchema,
   getNotValidatedOutputSchema,
   getNotValidatedForMapOutputSchema,
   // Pending Study Spot Schemas
-  pendingEditInputSchema,
+  creatependingEditInputSchema,
   pendingEditOutputSchema,
 };
 export type {

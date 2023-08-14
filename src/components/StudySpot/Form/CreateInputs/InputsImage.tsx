@@ -37,6 +37,7 @@ const StudySpotInputsImage = ({ form }: Props) => {
               <FormLabel>Images</FormLabel>
               <FormControl>
                 <FileInput
+                  {...field}
                   isSuccess={false}
                   setValue={(files) => form.setValue("images", files)}
                   value={field.value}

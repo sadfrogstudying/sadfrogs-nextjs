@@ -86,23 +86,13 @@ const StudySpotInputsLocation = ({ form }: Props) => {
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent className="space-y-8">
-        <FormField
-          control={form.control}
-          name="images"
-          render={() => (
-            <FormItem>
-              <FormLabel>Location</FormLabel>
-              <FormControl>
-                <LocationSearchInput
-                  onSelectedPlaceReady={onSelectedPlaceReady}
-                />
-              </FormControl>
-              <FormDescription>
-                You can use this input to assist in filling location details.
-              </FormDescription>
-            </FormItem>
-          )}
-        />
+        <div className="space-y-2">
+          <div className="text-sm">Location</div>
+          <LocationSearchInput onSelectedPlaceReady={onSelectedPlaceReady} />
+          <div className="text-sm text-muted-foreground">
+            You can use this input to assist in filling location details.
+          </div>
+        </div>
         <FormField
           control={form.control}
           name="placeId"

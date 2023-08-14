@@ -15,9 +15,10 @@ import StudySpotInputsMisc from "~/components/StudySpot/Form/CreateInputs/Inputs
 import StudySpotInputsImage from "~/components/StudySpot/Form/CreateInputs/InputsImage";
 
 import {
-  studySpotInputSchema,
+  createOneInputSchema,
   type StudySpotFormInputs,
 } from "~/schemas/study-spots";
+import { FileListImagesSchema } from "~/schemas/utility";
 
 const defaultValues = {
   name: "",
@@ -59,6 +60,10 @@ const defaultValues = {
   studyBreakFacilities: "",
 };
 
+const createOneFormInputSchema = createOneInputSchema.extend({
+  images: FileListImagesSchema,
+});
+
 /**
  *
  * This component is single source of truth for form data and handles submission.
@@ -68,7 +73,7 @@ const defaultValues = {
  */
 const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const form = useForm<StudySpotFormInputs>({
-    resolver: zodResolver(studySpotInputSchema),
+    resolver: zodResolver(createOneFormInputSchema),
     defaultValues,
   });
 
@@ -126,18 +131,12 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   });
 
   const isLoading = createIsLoading || getUrlsIsLoading || nameExistsLoading;
-  const submitDisabled = isLoading || !form.watch("images").length;
+  const submitDisabled = isLoading;
   const zodErrorMessages = parseZodClientError(createError?.data?.zodError);
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          void submitHandler();
-        }}
-        className="space-y-16 m-auto font-mono"
-      >
+      <form onSubmit={submitHandler} className="space-y-16 m-auto font-mono">
         <StudySpotInputsGeneral form={form} />
         <StudySpotInputsImage form={form} />
         <StudySpotInputsLocation form={form} />

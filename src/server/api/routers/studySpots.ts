@@ -13,9 +13,9 @@ import { deleteImagesFromBucket, getImagesMeta } from "~/utils/server-helpers";
 import {
   getNotValidatedForMapOutputSchema,
   getNotValidatedOutputSchema,
-  pendingEditInputSchema,
+  creatependingEditInputSchema,
   pendingEditOutputSchema,
-  studySpotInputSchema,
+  createOneInputSchema,
   studySpotSchema,
 } from "~/schemas/study-spots";
 
@@ -143,7 +143,7 @@ export const studySpotsRouter = createTRPCRouter({
    */
   createOne: publicProcedure
     .meta({ openapi: { method: "POST", path: "/studyspots.createOne" } })
-    .input(studySpotInputSchema)
+    .input(createOneInputSchema)
     .output(z.boolean())
     .mutation(async ({ ctx, input }) => {
       const { success } = await ratelimit.limit(ctx.ip);
@@ -403,7 +403,7 @@ export const studySpotsRouter = createTRPCRouter({
     .meta({
       openapi: { method: "POST", path: "/studyspots.createPendingEdit" },
     })
-    .input(pendingEditInputSchema)
+    .input(creatependingEditInputSchema)
     .output(z.boolean())
     .mutation(async ({ ctx, input }) => {
       const { success } = await ratelimit.limit(ctx.ip);
