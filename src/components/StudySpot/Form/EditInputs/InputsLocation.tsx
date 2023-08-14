@@ -9,14 +9,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormSectionHeader,
 } from "~/components/UI/Form";
 import { Input } from "~/components/UI/Input";
 
 import type { PendingEditFormInputs } from "~/schemas/study-spots";
 import { Button } from "~/components/UI/Button";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronDown, ChevronUp, ChevronsUpDown } from "lucide-react";
 import type { PlaceResultPicked } from "~/types/GoogleTypes";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "~/components/UI/Collapsible";
+import { useState } from "react";
+import { Separator } from "~/components/UI/Seperator";
 
 const LocationSearchInput = dynamic(
   () => import("~/components/LocationSearch"),
@@ -63,11 +69,23 @@ const StudySpotInputsLocation = ({ form }: Props) => {
     form.setValue("address", formatted_address, setValueOptions);
   };
 
-  return (
-    <div className="space-y-8">
-      <FormSectionHeader title="Location" />
+  const [open, setOpen] = useState(false);
 
-      <div className="space-y-8">
+  return (
+    <Collapsible className="space-y-8" open={open}>
+      <CollapsibleTrigger
+        className="w-full text-left"
+        onClick={() => setOpen((prev) => !prev)}
+      >
+        <div>
+          <h3 className="text-2xl font-bold mb-1 flex gap-4">
+            Location {open ? <ChevronUp /> : <ChevronDown />}
+          </h3>
+          <p className="text-sm text-muted-foreground">Optional Information</p>
+          <Separator className="mt-3" />
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="space-y-8">
         <FormField
           control={form.control}
           name="images"
@@ -191,8 +209,8 @@ const StudySpotInputsLocation = ({ form }: Props) => {
             )}
           />
         </div>
-      </div>
-    </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
 

@@ -72,12 +72,11 @@ const StudySpotInputsLocation = ({ form }: Props) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Collapsible
-      className="space-y-8"
-      open={open}
-      onClick={() => setOpen((prev) => !prev)}
-    >
-      <CollapsibleTrigger className="w-full text-left">
+    <Collapsible className="space-y-8" open={open}>
+      <CollapsibleTrigger
+        className="w-full text-left"
+        onClick={() => setOpen((prev) => !prev)}
+      >
         <div>
           <h3 className="text-2xl font-bold mb-1 flex gap-4">
             Location {open ? <ChevronUp /> : <ChevronDown />}

@@ -7,23 +7,43 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormSectionHeader,
 } from "~/components/UI/Form";
 import { Input } from "~/components/UI/Input";
 
 import type { PendingEditFormInputs } from "~/schemas/study-spots";
 import { Checkbox } from "~/components/UI/Checkbox";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "~/components/UI/Collapsible";
+import { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { Separator } from "~/components/UI/Seperator";
 
 interface Props {
   form: UseFormReturn<PendingEditFormInputs>;
 }
 
 const StudySpotInputsMisc = ({ form }: Props) => {
-  return (
-    <div className="space-y-8">
-      <FormSectionHeader title="Miscellaneous" />
+  const [open, setOpen] = useState(false);
 
-      <div className="grid grid-cols-2 gap-4">
+  return (
+    <Collapsible className="space-y-8" open={open}>
+      <CollapsibleTrigger
+        className="w-full text-left"
+        onClick={() => setOpen((prev) => !prev)}
+      >
+        <div>
+          <h3 className="text-2xl font-bold mb-1 flex gap-4">
+            Misc {open ? <ChevronUp /> : <ChevronDown />}
+          </h3>
+          <p className="text-sm text-muted-foreground">Optional Information</p>
+          <Separator className="mt-3" />
+        </div>
+      </CollapsibleTrigger>
+
+      <CollapsibleContent className="grid grid-cols-2 gap-4">
         <FormField
           control={form.control}
           name="canStudyForLong"
@@ -236,8 +256,8 @@ const StudySpotInputsMisc = ({ form }: Props) => {
             </FormItem>
           )}
         />
-      </div>
-    </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
 

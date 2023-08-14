@@ -5,6 +5,7 @@ import {
   parseZodClientError,
   uploadImagesToS3UsingPresignedUrls,
 } from "~/utils/helpers";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "~/components/UI/Button";
 import { Form } from "~/components/UI/Form";
@@ -13,7 +14,10 @@ import StudySpotInputsLocation from "~/components/StudySpot/Form/CreateInputs/In
 import StudySpotInputsMisc from "~/components/StudySpot/Form/CreateInputs/InputsMisc";
 import StudySpotInputsImage from "~/components/StudySpot/Form/CreateInputs/InputsImage";
 
-import type { StudySpotFormInputs } from "~/schemas/study-spots";
+import {
+  studySpotInputSchema,
+  type StudySpotFormInputs,
+} from "~/schemas/study-spots";
 
 const defaultValues = {
   name: "",
@@ -64,6 +68,7 @@ const defaultValues = {
  */
 const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const form = useForm<StudySpotFormInputs>({
+    resolver: zodResolver(studySpotInputSchema),
     defaultValues,
   });
 

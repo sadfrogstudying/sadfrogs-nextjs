@@ -17,7 +17,7 @@ const openingHoursSchema = z.object({
 });
 const studySpotInputSchema = z.object({
   name: z.string().min(1),
-  rating: z.number(),
+  rating: z.number().max(5),
   wifi: z.boolean(),
   powerOutlets: z.boolean(),
   noiseLevel: z.string().min(1),
@@ -57,7 +57,7 @@ const studySpotSchema = z.object({
   isValidated: z.boolean(),
   slug: z.string(),
   name: z.string(),
-  rating: z.number(),
+  rating: z.number().max(5),
   wifi: z.boolean(),
   powerOutlets: z.boolean(),
   noiseLevel: z.string(),
@@ -125,7 +125,7 @@ const pendingEditOutputSchema = studySpotSchema.partial().extend({
   updatedAt: z.date(),
   name: z.string().nullable(),
   slug: z.string().nullable(),
-  rating: z.number().nullable(),
+  rating: z.number().max(5).nullable(),
   wifi: z.boolean().nullable(),
   powerOutlets: z.boolean().nullable(),
   noiseLevel: z.string().nullable(),

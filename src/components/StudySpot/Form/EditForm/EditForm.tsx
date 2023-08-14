@@ -13,11 +13,13 @@ import StudySpotInputsImage from "~/components/StudySpot/Form/EditInputs/InputsI
 import StudySpotInputsLocation from "~/components/StudySpot/Form/EditInputs/InputsLocation";
 import StudySpotInputsMisc from "~/components/StudySpot/Form/EditInputs/InputsMisc";
 
-import type {
-  GetOneOutput,
-  PendingEditFormInputs,
+import {
+  pendingEditInputSchema,
+  type GetOneOutput,
+  type PendingEditFormInputs,
 } from "~/schemas/study-spots";
 import { differenceWith, isEqual, toPairs } from "lodash";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 /**
  *
@@ -34,6 +36,7 @@ const EditStudySpotForm = ({
   studySpot: GetOneOutput;
 }) => {
   const form = useForm<PendingEditFormInputs>({
+    resolver: zodResolver(pendingEditInputSchema),
     defaultValues: {
       ...studySpot,
       images: [],
