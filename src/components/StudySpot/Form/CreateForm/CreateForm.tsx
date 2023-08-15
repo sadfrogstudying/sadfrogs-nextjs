@@ -20,46 +20,6 @@ import {
 } from "~/schemas/study-spots";
 import { FileListImagesSchema } from "~/schemas/utility";
 
-const defaultValues = {
-  name: "",
-  rating: 0,
-  wifi: false,
-  powerOutlets: false,
-  noiseLevel: "",
-  venueType: "",
-  images: [],
-
-  placeId: "",
-  latitude: 0,
-  longitude: 0,
-  address: "",
-  country: "",
-  city: "",
-  state: "",
-
-  openingHours: [],
-
-  canStudyForLong: "",
-
-  vibe: "",
-  comfort: "",
-  views: "",
-  sunlight: false,
-  temperature: "",
-  music: "",
-  lighting: "",
-
-  distractions: "",
-  crowdedness: "",
-
-  naturalSurroundings: "",
-  proximityToAmenities: "",
-
-  drinks: false,
-  food: false,
-  studyBreakFacilities: "",
-};
-
 const createOneFormInputSchema = createOneInputSchema.extend({
   images: FileListImagesSchema,
 });
@@ -74,7 +34,43 @@ const createOneFormInputSchema = createOneInputSchema.extend({
 const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const form = useForm<StudySpotFormInputs>({
     resolver: zodResolver(createOneFormInputSchema),
-    defaultValues,
+    defaultValues: {
+      name: "",
+      rating: 0,
+      wifi: false,
+      powerOutlets: false,
+      noiseLevel: "",
+      venueType: "",
+      images: [],
+
+      placeId: "",
+      latitude: 0,
+      longitude: 0,
+      address: "",
+      country: "",
+      city: "",
+      state: "",
+
+      openingHours: [],
+
+      canStudyForLong: "",
+
+      comfort: "",
+      views: "",
+      sunlight: false,
+      temperature: "",
+      music: "",
+      lighting: "",
+
+      distractions: "",
+      crowdedness: "",
+
+      proximityToAmenities: "",
+
+      drinks: false,
+      food: false,
+      studyBreakFacilities: "",
+    },
   });
 
   const apiUtils = api.useContext();
