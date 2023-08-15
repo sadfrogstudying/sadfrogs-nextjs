@@ -34,11 +34,11 @@ model StudySpot {
     authorId             String?
     name                 String         @unique
     slug                 String         @unique
-    rating               Float          @default(0)
+    rating               Float          @default(0) // 1-5 slider
     wifi                 Boolean        @default(false)
     powerOutlets         Boolean        @default(false)
-    noiseLevel           String         @default("")
-    venueType            String         @default("")
+    noiseLevel           String         @default("") // placeholder: quiet, normal, noisy
+    venueType            String         @default("") // placeholder: cafe, library, etc.
     placeId              String         @default("")
     latitude             Float          @default(0)
     longitude            Float          @default(0)
@@ -47,21 +47,19 @@ model StudySpot {
     city                 String         @default("")
     state                String         @default("")
     openingHours         OpeningHours[]
-    canStudyForLong      String         @default("")
-    vibe                 String         @default("")
-    comfort              String         @default("")
-    views                String         @default("")
+    canStudyForLong      String         @default("") // ⚠️ boolean
+    comfort              String         @default("") // placeholder: soft chairs, small tables, etc.
+    views                String         @default("") // placeholder: trees, buildings, etc.
     sunlight             Boolean        @default(false)
-    temperature          String         @default("")
-    music                String         @default("")
-    lighting             String         @default("")
-    distractions         String         @default("")
-    crowdedness          String         @default("")
-    naturalSurroundings  String         @default("")
-    proximityToAmenities String         @default("")
+    temperature          String         @default("") // placeholder: cold, chilly, perfect, warm, hot
+    music                String         @default("") // placeholder: jazz, classical, none, etc.
+    lighting             String         @default("") // placeholder: normal, dim, bright, etc.
+    distractions         String         @default("") // placeholder: none, some, many
+    crowdedness          String         @default("") // placeholder: empty, some, crowded
+    proximityToAmenities String         @default("") // change to amenitiesNearby - restaurants, grocery stores, etc.
     drinks               Boolean        @default(false)
     food                 Boolean        @default(false)
-    studyBreakFacilities String         @default("")
+    studyBreakFacilities String         @default("") // smoking area, lounge, etc.
 
     pendingEditStudySpot PendingEdit[]
 
@@ -90,7 +88,6 @@ model PendingEdit {
     state                String?
     openingHours         OpeningHours[]
     canStudyForLong      String?
-    vibe                 String?
     comfort              String?
     views                String?
     sunlight             Boolean?
@@ -99,8 +96,7 @@ model PendingEdit {
     lighting             String?
     distractions         String?
     crowdedness          String?
-    naturalSurroundings  String?
-    proximityToAmenities String?
+    proximityToAmenities String? // change to amenitiesNearby - restaurants, grocery stores, etc.
     drinks               Boolean?
     food                 Boolean?
     studyBreakFacilities String?

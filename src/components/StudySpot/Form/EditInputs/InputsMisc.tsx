@@ -59,19 +59,6 @@ const StudySpotInputsMisc = ({ form }: Props) => {
         />
         <FormField
           control={form.control}
-          name="vibe"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Vibe</FormLabel>
-              <FormControl>
-                <Input placeholder="Cozy" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="comfort"
           render={({ field }) => (
             <FormItem>
@@ -156,19 +143,6 @@ const StudySpotInputsMisc = ({ form }: Props) => {
               <FormLabel>Crowdedness</FormLabel>
               <FormControl>
                 <Input placeholder="Very crowded after work" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="naturalSurroundings"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Natural Surroundings</FormLabel>
-              <FormControl>
-                <Input placeholder="Park closeby" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

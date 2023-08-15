@@ -199,7 +199,6 @@ export const studySpotsRouter = createTRPCRouter({
 
             canStudyForLong: input.canStudyForLong,
 
-            vibe: input.vibe,
             comfort: input.comfort,
             views: input.views,
             sunlight: input.sunlight,
@@ -210,7 +209,6 @@ export const studySpotsRouter = createTRPCRouter({
             distractions: input.distractions,
             crowdedness: input.crowdedness,
 
-            naturalSurroundings: input.naturalSurroundings,
             proximityToAmenities: input.proximityToAmenities,
 
             drinks: input.drinks,
@@ -455,7 +453,6 @@ export const studySpotsRouter = createTRPCRouter({
 
             canStudyForLong: input.canStudyForLong,
 
-            vibe: input.vibe,
             comfort: input.comfort,
             views: input.views,
             sunlight: input.sunlight,
@@ -466,7 +463,6 @@ export const studySpotsRouter = createTRPCRouter({
             distractions: input.distractions,
             crowdedness: input.crowdedness,
 
-            naturalSurroundings: input.naturalSurroundings,
             proximityToAmenities: input.proximityToAmenities,
 
             drinks: input.drinks,
@@ -622,7 +618,6 @@ export const studySpotsRouter = createTRPCRouter({
 
           canStudyForLong: pendingEdit.canStudyForLong || undefined,
 
-          vibe: pendingEdit.vibe || undefined,
           comfort: pendingEdit.comfort || undefined,
           views: pendingEdit.views || undefined,
           sunlight: pendingEdit.sunlight || undefined,
@@ -633,7 +628,6 @@ export const studySpotsRouter = createTRPCRouter({
           distractions: pendingEdit.distractions || undefined,
           crowdedness: pendingEdit.crowdedness || undefined,
 
-          naturalSurroundings: pendingEdit.naturalSurroundings || undefined,
           proximityToAmenities: pendingEdit.proximityToAmenities || undefined,
 
           drinks: pendingEdit.drinks || undefined,
