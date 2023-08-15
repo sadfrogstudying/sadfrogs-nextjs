@@ -30,12 +30,11 @@ const StudySpotInputsMisc = ({ form }: Props) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Collapsible
-      className="space-y-8"
-      open={open}
-      onClick={() => setOpen((prev) => !prev)}
-    >
-      <CollapsibleTrigger className="w-full text-left">
+    <Collapsible className="space-y-8" open={open}>
+      <CollapsibleTrigger
+        className="w-full text-left"
+        onClick={() => setOpen((prev) => !prev)}
+      >
         <div>
           <h3 className="text-2xl font-bold mb-1 flex gap-4">
             Misc {open ? <ChevronUp /> : <ChevronDown />}
@@ -46,19 +45,6 @@ const StudySpotInputsMisc = ({ form }: Props) => {
       </CollapsibleTrigger>
       <CollapsibleContent>
         <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="canStudyForLong"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Can Study For Long?</FormLabel>
-                <FormControl>
-                  <Input placeholder="Over 2 hours" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="comfort"
@@ -181,9 +167,41 @@ const StudySpotInputsMisc = ({ form }: Props) => {
           />
           <FormField
             control={form.control}
+            name="canStudyForLong"
+            render={({ field }) => (
+              <FormItem
+                className={`flex flex-row space-x-3 space-y-0 rounded-md ${
+                  field.value === undefined ? "opacity-40" : ""
+                }`}
+              >
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={(v) =>
+                      form.setValue("canStudyForLong", !!v)
+                    }
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>
+                    Can study for long?
+                    <FormDescription>
+                      Can you study for long here?
+                    </FormDescription>
+                  </FormLabel>
+                </div>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="drinks"
             render={({ field }) => (
-              <FormItem className="flex flex-row space-x-3 space-y-0 rounded-md">
+              <FormItem
+                className={`flex flex-row space-x-3 space-y-0 rounded-md ${
+                  field.value === undefined ? "opacity-40" : ""
+                }`}
+              >
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -191,10 +209,12 @@ const StudySpotInputsMisc = ({ form }: Props) => {
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel>Drinks</FormLabel>
-                  <FormDescription>
-                    Does the spot have/sell drinks?
-                  </FormDescription>
+                  <FormLabel>
+                    Drinks
+                    <FormDescription>
+                      Does the spot have/sell drinks?
+                    </FormDescription>
+                  </FormLabel>
                 </div>
               </FormItem>
             )}
@@ -203,7 +223,11 @@ const StudySpotInputsMisc = ({ form }: Props) => {
             control={form.control}
             name="sunlight"
             render={({ field }) => (
-              <FormItem className="flex flex-row space-x-3 space-y-0 rounded-md">
+              <FormItem
+                className={`flex flex-row space-x-3 space-y-0 rounded-md ${
+                  field.value === undefined ? "opacity-40" : ""
+                }`}
+              >
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -211,10 +235,12 @@ const StudySpotInputsMisc = ({ form }: Props) => {
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel>Sunlight</FormLabel>
-                  <FormDescription>
-                    Does the spot have sunlight?
-                  </FormDescription>
+                  <FormLabel>
+                    Sunlight
+                    <FormDescription>
+                      Does the spot have sunlight?
+                    </FormDescription>
+                  </FormLabel>
                 </div>
               </FormItem>
             )}
@@ -223,7 +249,11 @@ const StudySpotInputsMisc = ({ form }: Props) => {
             control={form.control}
             name="food"
             render={({ field }) => (
-              <FormItem className="flex flex-row space-x-3 space-y-0 rounded-md">
+              <FormItem
+                className={`flex flex-row space-x-3 space-y-0 rounded-md ${
+                  field.value === undefined ? "opacity-40" : ""
+                }`}
+              >
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -231,10 +261,12 @@ const StudySpotInputsMisc = ({ form }: Props) => {
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel>Food</FormLabel>
-                  <FormDescription>
-                    Does the spot have/sell food?
-                  </FormDescription>
+                  <FormLabel>
+                    Food
+                    <FormDescription>
+                      Does the spot have/sell food?
+                    </FormDescription>
+                  </FormLabel>
                 </div>
               </FormItem>
             )}

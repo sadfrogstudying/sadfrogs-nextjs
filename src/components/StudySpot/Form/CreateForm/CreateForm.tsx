@@ -42,7 +42,6 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       noiseLevel: "",
       venueType: "",
       images: [],
-
       placeId: "",
       latitude: 0,
       longitude: 0,
@@ -50,25 +49,19 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       country: "",
       city: "",
       state: "",
-
       openingHours: [],
-
-      canStudyForLong: "",
-
+      canStudyForLong: undefined,
       comfort: "",
       views: "",
-      sunlight: false,
+      sunlight: undefined,
       temperature: "",
       music: "",
       lighting: "",
-
       distractions: "",
       crowdedness: "",
-
       proximityToAmenities: "",
-
-      drinks: false,
-      food: false,
+      drinks: undefined,
+      food: undefined,
       studyBreakFacilities: "",
     },
   });
@@ -160,11 +153,6 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           >
             {isLoading ? "Creating..." : "Submit"}
           </Button>
-          {submitDisabled && (
-            <p className="text-sm bg-orange-100 rounded px-2">
-              Please fill out the general and image sections.
-            </p>
-          )}
         </div>
       </form>
     </Form>

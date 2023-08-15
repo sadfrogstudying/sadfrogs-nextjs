@@ -22,8 +22,6 @@ model User {
     authoredImages      Image[]
 }
 
-// model StudySpotDetails {}
-
 model StudySpot {
     id                   Int            @id @default(autoincrement())
     createdAt            DateTime       @default(now())
@@ -47,19 +45,19 @@ model StudySpot {
     city                 String         @default("")
     state                String         @default("")
     openingHours         OpeningHours[]
-    canStudyForLong      String         @default("") // ⚠️ boolean
+    canStudyForLong      Boolean?
     comfort              String         @default("") // placeholder: soft chairs, small tables, etc.
     views                String         @default("") // placeholder: trees, buildings, etc.
-    sunlight             Boolean        @default(false)
+    sunlight             Boolean?
     temperature          String         @default("") // placeholder: cold, chilly, perfect, warm, hot
     music                String         @default("") // placeholder: jazz, classical, none, etc.
     lighting             String         @default("") // placeholder: normal, dim, bright, etc.
     distractions         String         @default("") // placeholder: none, some, many
     crowdedness          String         @default("") // placeholder: empty, some, crowded
     proximityToAmenities String         @default("") // change to amenitiesNearby - restaurants, grocery stores, etc.
-    drinks               Boolean        @default(false)
-    food                 Boolean        @default(false)
-    studyBreakFacilities String         @default("") // smoking area, lounge, etc.
+    drinks               Boolean?
+    food                 Boolean?
+    studyBreakFacilities String         @default("") // placeholder: smoking area, lounge, etc.
 
     pendingEditStudySpot PendingEdit[]
 
@@ -87,7 +85,7 @@ model PendingEdit {
     city                 String?
     state                String?
     openingHours         OpeningHours[]
-    canStudyForLong      String?
+    canStudyForLong      Boolean?
     comfort              String?
     views                String?
     sunlight             Boolean?
