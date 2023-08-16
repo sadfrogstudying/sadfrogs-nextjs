@@ -509,7 +509,7 @@ export const studySpotsRouter = createTRPCRouter({
     .meta({
       openapi: { method: "POST", path: "/studyspots.acceptPendingEdit" },
     })
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.number() }))
     .output(z.boolean())
     .mutation(async ({ ctx, input }) => {
       const pendingEdit = await ctx.prisma.pendingEdit.findUnique({
@@ -649,7 +649,7 @@ export const studySpotsRouter = createTRPCRouter({
     .meta({
       openapi: { method: "POST", path: "/studyspots.declinePendingEdit" },
     })
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.number() }))
     .output(z.boolean())
     .mutation(async ({ ctx, input }) => {
       const pendingEdit = await ctx.prisma.pendingEdit.findUnique({

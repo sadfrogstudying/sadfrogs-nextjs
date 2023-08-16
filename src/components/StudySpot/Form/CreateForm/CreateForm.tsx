@@ -9,10 +9,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "~/components/UI/Button";
 import { Form } from "~/components/UI/Form";
-import StudySpotInputsGeneral from "~/components/StudySpot/Form/CreateInputs/InputsGeneral";
-import StudySpotInputsLocation from "~/components/StudySpot/Form/CreateInputs/InputsLocation";
-import StudySpotInputsMisc from "~/components/StudySpot/Form/CreateInputs/InputsMisc";
-import StudySpotInputsImage from "~/components/StudySpot/Form/CreateInputs/InputsImage";
+import StudySpotInputsGeneral from "~/components/StudySpot/Form/SharedInputs/InputsGeneral";
+import StudySpotInputsLocation from "~/components/StudySpot/Form/SharedInputs/InputsLocation";
+import StudySpotInputsMisc from "~/components/StudySpot/Form/SharedInputs/InputsMisc";
+import StudySpotInputsImage from "~/components/StudySpot/Form/SharedInputs/InputsImage";
 
 import {
   createOneInputSchema,

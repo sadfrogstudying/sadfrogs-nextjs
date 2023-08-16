@@ -22,7 +22,7 @@ import {
 
 import type {
   Image as ImageType,
-  PendingEditFormInputs,
+  StudySpotFormInputs,
 } from "~/schemas/study-spots";
 import { Button } from "~/components/UI/Button";
 
@@ -32,11 +32,12 @@ import { Trash } from "lucide-react";
 import { ScrollArea } from "~/components/UI/ScrollArea";
 
 interface Props {
-  form: UseFormReturn<PendingEditFormInputs>;
-  existingImages: ImageType[];
+  form: UseFormReturn<StudySpotFormInputs>;
+  /** Only passed in the edit form */
+  existingImages?: ImageType[];
 }
 
-const StudySpotInputsImage = ({ form, existingImages }: Props) => {
+const StudySpotInputsImage = ({ form, existingImages = undefined }: Props) => {
   return (
     <div className="space-y-8">
       <FormSectionHeader
@@ -63,7 +64,9 @@ const StudySpotInputsImage = ({ form, existingImages }: Props) => {
           )}
         />
 
-        <EditImages existingImages={existingImages} form={form} />
+        {existingImages && (
+          <EditImages existingImages={existingImages} form={form} />
+        )}
       </div>
     </div>
   );
@@ -76,7 +79,7 @@ const EditImages = ({
   form,
 }: {
   existingImages?: ImageType[];
-  form: UseFormReturn<PendingEditFormInputs>;
+  form: UseFormReturn<StudySpotFormInputs>;
 }) => {
   const [open, setOpen] = useState(false);
   const imagesToDelete = form.watch("imagesToDelete") || [];

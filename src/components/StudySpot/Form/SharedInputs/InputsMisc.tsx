@@ -10,7 +10,7 @@ import {
 } from "~/components/UI/Form";
 import { Input } from "~/components/UI/Input";
 
-import type { PendingEditFormInputs } from "~/schemas/study-spots";
+import type { StudySpotFormInputs } from "~/schemas/study-spots";
 import { Checkbox } from "~/components/UI/Checkbox";
 import {
   Collapsible,
@@ -22,7 +22,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { Separator } from "~/components/UI/Seperator";
 
 interface Props {
-  form: UseFormReturn<PendingEditFormInputs>;
+  form: UseFormReturn<StudySpotFormInputs>;
 }
 
 const StudySpotInputsMisc = ({ form }: Props) => {

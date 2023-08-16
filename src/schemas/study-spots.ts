@@ -34,19 +34,20 @@ const createOneInputSchema = z.object({
   city: z.string().optional(),
   state: z.string().optional(),
   openingHours: openingHoursSchema.array().optional(),
-  canStudyForLong: z.boolean().optional(),
+  canStudyForLong: z.boolean().nullable().optional(),
   comfort: z.string().optional(),
   views: z.string().optional(),
-  sunlight: z.boolean().optional(),
+  sunlight: z.boolean().nullable().optional(),
   temperature: z.string().optional(),
   music: z.string().optional(),
   lighting: z.string().optional(),
   distractions: z.string().optional(),
   crowdedness: z.string().optional(),
   proximityToAmenities: z.string().optional(),
-  drinks: z.boolean().optional(),
-  food: z.boolean().optional(),
+  drinks: z.boolean().nullable().optional(),
+  food: z.boolean().nullable().optional(),
   studyBreakFacilities: z.string().optional(),
+  imagesToDelete: z.number().array().optional(),
 });
 const studySpotSchema = z.object({
   id: z.number(),
@@ -120,7 +121,7 @@ const creatependingEditInputSchema = createOneInputSchema.partial().extend({
   food: z.boolean().nullable().optional(),
 });
 const pendingEditOutputSchema = studySpotSchema.partial().extend({
-  id: z.string(),
+  id: z.number(),
   createdAt: z.date(),
   updatedAt: z.date(),
   name: z.string().nullable(),
@@ -148,8 +149,8 @@ const pendingEditOutputSchema = studySpotSchema.partial().extend({
   distractions: z.string().nullable(),
   crowdedness: z.string().nullable(),
   proximityToAmenities: z.string().nullable(),
-  drinks: z.boolean().nullable().nullable(),
-  food: z.boolean().nullable().nullable(),
+  drinks: z.boolean().nullable(),
+  food: z.boolean().nullable(),
   studyBreakFacilities: z.string().nullable(),
   studySpotId: z.number(),
   studySpot: z.object({ name: z.string(), slug: z.string() }),
@@ -167,10 +168,6 @@ type GetNotValidatedElementOutput = z.infer<
   typeof getNotValidatedOutputSchema.element
 >;
 type Image = z.infer<typeof imageSchema>;
-type PendingEditQueryInput = z.infer<typeof creatependingEditInputSchema>;
-type PendingEditFormInputs = Omit<PendingEditQueryInput, "images"> & {
-  images: File[];
-};
 type PendingEditQueryOutput = z.infer<typeof pendingEditOutputSchema>;
 
 export {
@@ -190,6 +187,5 @@ export type {
   GetNotValidatedOutput,
   GetNotValidatedElementOutput,
   Image,
-  PendingEditFormInputs,
   PendingEditQueryOutput,
 };

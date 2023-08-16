@@ -8,15 +8,15 @@ import {
 
 import { Button } from "~/components/UI/Button";
 import { Form } from "~/components/UI/Form";
-import StudySpotInputsGeneral from "~/components/StudySpot/Form/EditInputs/InputsGeneral";
-import StudySpotInputsImage from "~/components/StudySpot/Form/EditInputs/InputsImage";
-import StudySpotInputsLocation from "~/components/StudySpot/Form/EditInputs/InputsLocation";
-import StudySpotInputsMisc from "~/components/StudySpot/Form/EditInputs/InputsMisc";
+import StudySpotInputsGeneral from "~/components/StudySpot/Form/SharedInputs/InputsGeneral";
+import StudySpotInputsImage from "~/components/StudySpot/Form/SharedInputs/InputsImage";
+import StudySpotInputsLocation from "~/components/StudySpot/Form/SharedInputs/InputsLocation";
+import StudySpotInputsMisc from "~/components/StudySpot/Form/SharedInputs/InputsMisc";
 
 import {
   creatependingEditInputSchema,
+  type StudySpotFormInputs,
   type GetOneOutput,
-  type PendingEditFormInputs,
 } from "~/schemas/study-spots";
 import { differenceWith, isEqual, toPairs } from "lodash";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,7 +35,7 @@ const EditStudySpotForm = ({
   onSuccess?: () => void;
   studySpot: GetOneOutput;
 }) => {
-  const form = useForm<PendingEditFormInputs>({
+  const form = useForm<StudySpotFormInputs>({
     resolver: zodResolver(creatependingEditInputSchema),
     defaultValues: {
       ...studySpot,
@@ -58,7 +58,7 @@ const EditStudySpotForm = ({
     // checks if the keys in changesObj are a subset of StudySpotFormInputs
     function partiallyConformsToStudySpotFormInputs(
       obj: object
-    ): obj is Partial<PendingEditFormInputs> {
+    ): obj is Partial<StudySpotFormInputs> {
       const changeKeys = Object.keys(changesObj);
       return changeKeys.every((key) => key in obj);
     }
