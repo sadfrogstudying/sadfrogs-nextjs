@@ -16,7 +16,7 @@ import {
   creatependingEditInputSchema,
   pendingEditOutputSchema,
   createOneInputSchema,
-  studySpotSchema,
+  getOneSchema,
 } from "~/schemas/study-spots";
 
 const ratelimit = new Ratelimit({
@@ -141,7 +141,7 @@ export const studySpotsRouter = createTRPCRouter({
    * Create One
    *
    */
-  createOne: publicProcedure
+  createOne: privateProcedure
     .meta({ openapi: { method: "POST", path: "/studyspots.createOne" } })
     .input(createOneInputSchema)
     .output(z.boolean())
@@ -161,13 +161,19 @@ export const studySpotsRouter = createTRPCRouter({
           strict: true,
         });
 
+        const author = await ctx.prisma.user.findUnique({
+          where: {
+            email: ctx.currentUser.email,
+          },
+        });
+
         await ctx.prisma.studySpot.create({
           data: {
             name: input.name,
             slug: slug,
             author: {
               connect: {
-                email: ctx.currentUser?.email,
+                email: ctx.currentUser.email,
               },
             },
             wifi: input.wifi,
@@ -177,7 +183,10 @@ export const studySpotsRouter = createTRPCRouter({
             venueType: input.venueType,
             images: {
               createMany: {
-                data: newImages,
+                data: newImages.map((x) => ({
+                  ...x,
+                  authorId: author?.id,
+                })),
               },
             },
 
@@ -235,15 +244,36 @@ export const studySpotsRouter = createTRPCRouter({
   getOne: publicProcedure
     .meta({ openapi: { method: "GET", path: "/studyspots.getOne" } })
     .input(z.object({ slug: z.string() }))
-    .output(studySpotSchema)
+    .output(getOneSchema)
     .query(async ({ ctx, input }) => {
       const studySpot = await ctx.prisma.studySpot.findUnique({
         where: {
           slug: input.slug,
         },
         include: {
-          images: true,
+          images: {
+            select: {
+              id: true,
+              aspectRatio: true,
+              height: true,
+              width: true,
+              name: true,
+              dominantColour: true,
+              url: true,
+              author: {
+                select: {
+                  username: true,
+                },
+              },
+            },
+          },
           openingHours: true,
+          author: {
+            select: {
+              profilePicture: true,
+              username: true,
+            },
+          },
         },
       });
 

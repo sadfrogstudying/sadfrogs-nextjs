@@ -22,7 +22,7 @@ const InfoTable = ({ studySpot }: { studySpot?: GetOneOutput }) => {
     <div className="flex w-full pt-12">
       <div className="w-1/2 border-t border-gray-200">
         {propertyEntriesFiltered.map(([label, value]) => {
-          if (value == null) return null;
+          if (value == null || value === "") return null;
           if (typeof value === "object") return null;
 
           return (
@@ -41,21 +41,12 @@ const InfoTable = ({ studySpot }: { studySpot?: GetOneOutput }) => {
 export default InfoTable;
 
 const readableKeys: Record<string, string> = {
-  id: "Id",
-  createdAt: "Created At",
-  updatedAt: "Updated At",
-  isValidated: "Is Validated",
-  slug: "Slug",
   name: "Name",
   rating: "Rating",
   wifi: "Wifi",
   powerOutlets: "Power Outlets",
   noiseLevel: "Noise Level",
   venueType: "Venue Type",
-  images: "Images",
-  placeId: "Place Id",
-  latitude: "Latitude",
-  longitude: "Longitude",
   address: "Address",
   country: "Country",
   city: "City",

@@ -8,6 +8,11 @@ const imageSchema = z.object({
   height: z.number(),
   aspectRatio: z.number(),
   url: z.string(),
+  author: z
+    .object({
+      username: z.string(),
+    })
+    .nullish(),
 });
 const openingHoursSchema = z.object({
   id: z.number(),
@@ -86,6 +91,14 @@ const studySpotSchema = z.object({
 });
 
 // Router Output Schemas
+const getOneSchema = studySpotSchema.extend({
+  author: z
+    .object({
+      profilePicture: imageSchema.nullable(),
+      username: z.string(),
+    })
+    .nullable(),
+});
 const getValidatedOutputSchema = studySpotSchema
   .pick({
     name: true,
@@ -174,6 +187,7 @@ export {
   // Study Spot Schemas
   createOneInputSchema,
   studySpotSchema,
+  getOneSchema,
   getValidatedOutputSchema,
   getNotValidatedOutputSchema,
   getNotValidatedForMapOutputSchema,
