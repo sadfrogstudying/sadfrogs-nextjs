@@ -147,7 +147,7 @@ const PendingEdit = ({
   );
 };
 
-const AcceptEditButton = ({ pendingEditId }: { pendingEditId: string }) => {
+const AcceptEditButton = ({ pendingEditId }: { pendingEditId: number }) => {
   const apiUtils = api.useContext();
   const { mutate: acceptEdit, isLoading } =
     api.studySpots.acceptPendingEdit.useMutation({
@@ -167,7 +167,7 @@ const AcceptEditButton = ({ pendingEditId }: { pendingEditId: string }) => {
   );
 };
 
-const DeclineEditButton = ({ pendingEditId }: { pendingEditId: string }) => {
+const DeclineEditButton = ({ pendingEditId }: { pendingEditId: number }) => {
   const apiUtils = api.useContext();
   const { mutate: declineEdit, isLoading } =
     api.studySpots.declinePendingEdit.useMutation({

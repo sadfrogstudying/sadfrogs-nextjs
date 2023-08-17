@@ -28,7 +28,7 @@ const Image = ({
   onClick,
   className,
 }: Props) => {
-  const { aspectRatio, dominantColour, height, url, width, author } = image;
+  const { aspectRatio, dominantColour, height, url, width } = image;
   const [imageLoaded, setImageLoaded] = useState(false);
   const doFadeIn = () => setImageLoaded(true);
 
