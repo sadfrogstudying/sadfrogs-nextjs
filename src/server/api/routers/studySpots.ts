@@ -178,6 +178,7 @@ export const studySpotsRouter = createTRPCRouter({
             },
             wifi: input.wifi,
             rating: input.rating,
+            website: input.website,
             powerOutlets: input.powerOutlets,
             noiseLevel: input.noiseLevel,
             venueType: input.venueType,

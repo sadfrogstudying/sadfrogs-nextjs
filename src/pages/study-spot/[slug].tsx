@@ -30,7 +30,7 @@ const StudySpotPage = () => {
       enabled: !!slug,
       retry(failureCount, error) {
         if (error.data?.code === "NOT_FOUND") return false;
-        return failureCount < 2;
+        return failureCount < 0;
       },
     }
   );
@@ -41,7 +41,7 @@ const StudySpotPage = () => {
     <main className="h-full w-full">
       {studySpot.isError ? (
         <div className="pt-12 h-full w-full flex justify-center items-center font-mono text-2xl">
-          No Study Spot exists for this URL
+          {studySpot.error?.message || "No Study Spot exists for this URL"}
         </div>
       ) : (
         <>
