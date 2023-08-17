@@ -124,6 +124,13 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const submitDisabled = isLoading;
   const zodErrorMessages = parseZodClientError(createError?.data?.zodError);
 
+  const getButtonText = () => {
+    if (createIsLoading) return "Creating...";
+    if (getUrlsIsLoading) return "Uploading images...";
+    if (nameExistsLoading) return "Checking name...";
+    return "Submit";
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={submitHandler} className="space-y-16 m-auto font-mono">
@@ -152,7 +159,7 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             disabled={submitDisabled}
             className="disabled:cursor-not-allowed"
           >
-            {isLoading ? "Creating..." : "Submit"}
+            {getButtonText()}
           </Button>
         </div>
       </form>
