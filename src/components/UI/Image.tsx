@@ -64,10 +64,6 @@ const Image = ({
         />
       )}
 
-      {author && (
-        <div className="h-4 w-4 bg-red-600 absolute bottom-2 right-2 rounded-full" />
-      )}
-
       <FutureImage
         src={url}
         alt={alt}

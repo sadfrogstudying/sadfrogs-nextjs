@@ -82,7 +82,7 @@ export const studySpotsRouter = createTRPCRouter({
       const studySpots = await ctx.prisma.studySpot.findMany({
         ...(input.cursor && { skip: 1, cursor: { id: input.cursor } }),
 
-        take: 2,
+        take: 6,
         orderBy: {
           createdAt: "desc",
         },

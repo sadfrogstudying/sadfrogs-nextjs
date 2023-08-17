@@ -36,7 +36,7 @@ const StudySpotPage = () => {
   );
 
   const { name = "", images = [], address = "", author } = studySpot.data || {};
-  console.log(studySpot.data);
+
   return (
     <main className="h-full w-full">
       {studySpot.isError ? (

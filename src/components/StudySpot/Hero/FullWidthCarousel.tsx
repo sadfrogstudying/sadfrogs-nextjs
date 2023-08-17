@@ -6,6 +6,14 @@ import Image from "../../UI/Image";
 import { FullWidthCarouselThumb } from "./FullWidthCarouselThumb";
 import type { Image as ImageType } from "~/schemas/study-spots";
 
+import { ChevronRightSquare } from "lucide-react";
+import { default as NextLink } from "next/link";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/UI/Popover";
+
 type PropType = {
   images: ImageType[];
   name: string;
@@ -51,7 +59,11 @@ const FullWidthHeroCarousel: React.FC<PropType> = (props) => {
       >
         <div className="flex touch-pan-y h-96 gap-2 cursor-grab active:cursor-grabbing">
           {images.map((image) => (
-            <div className="relative w-fit h-full" key={image.id}>
+            <div
+              className="relative w-fit h-full cursor-pointer"
+              key={image.id}
+            >
+              <AuthorTooltip username={image.author?.username} />
               <Image
                 image={{ ...image }}
                 alt={`Image of ${name}`}
@@ -86,3 +98,27 @@ const FullWidthHeroCarousel: React.FC<PropType> = (props) => {
 };
 
 export default FullWidthHeroCarousel;
+
+const AuthorTooltip = ({ username }: { username?: string }) => {
+  if (!username) return null;
+
+  return (
+    <Popover>
+      <PopoverTrigger className="p-2 opacity-70 absolute bottom-2 right-2 rounded-md bg-lime-300 text-black font-mono z-20 active:opacity-100 text-sm">
+        Author
+      </PopoverTrigger>
+      {/* <PopoverContent>Place content for the popover here.</PopoverContent> */}
+      <PopoverContent className="p-2 bg-lime-300 text-black font-mono text-sm w-full">
+        <NextLink
+          href={`/user/${username}`}
+          className="flex gap-4 items-center hover:text-red-500"
+        >
+          <span>
+            Uploaded by <strong>{username}</strong>
+          </span>
+          <ChevronRightSquare className="h-4 w-4" />
+        </NextLink>
+      </PopoverContent>
+    </Popover>
+  );
+};
