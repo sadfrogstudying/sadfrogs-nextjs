@@ -8,6 +8,7 @@ import { Skeleton } from "~/components/UI/Skeleton";
 import EditFormSheet from "~/components/StudySpot/Form/EditForm";
 import Image from "~/components/UI/Image";
 import Link from "next/link";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const FullWidthHeroCarousel = dynamic(
   () => import("~/components/StudySpot/Hero/FullWidthCarousel"),
@@ -37,6 +38,8 @@ const StudySpotPage = () => {
 
   const { name = "", images = [], address = "", author } = studySpot.data || {};
 
+  const { user, isLoading } = useUser();
+
   return (
     <main className="h-full w-full">
       {studySpot.isError ? (
@@ -51,7 +54,7 @@ const StudySpotPage = () => {
                 <>
                   <div className="flex gap-4">
                     <h1 className="text-3xl font-serif">{name}</h1>
-                    {studySpot.data && (
+                    {studySpot.data && user && !isLoading && (
                       <EditFormSheet studySpot={studySpot.data} />
                     )}
                   </div>

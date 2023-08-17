@@ -372,31 +372,10 @@ export const studySpotsRouter = createTRPCRouter({
     }),
   /**
    *
-   * Get Paths
-   *
-   */
-  getAllPaths: publicProcedure
-    .meta({ openapi: { method: "GET", path: "/studyspots.getAllPaths" } })
-    .input(z.void())
-    .output(z.string().array())
-    .query(async ({ ctx }) => {
-      const studySpots = await ctx.prisma.studySpot.findMany({
-        where: {
-          isValidated: false,
-        },
-        select: {
-          slug: true,
-        },
-      });
-
-      return studySpots.map((studySpot) => studySpot.slug);
-    }),
-  /**
-   *
    * Pending Edits: Get all
    *
    */
-  getAllPendingEdits: publicProcedure
+  getAllPendingEdits: privateProcedure
     .meta({
       openapi: { method: "GET", path: "/studyspots.getAllPendingEdits" },
     })
