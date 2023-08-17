@@ -97,9 +97,11 @@ const StudySpotPage = () => {
               <FullWidthHeroCarousel images={images} name={name} />
             </div>
           </section>
-          <section className="pb-4 flex flex-col align-start items-start min-h-screen w-full">
-            <InfoTable studySpot={studySpot.data} />
-          </section>
+          {studySpot.data && (
+            <section className="pb-4 flex flex-col align-start items-start min-h-screen w-full">
+              <InfoTable studySpot={studySpot.data} />
+            </section>
+          )}
         </>
       )}
     </main>

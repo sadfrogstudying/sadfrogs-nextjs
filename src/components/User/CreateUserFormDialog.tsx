@@ -6,7 +6,7 @@ const CreateUserFormDialog = () => {
   const [open, setOpen] = useState(true);
   return (
     <Dialog open={open}>
-      <DialogContent className="sm:max-w-[525px] font-mono">
+      <DialogContent className="sm:max-w-[525px] font-mono" hideClose>
         <CreateUserForm onSuccess={() => setOpen(false)} />
         <DialogFooter></DialogFooter>
       </DialogContent>

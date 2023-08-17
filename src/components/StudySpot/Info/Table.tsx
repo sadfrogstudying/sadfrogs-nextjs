@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { GetOneOutput } from "~/schemas/study-spots";
+import { typeSafeObjectEntries } from "~/types/util-types";
 
 const keysToIgnore = [
   "id",
@@ -13,25 +14,17 @@ const keysToIgnore = [
   "images",
 ];
 
-const InfoTable = ({ studySpot }: { studySpot?: GetOneOutput }) => {
-  const propertyEntries = Object.entries(studySpot || {});
+const InfoTable = ({ studySpot }: { studySpot: GetOneOutput }) => {
+  const propertyEntries = typeSafeObjectEntries(studySpot);
   const propertyEntriesFiltered = propertyEntries.filter(
     ([key]) => !keysToIgnore.includes(key)
   );
+
   return (
     <div className="flex w-full pt-12">
       <div className="w-1/2 border-t border-gray-200">
         {propertyEntriesFiltered.map(([label, value]) => {
-          if (value == null || value === "") return null;
-          if (typeof value === "object") return null;
-
-          return (
-            <Row
-              label={label.toString()}
-              value={value}
-              key={label.toString()}
-            />
-          );
+          return <Row label={label} value={value} key={label} />;
         })}
       </div>
     </div>
@@ -40,9 +33,10 @@ const InfoTable = ({ studySpot }: { studySpot?: GetOneOutput }) => {
 
 export default InfoTable;
 
-const readableKeys: Record<string, string> = {
+const readableKeys: Record<keyof GetOneOutput, string> = {
   name: "Name",
   rating: "Rating",
+  website: "Website",
   wifi: "Wifi",
   powerOutlets: "Power Outlets",
   noiseLevel: "Noise Level",
@@ -53,7 +47,6 @@ const readableKeys: Record<string, string> = {
   state: "State",
   openingHours: "Opening Hours",
   canStudyForLong: "Can Study For Long",
-  vibe: "Vibe",
   comfort: "Comfort",
   views: "Views",
   sunlight: "Sunlight",
@@ -62,19 +55,27 @@ const readableKeys: Record<string, string> = {
   lighting: "Lighting",
   distractions: "Distractions",
   crowdedness: "Crowdedness",
-  naturalSurroundings: "Natural Surroundings",
   proximityToAmenities: "Proximity To Amenities",
   drinks: "Drinks",
   food: "Food",
   studyBreakFacilities: "Study Break Facilities",
+  id: "id",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  isValidated: "isValidated",
+  slug: "slug",
+  placeId: "placeId",
+  latitude: "latitude",
+  longitude: "longitude",
+  images: "images",
 };
 
 const Row = ({
   label,
   value,
 }: {
-  label: string;
-  value: string | number | boolean | string[];
+  label: keyof GetOneOutput;
+  value: GetOneOutput[keyof GetOneOutput];
 }) => {
   const shadesOfOj = [
     "bg-orange-50",
@@ -101,6 +102,9 @@ const Row = ({
     return "No";
   };
 
+  if (value == null || value === "") return null;
+  if (typeof value === "object") return null;
+
   return (
     <div className="flex border-b border-gray-200 w-full text-sm">
       <div className={`w-2 mr-2 ${color}`} />
@@ -109,7 +113,7 @@ const Row = ({
           {readableKeys[label]}:{" "}
         </strong>{" "}
         <div className="font-mono break-normal w-96">
-          {typeof value === "boolean" ? parseBoolean(value) : value}
+          {typeof value === "boolean" ? parseBoolean(value) : value?.toString()}
         </div>
       </div>
     </div>
