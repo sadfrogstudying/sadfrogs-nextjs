@@ -63,7 +63,7 @@ const StudySpotPage = () => {
                     </div>
                     {author?.username && (
                       <Link
-                        className="font-mono flex items-center gap-2 hover:text-purple-600"
+                        className="font-mono flex items-center gap-2 active:text-red-500"
                         href={`/user/${author?.username}`}
                       >
                         <span className="h-fit">

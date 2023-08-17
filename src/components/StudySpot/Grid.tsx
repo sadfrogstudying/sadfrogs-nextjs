@@ -30,11 +30,8 @@ const StudySpotGrid = () => {
         onClick={() => void fetchNextPage()}
         disabled={isLoading || isFetchingNextPage}
       >
-        Fetch more
+        {isLoading || isFetchingNextPage ? "Loading..." : "Fetch More"}
       </Button>
-      {(isLoading || isFetchingNextPage) && (
-        <p className="mb-4 font-mono">Loading...</p>
-      )}
     </>
   );
 };
