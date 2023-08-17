@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "~/components/UI/Card";
 import Image from "~/components/UI/Image";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
 import dynamic from "next/dynamic";
 import { Button } from "../UI/Button";
@@ -25,6 +25,7 @@ const StudySpotGridItem = ({
 }) => {
   const { name, slug, id, address, wifi, music, powerOutlets } = studySpot;
   const properties = Object.entries({ address, wifi, music, powerOutlets });
+  const [token] = useState(sessionStorage.getItem("sadfrogs_admin") || "");
 
   return (
     <Card className="flex flex-col gap-4 border-0 shadow-none w-full font-mono text-sm justify-end">
@@ -59,7 +60,7 @@ const StudySpotGridItem = ({
           ))}
         </div>
 
-        <DeleteAlertDialog id={id} />
+        {!!token && <DeleteAlertDialog id={id} />}
       </CardContent>
     </Card>
   );

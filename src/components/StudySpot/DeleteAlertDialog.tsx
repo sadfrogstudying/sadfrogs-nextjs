@@ -12,15 +12,17 @@ import {
 import { Trash2 } from "lucide-react";
 import { Button } from "~/components/UI/Button";
 import { api } from "~/utils/api";
+import { useState } from "react";
 
 const DeleteAlertDialog = ({ id }: { id: number }) => {
+  const [token] = useState(sessionStorage.getItem("sadfrogs_admin") || "");
   const apiUtils = api.useContext();
   const { mutate: deleteStudyspot, isLoading: isDeleting } =
     api.studySpots.deleteOne.useMutation({
       onSuccess: () => apiUtils.studySpots.getNotValidated.invalidate(),
     });
 
-  const deleteHandler = () => deleteStudyspot({ id });
+  const deleteHandler = () => deleteStudyspot({ id, token });
 
   return (
     <>
