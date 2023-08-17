@@ -36,7 +36,8 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     resolver: zodResolver(createOneFormInputSchema),
     defaultValues: {
       name: "",
-      rating: 0,
+      rating: 1,
+      website: "",
       wifi: false,
       powerOutlets: false,
       noiseLevel: "",

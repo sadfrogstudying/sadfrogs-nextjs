@@ -107,20 +107,22 @@ const useGooglePlaces = () => {
 
     if (selectedPlaceId === selectedPlace?.place_id) return; // same place was selected
 
+    const placeResultReturnedFields = [
+      "place_id",
+      "address_components",
+      "opening_hours",
+      "formatted_address",
+      "geometry",
+      // "name",
+      // "opening_hours",
+      "website",
+    ];
+
     return servicePlaces.current.getDetails(
       {
         sessionToken: sessionToken.current,
         placeId: selectedPlaceId,
-        fields: [
-          "place_id",
-          "address_components",
-          "opening_hours",
-          "formatted_address",
-          "geometry",
-          // "name",
-          // "opening_hours",
-          // "website",
-        ],
+        fields: placeResultReturnedFields,
       },
       (place, status) => {
         if (status !== google.maps.places.PlacesServiceStatus.OK)

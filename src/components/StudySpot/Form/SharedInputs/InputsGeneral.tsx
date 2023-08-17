@@ -23,7 +23,7 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
     <div className="space-y-8">
       <FormSectionHeader
         title="General"
-        description="This section must be filled out."
+        description="The fields marked with (*) are required."
       />
 
       <div className="grid grid-cols-1 gap-4">
@@ -32,7 +32,7 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Name (*)</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -48,7 +48,7 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
               <FormLabel>Rating</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="0"
+                  placeholder="1"
                   {...field}
                   type="number"
                   onChange={(event) => field.onChange(+event.target.value)}
@@ -60,10 +60,23 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
         />
         <FormField
           control={form.control}
+          name="website"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Website</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="noiseLevel"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Noise Level</FormLabel>
+              <FormLabel>Noise Level (*)</FormLabel>
               <FormControl>
                 <Input placeholder="Loud at peak hours" {...field} />
               </FormControl>
@@ -76,7 +89,7 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
           name="venueType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Venue Type</FormLabel>
+              <FormLabel>Venue Type (*)</FormLabel>
               <FormControl>
                 <Input placeholder="Cafe" {...field} />
               </FormControl>

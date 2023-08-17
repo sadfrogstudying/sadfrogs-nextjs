@@ -12,7 +12,7 @@ type PlaceResultPicked = Pick<
   | "geometry"
   //   | "name"
   //   | "opening_hours"
-  //   | "website"
+  | "website"
 >;
 type PlacesServiceStatus = google.maps.places.PlacesServiceStatus;
 

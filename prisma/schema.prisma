@@ -33,6 +33,7 @@ model StudySpot {
     name                 String         @unique
     slug                 String         @unique
     rating               Float          @default(0) // 1-5 slider
+    website              String         @default("")
     wifi                 Boolean        @default(false)
     powerOutlets         Boolean        @default(false)
     noiseLevel           String         @default("") // placeholder: quiet, normal, noisy
@@ -73,6 +74,7 @@ model PendingEdit {
     name                 String?
     slug                 String?
     rating               Float?
+    website              String?
     wifi                 Boolean?
     powerOutlets         Boolean?
     noiseLevel           String?

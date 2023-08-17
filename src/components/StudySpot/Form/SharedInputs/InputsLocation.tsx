@@ -49,7 +49,13 @@ interface Props {
 
 const StudySpotInputsLocation = ({ form }: Props) => {
   const onSelectedPlaceReady = (place: PlaceResultPicked) => {
-    const { place_id, address_components, formatted_address, geometry } = place;
+    const {
+      place_id,
+      address_components,
+      formatted_address,
+      geometry,
+      website,
+    } = place;
 
     const setValueOptions: SetValueConfig = {
       shouldTouch: true,
@@ -63,10 +69,15 @@ const StudySpotInputsLocation = ({ form }: Props) => {
       if (address.types.includes("administrative_area_level_1"))
         form.setValue("state", address.long_name);
     });
+
+    const formVals = form.getValues();
+
     form.setValue("placeId", place_id, setValueOptions);
     form.setValue("latitude", geometry?.location?.lat(), setValueOptions);
     form.setValue("longitude", geometry?.location?.lng(), setValueOptions);
     form.setValue("address", formatted_address, setValueOptions);
+    formVals.website === "" &&
+      form.setValue("website", website, setValueOptions);
   };
 
   const [open, setOpen] = useState(false);
