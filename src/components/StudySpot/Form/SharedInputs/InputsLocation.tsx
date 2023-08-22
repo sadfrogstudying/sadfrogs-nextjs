@@ -131,6 +131,7 @@ const StudySpotInputsLocation = ({ form }: Props) => {
                   <Input
                     placeholder="Enter latitude"
                     {...field}
+                    step="any"
                     type="number"
                     onChange={(event) => field.onChange(+event.target.value)}
                   />
@@ -149,6 +150,7 @@ const StudySpotInputsLocation = ({ form }: Props) => {
                   <Input
                     placeholder="Enter longitude"
                     {...field}
+                    step="any"
                     type="number"
                     onChange={(event) => field.onChange(+event.target.value)}
                   />
