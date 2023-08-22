@@ -97,9 +97,9 @@ const useGooglePlaces = () => {
     getPredictions();
   };
 
-  const onSelect = (desc: string) => {
+  const onSelect = (placeId: string) => {
     const selectedPlaceId = predictions.find(
-      (p) => p.description.toLowerCase().trim() === desc
+      (p) => p.place_id === placeId
     )?.place_id;
 
     if (!selectedPlaceId || !servicePlaces.current || !sessionToken.current)

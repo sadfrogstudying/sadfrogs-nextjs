@@ -83,7 +83,7 @@ const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
           className="w-[var(--radix-popover-trigger-width)] p-0"
           align="start"
         >
-          <Command className="font-mono">
+          <Command className="font-mono" loop>
             <CommandInput
               placeholder={!libraryReady ? "Loading..." : "Search location..."}
               onValueChange={(val) => onChange(val)}
@@ -92,15 +92,16 @@ const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
               className="text-lg sm:text-sm"
             />
             <CommandEmpty>No locations found.</CommandEmpty>
+
             {predictions.length > 0 && (
               <CommandGroup>
-                {predictions.map((prediction) => (
+                {predictions.map((prediction, i) => (
                   <CommandItem
-                    key={prediction.description}
-                    value={prediction.description}
-                    onSelect={(desc) => {
+                    key={prediction.structured_formatting.main_text + i}
+                    value={prediction.structured_formatting.main_text}
+                    onSelect={() => {
                       setValue(prediction);
-                      onSelect(desc);
+                      onSelect(prediction.place_id);
                       setOpen(false);
                     }}
                     className="truncate"
