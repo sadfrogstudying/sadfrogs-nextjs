@@ -34,11 +34,11 @@ const LocationSearchInput = dynamic(
 
 const Loading = () => (
   <Button
-    variant="secondary"
-    role="combobox"
-    className="w-full justify-between"
+    variant="outline"
+    className="w-full justify-between bg-gray-100 text-lg sm:text-sm"
+    disabled
   >
-    Loading Location Search...
+    Loading...
     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
   </Button>
 );
