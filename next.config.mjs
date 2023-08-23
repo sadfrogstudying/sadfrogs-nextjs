@@ -26,6 +26,7 @@ const config = {
     defaultLocale: "en",
   },
   images: {
+    minimumCacheTTL: 60 * 60, // 1 hour
     remotePatterns: [
       {
         hostname: "sadfrogs.s3.ap-southeast-2.amazonaws.com",

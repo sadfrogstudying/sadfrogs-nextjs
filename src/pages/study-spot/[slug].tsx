@@ -9,6 +9,7 @@ import EditFormSheet from "~/components/StudySpot/Form/EditForm";
 import Image from "~/components/UI/Image";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { Button } from "~/components/UI/Button";
 
 const FullWidthHeroCarousel = dynamic(
   () => import("~/components/StudySpot/Hero/FullWidthCarousel"),
@@ -21,6 +22,13 @@ const FullWidthHeroCarousel = dynamic(
 const StudySpotPage = () => {
   const router = useRouter();
   const slug = typeof router.query.slug === "string" ? router.query.slug : "";
+  const apiUtils = api.useContext();
+  const cachedGetAllQuery = apiUtils.studySpots.getNotValidated.getInfiniteData(
+    {}
+  )?.pages;
+  const cachedStudySpot = cachedGetAllQuery
+    ?.flatMap((page) => page)
+    .find((studySpot) => studySpot.slug === slug);
 
   const studySpot = api.studySpots.getOne.useQuery(
     {
@@ -36,7 +44,12 @@ const StudySpotPage = () => {
     }
   );
 
-  const { name = "", images = [], address = "", author } = studySpot.data || {};
+  const {
+    name = cachedStudySpot?.name || "",
+    images = cachedStudySpot?.images || [],
+    address = cachedStudySpot?.address || "",
+    author,
+  } = studySpot.data || {};
 
   const { user, isLoading } = useUser();
 
@@ -54,8 +67,16 @@ const StudySpotPage = () => {
                 <>
                   <div className="flex gap-4">
                     <h1 className="text-3xl font-serif">{name}</h1>
-                    {studySpot.data && user && !isLoading && (
+                    {studySpot.data && user && !isLoading ? (
                       <EditFormSheet studySpot={studySpot.data} />
+                    ) : (
+                      <Button
+                        variant="secondary"
+                        disabled
+                        className="font-mono"
+                      >
+                        Edit
+                      </Button>
                     )}
                   </div>
                   <div className="flex justify-between flex-wrap items-center gap-x-6">
@@ -64,25 +85,36 @@ const StudySpotPage = () => {
                         ? address
                         : "No address yet, submit one to help others find this spot!"}
                     </div>
-                    {author?.username && (
-                      <Link
-                        className="font-mono flex items-center gap-2 active:text-red-500"
-                        href={`/user/${author?.username}`}
-                      >
-                        <span className="h-fit">
-                          Found by {author?.username || "Anonymous"}
-                        </span>
-                        {author?.profilePicture && (
-                          <div className="aspect-square overflow-hidden rounded-full w-8 h-8 object-cover border">
-                            <Image
-                              alt={`Profile picture of ${author?.username}`}
-                              image={author?.profilePicture}
-                              className="w-full h-full object-cover"
-                              objectFit="cover"
-                            />
-                          </div>
-                        )}
-                      </Link>
+                    {!studySpot.isLoading ? (
+                      <div className={`${!author ? "cursor-not-allowed" : ""}`}>
+                        <Link
+                          className={`font-mono flex items-center gap-2 active:text-red-500 ${
+                            !author ? "pointer-events-none" : ""
+                          }`}
+                          href={`/user/${author?.username}`}
+                        >
+                          <span className="h-fit">
+                            Found by {author?.username || "Anonymous"}
+                          </span>
+                          {author?.profilePicture && (
+                            <div className="aspect-square overflow-hidden rounded-full w-8 h-8 object-cover border">
+                              <Image
+                                alt={`Profile picture of ${author?.username}`}
+                                image={author?.profilePicture}
+                                className="w-full h-full object-cover"
+                                objectFit="cover"
+                              />
+                            </div>
+                          )}
+                        </Link>
+                      </div>
+                    ) : (
+                      <div>
+                        <div className="h-fit font-mono flex items-center gap-2">
+                          Loading Author...
+                          <Skeleton className="aspect-square overflow-hidden rounded-full w-8 h-8 object-cover border" />
+                        </div>
+                      </div>
                     )}
                   </div>
                 </>

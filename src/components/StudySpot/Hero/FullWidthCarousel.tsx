@@ -104,7 +104,7 @@ const AuthorTooltip = ({ username }: { username?: string }) => {
 
   return (
     <Popover>
-      <PopoverTrigger className="p-2 opacity-70 absolute bottom-2 right-2 rounded-md bg-lime-300 text-black font-mono z-20 active:opacity-100 text-sm">
+      <PopoverTrigger className="p-2 opacity-70 absolute bottom-2 right-2 rounded-md bg-lime-300 text-black font-mono z-20 active:opacity-100 text-sm animate-fade-in-70">
         Author
       </PopoverTrigger>
       {/* <PopoverContent>Place content for the popover here.</PopoverContent> */}

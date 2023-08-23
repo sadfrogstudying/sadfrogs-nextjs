@@ -28,7 +28,13 @@ const Image = ({
   onClick,
   className,
 }: Props) => {
-  const { aspectRatio, dominantColour, height, url, width } = image;
+  const {
+    aspectRatio,
+    // dominantColour,
+    height,
+    url,
+    width,
+  } = image;
   const [imageLoaded, setImageLoaded] = useState(false);
   const doFadeIn = () => setImageLoaded(true);
 
@@ -37,7 +43,7 @@ const Image = ({
     100: "opacity-100",
   };
 
-  const imageOpacity = imageLoaded ? opacity[100] : opacity[0];
+  // const imageOpacity = imageLoaded ? opacity[100] : opacity[0];
   const placeholderOpacity = imageLoaded ? opacity[0] : opacity[100];
 
   const objectFitOptions = {
@@ -56,10 +62,10 @@ const Image = ({
     >
       {placeholder === "empty" && (
         <div
-          className={`${placeholderOpacity} absolute inset-0 z-10 ease-in duration-500 w-full h-full`}
+          className={`${placeholderOpacity} absolute inset-0 z-10 ease-in duration-500 w-full h-full bg-gray-100`}
           style={{
             aspectRatio: aspectRatio,
-            backgroundColor: dominantColour,
+            // backgroundColor: dominantColour,
           }}
         />
       )}
@@ -72,7 +78,7 @@ const Image = ({
         onLoadingComplete={doFadeIn}
         placeholder={placeholder}
         quality={quality || undefined}
-        className={`w-full h-full ${imageOpacity} ${objectFitOptions[objectFit]} ease-out duration-500`}
+        className={`w-full h-full ${objectFitOptions[objectFit]} ease-out duration-500`}
       />
     </div>
   );

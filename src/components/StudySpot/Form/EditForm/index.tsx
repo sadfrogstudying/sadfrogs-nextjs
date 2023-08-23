@@ -10,8 +10,8 @@ const EditStudySpotFormSheet = dynamic(
 );
 
 const Loading = () => (
-  <Button variant="outline" disabled>
-    Create
+  <Button variant="secondary" disabled className="font-mono">
+    Edit
   </Button>
 );
 

@@ -65,11 +65,16 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        "fade-in-70": {
+          from: { opacity: 0 },
+          to: { opacity: 0.7 },
+        },
       },
       /* @keyframes duration | easing-function | delay | iteration-count | direction | fill-mode | play-state | name */
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in-70": "fade-in-70 0.6s ease-out",
       },
       gridTemplateColumns: {
         "fill-40": "repeat(auto-fill, minmax(300px, 1fr))",
