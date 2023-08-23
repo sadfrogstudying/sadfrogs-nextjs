@@ -43,16 +43,14 @@ const StudySpotGridItem = ({
         )}
       </CardHeader>
       <CardContent className="space-y-4 p-0 w-29 border-y border-gray-400 py-4 flex flex-col">
-        <Link className="hover:underline" href={`/study-spot/${slug}`}>
+        <Link
+          className="font-bold hover:underline"
+          href={`/study-spot/${slug}`}
+        >
           {name}
         </Link>
-        <div>
-          Otters are carnivorous mammals in the subfamily Lutrinae. The 13
-          extant otter species are all semiaquatic, aquatic, or marine, with
-          diets based on fish and invertebrates.
-        </div>
 
-        <div>
+        <div className="text-gray-500">
           {properties.map(([key, value]) => (
             <Row key={key.toString()} title={key.toString()}>
               {value.toString()}
