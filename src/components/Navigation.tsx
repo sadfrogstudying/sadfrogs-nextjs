@@ -20,26 +20,42 @@ const Loading = () => (
   </Button>
 );
 
-const Navigation = ({ forMobile = true }: { forMobile?: boolean }) => {
+const Navigation = ({
+  forMobile = false,
+  onLinkClick,
+}: {
+  forMobile?: boolean;
+  onLinkClick?: () => void;
+}) => {
   const { user, isLoading } = useUser();
   const apiUtils = api.useContext();
   const currentUser = apiUtils.user.getCurrentUser.getData();
+  console.log(forMobile);
 
   return (
     <>
       {!isLoading && (
         <>
-          <Link href="/about" className="pointer-events-auto h-fit">
+          <Link
+            onClick={onLinkClick}
+            href="/about"
+            className="pointer-events-auto h-fit"
+          >
             About
           </Link>
           {!forMobile && <span> | </span>}
-          <Link href="/map" className="pointer-events-auto h-fit">
+          <Link
+            onClick={onLinkClick}
+            href="/map"
+            className="pointer-events-auto h-fit"
+          >
             Map
           </Link>
           {!forMobile && <span> | </span>}
           {!user ? (
             /* eslint-disable */
             <a
+              onClick={onLinkClick}
               href="/api/auth/login"
               className={`h-fit ${
                 isLoading
@@ -50,7 +66,11 @@ const Navigation = ({ forMobile = true }: { forMobile?: boolean }) => {
               Login / Register
             </a>
           ) : (
-            <Link href="/account" className="pointer-events-auto h-fit">
+            <Link
+              onClick={onLinkClick}
+              href="/account"
+              className="pointer-events-auto h-fit"
+            >
               Account
             </Link>
           )}

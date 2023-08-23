@@ -36,7 +36,7 @@ function MobileMenuSheet({ className }: { className?: string }) {
           >
             <Link href="/">Sad Frogs Studying</Link>
           </h1>
-          <Navigation forMobile />
+          <Navigation forMobile onLinkClick={() => setOpen(false)} />
         </nav>
       </SheetContent>
     </Sheet>
