@@ -13,6 +13,20 @@ const rgbToHex = (r: number, g: number, b: number) => {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 };
 
+export const getBucketObjectNameFromUrl = (url: string) => {
+  const bucketPath = `https://${env.BUCKET_NAME}.s3.${env.REGION}.amazonaws.com/`;
+
+  if (!url.startsWith(bucketPath))
+    throw new TRPCError({
+      code: "UNPROCESSABLE_CONTENT",
+      message: "Image url is not from the bucket",
+    });
+
+  const splitUrl = url.split("?")[0] || "";
+  const imageName = splitUrl.substring(bucketPath.length);
+  return imageName;
+};
+
 /**
  * @description uses sharp to get image metadata.  Also serves to validate that the images are from the bucket and not some other dog
  * @param input array of image urls
@@ -34,17 +48,7 @@ export const getImagesMeta = async (input: string[]) => {
 
     const allImagesWithMeta = await Promise.all(
       input.map(async (url) => {
-        const bucketPath = `https://${env.BUCKET_NAME}.s3.${env.REGION}.amazonaws.com/`;
-
-        if (!url.startsWith(bucketPath))
-          throw new TRPCError({
-            code: "UNPROCESSABLE_CONTENT",
-            message: "Image url is not from the bucket",
-          });
-
-        const splitUrl = url.split("?")[0] || "";
-        const imageName = splitUrl.substring(bucketPath.length);
-
+        const imageName = getBucketObjectNameFromUrl(url);
         const imageUrl = `${env.CLOUDFRONT_URL}/${imageName}`;
 
         // Download Image & use Buffer as Input
@@ -82,9 +86,9 @@ export const getImagesMeta = async (input: string[]) => {
 
     return allImagesWithMeta;
   } catch (error) {
-    const errorString = "Something went wrong getting image metadata";
-
     if (error instanceof TRPCError) throw error;
+
+    const errorString = "Something went wrong getting image metadata";
 
     if (error instanceof AxiosError) {
       if (error.code === "ECONNREFUSED")
@@ -105,14 +109,11 @@ export const getImagesMeta = async (input: string[]) => {
  * @description deletes images from bucket
  * @param images array of objects that have image urls
  */
-export const deleteImagesFromBucket = async <T extends { name: string }>(
-  images: T[],
-  s3: S3
-) => {
+export const deleteImagesFromBucket = async (imageNames: string[], s3: S3) => {
   try {
     await Promise.all(
-      images.map(async (image) => {
-        const bucketParams = { Bucket: env.BUCKET_NAME, Key: image.name };
+      imageNames.map(async (name) => {
+        const bucketParams = { Bucket: env.BUCKET_NAME, Key: name };
         const data = await s3.send(new DeleteObjectCommand(bucketParams));
         console.log("Success. Object deleted.", data);
         return data; // For unit tests.

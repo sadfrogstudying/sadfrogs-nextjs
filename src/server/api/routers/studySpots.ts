@@ -9,7 +9,11 @@ import slugify from "slugify";
 
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
-import { deleteImagesFromBucket, getImagesMeta } from "~/utils/server-helpers";
+import {
+  deleteImagesFromBucket,
+  getBucketObjectNameFromUrl,
+  getImagesMeta,
+} from "~/utils/server-helpers";
 import {
   getNotValidatedForMapOutputSchema,
   getNotValidatedOutputSchema,
@@ -232,8 +236,13 @@ export const studySpotsRouter = createTRPCRouter({
 
         return true;
       } catch (error: unknown) {
-        if (error instanceof TRPCError) throw error;
+        // Delete uploaded images in s3, this is unoptimal, but shouldn't happen often
+        await deleteImagesFromBucket(
+          input.images.map((url) => getBucketObjectNameFromUrl(url)),
+          ctx.s3
+        );
 
+        if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Something went wrong creating a study spot",
@@ -352,7 +361,10 @@ export const studySpotsRouter = createTRPCRouter({
 
       // Delete uploaded images in s3
       const { s3 } = ctx;
-      await deleteImagesFromBucket(deletedStudySpot.images, s3);
+      await deleteImagesFromBucket(
+        deletedStudySpot.images.map(({ name }) => name),
+        s3
+      );
 
       // Delete associated images
       await ctx.prisma.image.deleteMany({
@@ -590,7 +602,7 @@ export const studySpotsRouter = createTRPCRouter({
 
         const { s3 } = ctx;
         await deleteImagesFromBucket(
-          pendingImagesToDelete.map(({ image }) => image),
+          pendingImagesToDelete.map(({ image }) => image.name),
           s3
         );
       }
@@ -716,7 +728,7 @@ export const studySpotsRouter = createTRPCRouter({
 
         const { s3 } = ctx;
         await deleteImagesFromBucket(
-          pendingImagesToAdd.map((image) => image),
+          pendingImagesToAdd.map(({ name }) => name),
           s3
         );
       }

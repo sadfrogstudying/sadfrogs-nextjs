@@ -28,6 +28,7 @@ const createOneInputSchema = z.object({
   powerOutlets: z.boolean(),
   noiseLevel: z.string().max(100).min(1, { message: "Required" }),
   venueType: z.string().max(100).min(1, { message: "Required" }),
+  /** URLs in array */
   images: z
     .string()
     .array()
