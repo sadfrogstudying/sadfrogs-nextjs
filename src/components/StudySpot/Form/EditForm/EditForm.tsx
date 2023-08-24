@@ -39,6 +39,12 @@ const EditStudySpotForm = ({
     resolver: zodResolver(creatependingEditInputSchema),
     defaultValues: {
       ...studySpot,
+      // Remember that checkbox value cannot be null, but can be undefined
+      // However, in the DB it can be null
+      canStudyForLong: studySpot.canStudyForLong === null && undefined,
+      sunlight: studySpot.sunlight === null && undefined,
+      drinks: studySpot.drinks === null && undefined,
+      food: studySpot.food === null && undefined,
       images: [],
       imagesToDelete: [],
     },
