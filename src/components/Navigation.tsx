@@ -30,7 +30,6 @@ const Navigation = ({
   const { user, isLoading } = useUser();
   const apiUtils = api.useContext();
   const currentUser = apiUtils.user.getCurrentUser.getData();
-  console.log(forMobile);
 
   return (
     <>
