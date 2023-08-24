@@ -3,14 +3,13 @@ import slugify from "slugify";
 
 async function main() {
   /**
+   await prisma.user.deleteMany();
+   await prisma.studySpot.deleteMany();
+   await prisma.pendingEdit.deleteMany();
+   await prisma.openingHours.deleteMany();
+   await prisma.image.deleteMany();
+   await prisma.pendingImageToDelete.deleteMany();
   Comment this out to wipe database
-  await prisma.openingHours.deleteMany();
-  await prisma.pendingImagesToAdd.deleteMany();
-  await prisma.pendingImagesToDelete.deleteMany();
-  await prisma.pendingEdit.deleteMany();
-  await prisma.image.deleteMany();
-  await prisma.studySpot.deleteMany();
-  await prisma.user.deleteMany();
   */
 
   return;
