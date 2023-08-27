@@ -1,42 +1,62 @@
 import imageCompression from "browser-image-compression";
-import { ChangeEvent } from "react";
+import { useState } from "react";
+import { useDropzone } from "react-dropzone";
 
 const TestPage = () => {
-  async function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
-    if (!event.target.files) return;
-    const imageFile = event.target.files[0];
-    if (!imageFile) return;
-    console.log("originalFile instanceof Blob", imageFile instanceof Blob); // true
-    console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
-
+  const compressImages = async (acceptedFiles: File[]) => {
     const options = {
       maxSizeMB: 1,
       maxWidthOrHeight: 1920,
       useWebWorker: true,
     };
-    try {
-      const compressedFile = await imageCompression(imageFile, options);
-      console.log(
-        "compressedFile instanceof Blob",
-        compressedFile instanceof Blob
-      ); // true
-      console.log(
-        `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
-      ); // smaller than maxSizeMB
 
-      //   await uploadToServer(compressedFile); // write your own logic
-    } catch (error) {
-      console.log(error);
-    }
-  }
+    const compressedFilePromises = acceptedFiles.map(
+      async (file) => await imageCompression(file, options)
+    );
+
+    const compressedFiles = await Promise.all(compressedFilePromises);
+
+    return compressedFiles;
+  };
+
+  const [images, setImages] = useState<File[]>([]);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: 8,
+    maxSize: 80000000, // 10mb
+    accept: {
+      "image/png": [".png"],
+      "image/jpeg": [".jpeg", ".jpg"],
+      "image/webp": [".webp"],
+    },
+    onDrop: (acceptedFiles) => {
+      setImages([]);
+      // IIFE signals clearly that this is a "fire and forget" operation and that the callback itself doesn't do anything special with the async code return value
+      void (async () => {
+        const compressed = await compressImages(acceptedFiles);
+        if (!compressed) return;
+        setImages(compressed);
+      })();
+    },
+  });
 
   return (
     <div className="pt-44">
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => handleImageUpload(e)}
-      />
+      <div className="rounded-md bg-gray-50 border border-dashed border-gray-300">
+        <div
+          className={`rounded-md flex-row h-24 gap-4 p-4 justify-center border-dashed border-gray-300 flex items-center w-full cursor-pointer`}
+          {...getRootProps()}
+        >
+          <input type="hidden" {...getInputProps()} />
+          Drop here
+        </div>
+
+        <div className="flex flex-wrap">
+          {images.map((x) => (
+            <img src={URL.createObjectURL(x)} key={x.name} className="w-40" />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
