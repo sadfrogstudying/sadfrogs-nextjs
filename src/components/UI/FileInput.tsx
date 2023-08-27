@@ -146,7 +146,7 @@ const FileInput = forwardRef<HTMLInputElement, InputProps>(
             } border-dashed border-gray-300 flex items-center w-full cursor-pointer`}
             {...getRootProps()}
           >
-            <Input type="hidden" {...getInputProps()} {...props} ref={ref} />
+            <Input type="hidden" {...props} ref={ref} {...getInputProps()} />
 
             {getDropzoneText()}
           </div>
