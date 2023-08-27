@@ -1,17 +1,12 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
 import { useDropzone } from "react-dropzone";
 
 import { Input } from "~/components/UI/Input";
 
-interface Props {
-  setValue: (file: File[]) => void;
-  value: File[];
-  isSuccess: boolean;
-}
-
-const Test2 = ({ setValue, value, isSuccess, ...props }: Props) => {
+const Test2 = () => {
+  const [value, setValue] = React.useState<File[]>([]);
   const [error, setError] = React.useState<string | null>(null);
   const [compressionProgress, setCompressionProgress] = React.useState<
     number[]
@@ -80,10 +75,6 @@ const Test2 = ({ setValue, value, isSuccess, ...props }: Props) => {
     ));
   }, [value]);
 
-  useEffect(() => {
-    if (isSuccess) setValue([]);
-  }, [isSuccess, setValue]);
-
   return (
     <>
       <div
@@ -96,7 +87,6 @@ const Test2 = ({ setValue, value, isSuccess, ...props }: Props) => {
         <Input
           type="hidden"
           {...getInputProps()}
-          {...props}
           value=""
           onClick={() => setValue([])}
         />
