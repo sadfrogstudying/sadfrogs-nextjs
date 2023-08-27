@@ -57,8 +57,9 @@ const StudySpotInputsImage = ({ form, existingImages = undefined }: Props) => {
                   type="file"
                   multiple
                   setValue={(files) => {
-                    form.setValue("images", files);
-                    void form.trigger("images");
+                    form.setValue("images", files, {
+                      shouldValidate: true,
+                    });
                   }}
                   {...field}
                 />
