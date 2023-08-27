@@ -20,6 +20,7 @@ const TestPage = () => {
   };
 
   const [images, setImages] = useState<File[]>([]);
+  const [originalSizes, setOriginalSizes] = useState<number[]>([]);
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 8,
@@ -31,6 +32,7 @@ const TestPage = () => {
     },
     onDrop: (acceptedFiles) => {
       setImages([]);
+      setOriginalSizes(acceptedFiles.map((x) => x.size));
       // IIFE signals clearly that this is a "fire and forget" operation and that the callback itself doesn't do anything special with the async code return value
       void (async () => {
         const compressed = await compressImages(acceptedFiles);
@@ -51,9 +53,18 @@ const TestPage = () => {
           Drop here
         </div>
 
+        <div>
+          Original sizes:{" "}
+          {originalSizes.map((x, i) => (
+            <span key={i}>{(x / 1000 / 1000).toPrecision(2)}, </span>
+          ))}
+        </div>
         <div className="flex flex-wrap">
           {images.map((x) => (
-            <img src={URL.createObjectURL(x)} key={x.name} className="w-40" />
+            <div key={x.name}>
+              <img src={URL.createObjectURL(x)} className="w-40" />
+              <div>{(x.size / 1000 / 1000).toPrecision(2)}mb</div>
+            </div>
           ))}
         </div>
       </div>
