@@ -91,10 +91,13 @@ const useGooglePlaces = () => {
       {} as CachedData
     );
     const cachedPredictions = reducedCachedData[val]?.data || null;
-    if (cachedPredictions) return setPredictions(cachedPredictions);
+    if (cachedPredictions) {
+      return setPredictions(cachedPredictions);
+    } else {
+      // if not in cache, send request
 
-    // if not in cache, send request
-    getPredictions();
+      getPredictions();
+    }
   };
 
   const onSelect = (placeId: string) => {

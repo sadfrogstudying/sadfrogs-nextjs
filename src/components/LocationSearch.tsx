@@ -91,7 +91,10 @@ const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
               disabled={!libraryReady}
               className="text-lg sm:text-sm"
             />
-            <CommandEmpty>No locations found.</CommandEmpty>
+
+            {inputValue.length > 0 && (
+              <CommandEmpty>No locations found.</CommandEmpty>
+            )}
 
             {predictions.length > 0 && (
               <CommandGroup>
