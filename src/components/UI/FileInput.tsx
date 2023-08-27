@@ -144,11 +144,10 @@ const FileInput = forwardRef<HTMLInputElement, InputProps>(
             className={`rounded-md flex-row h-24 gap-4 p-4 justify-center ${getDropzoneColor()} ${
               !!value.length ? "border-b" : ""
             } border-dashed border-gray-300 flex items-center w-full cursor-pointer`}
-            {...props}
             {...getRootProps()}
             ref={ref}
           >
-            <Input type="hidden" {...getInputProps()} />
+            <Input type="hidden" {...getInputProps()} {...props} />
 
             {getDropzoneText()}
           </div>
