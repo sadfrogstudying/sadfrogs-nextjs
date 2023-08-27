@@ -152,7 +152,7 @@ const FileInput = forwardRef<HTMLInputElement, InputProps>(
 
             {getDropzoneText()}
           </div>
-          <RenderedFiles values={value} setValues={setValue} />
+          {/* <RenderedFiles values={value} setValues={setValue} /> */}
         </div>
 
         <CompressionProgress compressionProgress={compressionProgress} />
