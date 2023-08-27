@@ -54,8 +54,12 @@ const StudySpotInputsImage = ({ form, existingImages = undefined }: Props) => {
               <FormLabel>Images</FormLabel>
               <FormControl>
                 <FileInput
-                  isSuccess={false}
-                  setValue={(files) => form.setValue("images", files)}
+                  type="file"
+                  multiple
+                  setValue={(files) => {
+                    form.setValue("images", files);
+                    void form.trigger("images");
+                  }}
                   {...field}
                 />
               </FormControl>

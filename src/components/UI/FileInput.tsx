@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, memo, type ReactNode } from "react";
+import React, { forwardRef, memo, type ReactNode } from "react";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
 import { type FileRejection, useDropzone } from "react-dropzone";
@@ -24,7 +24,6 @@ import {
 interface Props {
   setValue: (images: File[]) => void;
   value: File[];
-  isSuccess: boolean;
   maxFiles?: number;
 }
 
@@ -38,7 +37,7 @@ const CircleDashedIcon = () => (
 );
 
 const FileInput = forwardRef<HTMLInputElement, InputProps>(
-  ({ setValue, value, isSuccess, maxFiles = 8, ...props }, ref) => {
+  ({ setValue, value, maxFiles = 8, ...props }, ref) => {
     const [error, setError] = React.useState<string | null>(null);
     const [compressionProgress, setCompressionProgress] = React.useState<
       number[]
@@ -54,7 +53,6 @@ const FileInput = forwardRef<HTMLInputElement, InputProps>(
           "image/webp": [".webp"],
         },
         onDrop: (acceptedFiles) => {
-          setValue([]);
           // IIFE signals clearly that this is a "fire and forget" operation and that the callback itself doesn't do anything special with the async code return value
           void (async () => {
             const compressed = await compressImages(acceptedFiles);
@@ -98,22 +96,21 @@ const FileInput = forwardRef<HTMLInputElement, InputProps>(
       return await imageCompression(image, options);
     };
 
-    useEffect(() => {
-      if (isSuccess) setValue([]);
-    }, [isSuccess, setValue]);
-
     const getDropzoneText = (): ReactNode => {
       if (fileRejections.length) return "Only images are allowed";
+      if (
+        compressionProgress.length > 0 &&
+        compressionProgress.some((x) => x < 100)
+      )
+        return (
+          <>
+            <CircleDashedIcon /> Compressing images
+          </>
+        );
       if (value.length)
         return (
           <>
             <CheckCircleIcon /> Images ready to upload
-          </>
-        );
-      if (compressionProgress.length > 0)
-        return (
-          <>
-            <CircleDashedIcon /> Compressing images
           </>
         );
       if (isDragActive)
@@ -131,8 +128,12 @@ const FileInput = forwardRef<HTMLInputElement, InputProps>(
 
     const getDropzoneColor = () => {
       if (fileRejections.length) return "bg-red-200";
+      if (
+        compressionProgress.length > 0 &&
+        compressionProgress.some((x) => x < 100)
+      )
+        return "bg-yellow-200";
       if (value.length) return "bg-green-200";
-      if (compressionProgress.length > 0) return "bg-yellow-200";
       if (isDragActive) return "bg-blue-200";
       return "bg-gray-100";
     };
@@ -145,7 +146,13 @@ const FileInput = forwardRef<HTMLInputElement, InputProps>(
             } border-dashed border-gray-300 flex items-center w-full cursor-pointer`}
             {...getRootProps()}
           >
-            <Input type="hidden" {...props} ref={ref} {...getInputProps()} />
+            <Input
+              type="file"
+              {...props}
+              ref={ref}
+              {...getInputProps()}
+              multiple
+            />
 
             {getDropzoneText()}
           </div>
@@ -265,23 +272,25 @@ const RenderedFiles = memo(
                   />
                 </div>
               </TableCell>
-              <TableCell className="h-full text-center space-x-4 gap-4 m-auto">
-                <Button
-                  type="button"
-                  onClick={() => moveItemHandler(-1, i)}
-                  variant="ghost"
-                  className="text-gray-500 p-0 w-6 md:w-4"
-                >
-                  <ChevronUp />
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => moveItemHandler(1, i)}
-                  variant="ghost"
-                  className="text-gray-500 p-0 w-6 md:w-4"
-                >
-                  <ChevronDown />
-                </Button>
+              <TableCell className="h-full text-center m-auto">
+                <div className="flex gap-4">
+                  <Button
+                    type="button"
+                    onClick={() => moveItemHandler(-1, i)}
+                    variant="ghost"
+                    className="text-gray-500 p-0 w-6 md:w-4"
+                  >
+                    <ChevronUp />
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => moveItemHandler(1, i)}
+                    variant="ghost"
+                    className="text-gray-500 p-0 w-6 md:w-4"
+                  >
+                    <ChevronDown />
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           ))}

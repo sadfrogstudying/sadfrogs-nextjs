@@ -140,7 +140,6 @@ const CreateUserForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                 <FormLabel>Images</FormLabel>
                 <FormControl>
                   <FileInput
-                    isSuccess={false}
                     setValue={(files) => form.setValue("image", files)}
                     value={field.value}
                     maxFiles={1}
