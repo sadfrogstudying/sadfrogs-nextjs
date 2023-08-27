@@ -142,6 +142,10 @@ const FileInput = forwardRef<HTMLInputElement, InputProps>(
     // console.log("{ ...getInputProps(), ...props, ref }");
     // console.log({ ...getInputProps(), ...props, ref });
 
+    // console.log("{ ...props }");
+    // console.log({ ...props });
+    // console.log("{ ...getInputProps() }");
+    // console.log({ ...getInputProps() });
     return (
       <div className="space-y-4">
         <div className="rounded-md bg-gray-50 border border-dashed border-gray-300">
@@ -151,7 +155,7 @@ const FileInput = forwardRef<HTMLInputElement, InputProps>(
             } border-dashed border-gray-300 flex items-center w-full cursor-pointer`}
             {...getRootProps()}
           >
-            <Input type="hidden" {...props} {...getInputProps()} ref={ref} />
+            <Input type="hidden" ref={ref} {...getInputProps()} {...props} />
 
             {getDropzoneText()}
           </div>
