@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, memo, type ReactNode } from "react";
+import React, { forwardRef, memo, type ReactNode } from "react";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
 import { type FileRejection, useDropzone } from "react-dropzone";
@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/UI/Table";
-import { Button } from "./Button";
+import { Button } from "~/components/UI/Button";
 import {
   CheckCircle,
   ChevronDown,
@@ -37,134 +37,127 @@ const CircleDashedIcon = () => (
   <CircleDashed className="flex-shrink-0 w-5 animate-ping" />
 );
 
-const FileInput = forwardRef<HTMLInputElement, InputProps>(
-  ({ setValue, value, isSuccess, maxFiles = 8, ...props }, ref) => {
-    const [error, setError] = React.useState<string | null>(null);
-    const [compressionProgress, setCompressionProgress] = React.useState<
-      number[]
-    >([]);
+const Test3Page = forwardRef<HTMLInputElement, InputProps>(() => {
+  const [value, setValue] = React.useState<File[]>([]);
+  const [error, setError] = React.useState<string | null>(null);
+  const [compressionProgress, setCompressionProgress] = React.useState<
+    number[]
+  >([]);
 
-    const { getRootProps, getInputProps, isDragActive, fileRejections } =
-      useDropzone({
-        maxFiles: maxFiles,
-        maxSize: 30000000, // 10mb
-        accept: {
-          "image/png": [".png"],
-          "image/jpeg": [".jpeg", ".jpg"],
-          "image/webp": [".webp"],
-        },
-        onDrop: (acceptedFiles) => {
-          setValue([]);
-          // IIFE signals clearly that this is a "fire and forget" operation and that the callback itself doesn't do anything special with the async code return value
-          void (async () => {
-            const compressed = await compressImages(acceptedFiles);
-            if (!compressed) return;
-            setValue(compressed);
-          })();
-        },
-      });
+  const { getRootProps, getInputProps, isDragActive, fileRejections } =
+    useDropzone({
+      maxFiles: 8,
+      maxSize: 30000000, // 10mb
+      accept: {
+        "image/png": [".png"],
+        "image/jpeg": [".jpeg", ".jpg"],
+        "image/webp": [".webp"],
+      },
+      onDrop: (acceptedFiles) => {
+        setValue([]);
+        // IIFE signals clearly that this is a "fire and forget" operation and that the callback itself doesn't do anything special with the async code return value
+        void (async () => {
+          const compressed = await compressImages(acceptedFiles);
+          if (!compressed) return;
+          setValue(compressed);
+        })();
+      },
+    });
 
-    const compressImages = async (acceptedFiles: File[]) => {
-      setCompressionProgress(Array(acceptedFiles.length).fill(0));
-      setError(null);
+  const compressImages = async (acceptedFiles: File[]) => {
+    setCompressionProgress(Array(acceptedFiles.length).fill(0));
+    setError(null);
 
-      try {
-        const compressedFilePromises = acceptedFiles.map(
-          async (file, i) => await handleImageCompression(file, i)
-        );
-        const compressedFiles = await Promise.all(compressedFilePromises);
-        return compressedFiles;
-      } catch (error) {
-        if (error instanceof Error) {
-          void setError(error.message);
-        }
+    try {
+      const compressedFilePromises = acceptedFiles.map(
+        async (file, i) => await handleImageCompression(file, i)
+      );
+      const compressedFiles = await Promise.all(compressedFilePromises);
+      return compressedFiles;
+    } catch (error) {
+      if (error instanceof Error) {
+        void setError(error.message);
       }
-      setCompressionProgress([]);
+    }
+    setCompressionProgress([]);
+  };
+
+  const handleImageCompression = async (image: File, index: number) => {
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+      onProgress: (p: number) =>
+        setCompressionProgress((progressArr) => {
+          const newArr = [...progressArr];
+          newArr[index] = p;
+          return newArr;
+        }),
     };
 
-    const handleImageCompression = async (image: File, index: number) => {
-      const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 1920,
-        useWebWorker: true,
-        onProgress: (p: number) =>
-          setCompressionProgress((progressArr) => {
-            const newArr = [...progressArr];
-            newArr[index] = p;
-            return newArr;
-          }),
-      };
+    return await imageCompression(image, options);
+  };
 
-      return await imageCompression(image, options);
-    };
-
-    useEffect(() => {
-      if (isSuccess) setValue([]);
-    }, [isSuccess, setValue]);
-
-    const getDropzoneText = (): ReactNode => {
-      if (fileRejections.length) return "Only images are allowed";
-      if (value.length)
-        return (
-          <>
-            <CheckCircleIcon /> Images ready to upload
-          </>
-        );
-      if (compressionProgress.length > 0)
-        return (
-          <>
-            <CircleDashedIcon /> Compressing images
-          </>
-        );
-      if (isDragActive)
-        return (
-          <>
-            <UploadIcon /> Fire in the hole!
-          </>
-        );
+  const getDropzoneText = (): ReactNode => {
+    if (fileRejections.length) return "Only images are allowed";
+    if (value.length)
       return (
         <>
-          <UploadIcon /> Drag files or click here to choose
+          <CheckCircleIcon /> Images ready to upload
         </>
       );
-    };
-
-    const getDropzoneColor = () => {
-      if (fileRejections.length) return "bg-red-200";
-      if (value.length) return "bg-green-200";
-      if (compressionProgress.length > 0) return "bg-yellow-200";
-      if (isDragActive) return "bg-blue-200";
-      return "bg-gray-100";
-    };
-
+    if (compressionProgress.length > 0)
+      return (
+        <>
+          <CircleDashedIcon /> Compressing images
+        </>
+      );
+    if (isDragActive)
+      return (
+        <>
+          <UploadIcon /> Fire in the hole!
+        </>
+      );
     return (
-      <div className="space-y-4">
-        <div className="rounded-md bg-gray-50 border border-dashed border-gray-300">
-          <div
-            className={`rounded-md flex-row h-24 gap-4 p-4 justify-center ${getDropzoneColor()} ${
-              !!value.length ? "border-b" : ""
-            } border-dashed border-gray-300 flex items-center w-full cursor-pointer`}
-            {...props}
-            {...getRootProps()}
-            ref={ref}
-          >
-            <Input type="hidden" {...getInputProps()} />
-
-            {getDropzoneText()}
-          </div>
-          <RenderedFiles values={value} setValues={setValue} />
-        </div>
-
-        <CompressionProgress compressionProgress={compressionProgress} />
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        <ReactDropzoneFileRejectionErrors fileRejections={fileRejections} />
-      </div>
+      <>
+        <UploadIcon /> Drag files or click here to choose
+      </>
     );
-  }
-);
+  };
 
-export default FileInput;
-FileInput.displayName = "FileInput";
+  const getDropzoneColor = () => {
+    if (fileRejections.length) return "bg-red-200";
+    if (value.length) return "bg-green-200";
+    if (compressionProgress.length > 0) return "bg-yellow-200";
+    if (isDragActive) return "bg-blue-200";
+    return "bg-gray-100";
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="rounded-md bg-gray-50 border border-dashed border-gray-300">
+        <div
+          className={`rounded-md flex-row h-24 gap-4 p-4 justify-center ${getDropzoneColor()} ${
+            !!value.length ? "border-b" : ""
+          } border-dashed border-gray-300 flex items-center w-full cursor-pointer`}
+          {...getRootProps()}
+        >
+          <Input type="hidden" {...getInputProps()} />
+
+          {getDropzoneText()}
+        </div>
+        <RenderedFiles values={value} setValues={setValue} />
+      </div>
+
+      <CompressionProgress compressionProgress={compressionProgress} />
+      {error && <p className="text-sm text-red-500">{error}</p>}
+      <ReactDropzoneFileRejectionErrors fileRejections={fileRejections} />
+    </div>
+  );
+});
+
+export default Test3Page;
+Test3Page.displayName = "Test3Page";
 
 const ReactDropzoneFileRejectionErrors = ({
   fileRejections,
