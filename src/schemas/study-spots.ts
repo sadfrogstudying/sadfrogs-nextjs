@@ -128,9 +128,7 @@ const getNotValidatedForMapOutputSchema = studySpotSchema
   })
   .array();
 const creatependingEditInputSchema = createOneInputSchema.partial().extend({
-  images: z.string().max(100).array().optional(),
   studySpotId: z.number().optional(),
-  imagesToDelete: z.number().array().optional(),
 });
 const pendingEditOutputSchema = studySpotSchema.partial().extend({
   id: z.number(),
