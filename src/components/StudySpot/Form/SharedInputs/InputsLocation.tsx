@@ -21,7 +21,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "~/components/UI/Collapsible";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Separator } from "~/components/UI/Seperator";
 
 const LocationSearchInput = dynamic(
@@ -48,37 +48,40 @@ interface Props {
 }
 
 const StudySpotInputsLocation = ({ form }: Props) => {
-  const onSelectedPlaceReady = (place: PlaceResultPicked) => {
-    const {
-      place_id,
-      address_components,
-      formatted_address,
-      geometry,
-      website,
-    } = place;
+  const onSelectedPlaceReady = useCallback(
+    (place: PlaceResultPicked) => {
+      const {
+        place_id,
+        address_components,
+        formatted_address,
+        geometry,
+        website,
+      } = place;
 
-    const setValueOptions: SetValueConfig = {
-      shouldTouch: true,
-    };
+      const setValueOptions: SetValueConfig = {
+        shouldTouch: true,
+      };
 
-    address_components?.forEach((address) => {
-      if (address.types.includes("locality"))
-        form.setValue("city", address.long_name);
-      if (address.types.includes("country"))
-        form.setValue("country", address.long_name);
-      if (address.types.includes("administrative_area_level_1"))
-        form.setValue("state", address.long_name);
-    });
+      address_components?.forEach((address) => {
+        if (address.types.includes("locality"))
+          form.setValue("city", address.long_name);
+        if (address.types.includes("country"))
+          form.setValue("country", address.long_name);
+        if (address.types.includes("administrative_area_level_1"))
+          form.setValue("state", address.long_name);
+      });
 
-    const formVals = form.getValues();
+      const formVals = form.getValues();
 
-    form.setValue("placeId", place_id, setValueOptions);
-    form.setValue("latitude", geometry?.location?.lat(), setValueOptions);
-    form.setValue("longitude", geometry?.location?.lng(), setValueOptions);
-    form.setValue("address", formatted_address, setValueOptions);
-    formVals.website === "" &&
-      form.setValue("website", website, setValueOptions);
-  };
+      form.setValue("placeId", place_id, setValueOptions);
+      form.setValue("latitude", geometry?.location?.lat(), setValueOptions);
+      form.setValue("longitude", geometry?.location?.lng(), setValueOptions);
+      form.setValue("address", formatted_address, setValueOptions);
+      formVals.website === "" &&
+        form.setValue("website", website, setValueOptions);
+    },
+    [form]
+  );
 
   const [open, setOpen] = useState(false);
 

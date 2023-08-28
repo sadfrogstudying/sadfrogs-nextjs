@@ -51,6 +51,8 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
                   placeholder="1"
                   {...field}
                   type="number"
+                  min={1}
+                  max={5}
                   onChange={(event) => field.onChange(+event.target.value)}
                 />
               </FormControl>
