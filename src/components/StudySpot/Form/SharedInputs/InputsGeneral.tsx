@@ -23,7 +23,7 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
     <div className="space-y-8">
       <FormSectionHeader
         title="General"
-        description="The fields marked with (*) are required."
+        description="Please fill in this section"
       />
 
       <div className="grid grid-cols-1 gap-4">
@@ -32,7 +32,7 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name (*)</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -60,23 +60,10 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
         />
         <FormField
           control={form.control}
-          name="website"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Website</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="venueType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Venue Type (*)</FormLabel>
+              <FormLabel>Venue Type</FormLabel>
               <FormControl>
                 <Input placeholder="Cafe" {...field} />
               </FormControl>

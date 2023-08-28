@@ -46,6 +46,19 @@ const StudySpotInputsMisc = ({ form }: Props) => {
       <CollapsibleContent className="grid grid-cols-2 gap-4">
         <FormField
           control={form.control}
+          name="website"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Website</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="noiseLevel"
           render={({ field }) => (
             <FormItem>
