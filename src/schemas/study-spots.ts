@@ -26,7 +26,7 @@ const createOneInputSchema = z.object({
   website: z.string().max(100).optional(),
   wifi: z.boolean(),
   powerOutlets: z.boolean(),
-  noiseLevel: z.string().max(100).min(1, { message: "Required" }),
+  noiseLevel: z.string().max(100),
   venueType: z.string().max(100).min(1, { message: "Required" }),
   /** URLs in array */
   images: z

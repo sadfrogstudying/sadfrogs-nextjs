@@ -73,19 +73,6 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
         />
         <FormField
           control={form.control}
-          name="noiseLevel"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Noise Level (*)</FormLabel>
-              <FormControl>
-                <Input placeholder="Loud at peak hours" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="venueType"
           render={({ field }) => (
             <FormItem>
