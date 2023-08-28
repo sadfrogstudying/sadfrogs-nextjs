@@ -98,33 +98,43 @@ const LocationSearchInput = ({ onSelectedPlaceReady }: Props) => {
 
             {predictions.length > 0 && (
               <CommandGroup>
-                {predictions.map((prediction, i) => (
-                  <CommandItem
-                    key={prediction.structured_formatting.main_text + i}
-                    value={prediction.structured_formatting.main_text}
-                    onSelect={() => {
-                      setValue(prediction);
-                      onSelect(prediction.place_id);
-                      setOpen(false);
-                    }}
-                    className="truncate"
-                  >
-                    <MapPinIcon
-                      className={cn(
-                        "mr-2 h-4 w-4 shrink-0",
-                        prediction.place_id === value?.place_id
-                          ? "opacity-100"
-                          : "opacity-20"
-                      )}
-                    />
-                    <strong className="mr-2">
-                      {prediction.structured_formatting.main_text}
-                    </strong>
-                    <div className="truncate">
-                      {prediction.structured_formatting.secondary_text}
-                    </div>
-                  </CommandItem>
-                ))}
+                {predictions.map((prediction) => {
+                  return (
+                    <CommandItem
+                      key={
+                        prediction.structured_formatting.main_text +
+                        prediction.structured_formatting.secondary_text +
+                        inputValue
+                      }
+                      value={
+                        prediction.structured_formatting.main_text +
+                        prediction.structured_formatting.secondary_text +
+                        inputValue
+                      }
+                      onSelect={() => {
+                        setValue(prediction);
+                        onSelect(prediction.place_id);
+                        setOpen(false);
+                      }}
+                      className="truncate"
+                    >
+                      <MapPinIcon
+                        className={cn(
+                          "mr-2 h-4 w-4 shrink-0",
+                          prediction.place_id === value?.place_id
+                            ? "opacity-100"
+                            : "opacity-20"
+                        )}
+                      />
+                      <strong className="mr-2">
+                        {prediction.structured_formatting.main_text}
+                      </strong>
+                      <div className="truncate">
+                        {prediction.structured_formatting.secondary_text}
+                      </div>
+                    </CommandItem>
+                  );
+                })}
               </CommandGroup>
             )}
 
