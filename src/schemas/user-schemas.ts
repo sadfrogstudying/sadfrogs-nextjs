@@ -24,4 +24,12 @@ const createUserInput = z.object({
   description: z.string().max(100),
 });
 
-export { getCurrentUserOutput, createUserInput };
+const getUserByUsernameOutput = z
+  .object({
+    username: z.string(),
+    profilePicture: imageSchema.nullable(),
+    description: z.string(),
+  })
+  .nullable();
+
+export { getCurrentUserOutput, createUserInput, getUserByUsernameOutput };

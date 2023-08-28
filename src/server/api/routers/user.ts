@@ -1,6 +1,10 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { z } from "zod";
-import { createUserInput, getCurrentUserOutput } from "~/schemas/user-schemas";
+import {
+  createUserInput,
+  getCurrentUserOutput,
+  getUserByUsernameOutput,
+} from "~/schemas/user-schemas";
 import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
 import { Redis } from "@upstash/redis";
 import { TRPCError } from "@trpc/server";
@@ -81,5 +85,25 @@ export const userRouter = createTRPCRouter({
         });
 
       return true;
+    }),
+  getUserByUsername: privateProcedure
+    .meta({
+      openapi: { method: "POST", path: "/user.getUserByUsername" },
+    })
+    .input(z.object({ username: z.string() }))
+    .output(getUserByUsernameOutput)
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          username: input.username,
+        },
+        select: {
+          description: true,
+          username: true,
+          profilePicture: true,
+        },
+      });
+
+      return user;
     }),
 });
