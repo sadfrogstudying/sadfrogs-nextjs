@@ -271,19 +271,19 @@ const RenderedFiles = memo(
                 <div className="flex gap-4">
                   <Button
                     type="button"
-                    onClick={() => moveItemHandler(-1, i)}
-                    variant="ghost"
-                    className="text-gray-500 p-0 w-6 md:w-4"
-                  >
-                    <ChevronUp />
-                  </Button>
-                  <Button
-                    type="button"
                     onClick={() => moveItemHandler(1, i)}
                     variant="ghost"
                     className="text-gray-500 p-0 w-6 md:w-4"
                   >
                     <ChevronDown />
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => moveItemHandler(-1, i)}
+                    variant="ghost"
+                    className="text-gray-500 p-0 w-6 md:w-4"
+                  >
+                    <ChevronUp />
                   </Button>
                 </div>
               </TableCell>
