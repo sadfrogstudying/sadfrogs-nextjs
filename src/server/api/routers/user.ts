@@ -5,7 +5,11 @@ import {
   getCurrentUserOutput,
   getUserByUsernameOutput,
 } from "~/schemas/user-schemas";
-import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { Redis } from "@upstash/redis";
 import { TRPCError } from "@trpc/server";
 import { getImagesMeta } from "~/utils/server-helpers";
@@ -86,7 +90,7 @@ export const userRouter = createTRPCRouter({
 
       return true;
     }),
-  getUserByUsername: privateProcedure
+  getUserByUsername: publicProcedure
     .meta({
       openapi: { method: "POST", path: "/user.getUserByUsername" },
     })
