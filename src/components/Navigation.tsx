@@ -23,9 +23,11 @@ const Loading = () => (
 const Navigation = ({
   forMobile = false,
   onLinkClick,
+  username,
 }: {
   forMobile?: boolean;
   onLinkClick?: () => void;
+  username?: string;
 }) => {
   const { user, isLoading } = useUser();
   const apiUtils = api.useContext();
@@ -67,8 +69,11 @@ const Navigation = ({
           ) : (
             <Link
               onClick={onLinkClick}
-              href="/account"
-              className="pointer-events-auto h-fit"
+              href={`/user/${username}`}
+              aria-disabled={!username}
+              className={`${
+                username ? "pointer-events-auto" : "opacity-50 line-through"
+              } h-fit`}
             >
               Account
             </Link>

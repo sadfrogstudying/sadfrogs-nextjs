@@ -42,7 +42,7 @@ const Header = () => {
           role="menubar"
           className="p-4 z-20 gap-4 justify-center items-center font-mono md:m-4 rounded-md hidden md:flex"
         >
-          <Navigation />
+          <Navigation username={currentUser?.username} />
         </div>
 
         <div className="font-mono m-4 block md:hidden">
