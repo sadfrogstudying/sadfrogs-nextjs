@@ -82,6 +82,8 @@ export const s3Router = createTRPCRouter({
           message: "Too many requests",
         });
 
+      if (input.files.length === 0) return [];
+
       // Limit to 8 files
       if (input.files.length > 8)
         throw new TRPCError({
