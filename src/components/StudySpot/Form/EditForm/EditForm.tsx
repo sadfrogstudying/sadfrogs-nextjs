@@ -23,7 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FileListImagesSchema } from "~/schemas/utility";
 
 const createPendingEditFormInputSchema = creatependingEditInputSchema.extend({
-  images: FileListImagesSchema,
+  images: FileListImagesSchema(),
 });
 
 /**
@@ -171,8 +171,6 @@ const EditStudySpotForm = ({
     if (nameExistsLoading) return "Checking name...";
     return "Submit";
   };
-
-  console.log(form.formState.errors);
 
   return (
     <Form {...form}>

@@ -21,7 +21,7 @@ import {
 import { FileListImagesSchema } from "~/schemas/utility";
 
 const createOneFormInputSchema = createOneInputSchema.extend({
-  images: FileListImagesSchema,
+  images: FileListImagesSchema({ minFiles: 1 }),
 });
 
 /**
