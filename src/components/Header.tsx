@@ -21,8 +21,7 @@ const Header = () => {
   const { data: currentUser, isFetched } = api.user.getCurrentUser.useQuery(
     undefined,
     {
-      retry: 0,
-      refetchOnWindowFocus: false,
+      staleTime: 1 * 1000 * 60 * 60, // 1 hour
       enabled: !!user,
     }
   );
