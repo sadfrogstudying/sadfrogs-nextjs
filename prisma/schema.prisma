@@ -62,7 +62,11 @@ model StudySpot {
 
     pendingEditStudySpot PendingEdit[]
 
+    // Sorting and Filtering: Indexes can also help with sorting and filtering operations. For example, if you 
+    // want to retrieve study spots sorted by their ratings, an index on the rating column allows the database 
+    // to perform the sorting much faster.
     @@index([authorId])
+    @@index([createdAt]) // Index on the 'name' field for faster name-based lookups
 }
 
 model PendingEdit {
