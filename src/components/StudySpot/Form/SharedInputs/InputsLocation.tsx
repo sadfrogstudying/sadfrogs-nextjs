@@ -104,21 +104,18 @@ const StudySpotInputsLocation = ({ form }: Props) => {
           <div className="text-sm">Location</div>
           <LocationSearchInput onSelectedPlaceReady={onSelectedPlaceReady} />
           <div className="text-sm text-muted-foreground">
-            You can use this input to assist in filling location details.
+            You can use this input to assist auto-filling location details.
           </div>
         </div>
         <FormField
           control={form.control}
-          name="placeId"
+          name="address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Place ID</FormLabel>
+              <FormLabel>Address</FormLabel>
               <FormControl>
-                <Input placeholder="Enter placeId" {...field} />
+                <Input placeholder="Enter Address" {...field} />
               </FormControl>
-              <FormDescription>
-                This is the unique identifier for the location.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -157,19 +154,6 @@ const StudySpotInputsLocation = ({ form }: Props) => {
                     type="number"
                     onChange={(event) => field.onChange(+event.target.value)}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="address"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Address</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter Address" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -46,19 +46,6 @@ const StudySpotInputsMisc = ({ form }: Props) => {
       <CollapsibleContent className="grid grid-cols-2 gap-4">
         <FormField
           control={form.control}
-          name="website"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Website</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="noiseLevel"
           render={({ field }) => (
             <FormItem>
@@ -66,6 +53,7 @@ const StudySpotInputsMisc = ({ form }: Props) => {
               <FormControl>
                 <Input placeholder="Loud at peak hours" {...field} />
               </FormControl>
+              <FormDescription>Is it louder at certain times?</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -79,10 +67,57 @@ const StudySpotInputsMisc = ({ form }: Props) => {
               <FormControl>
                 <Input placeholder="Comfy chairs" {...field} />
               </FormControl>
+              <FormDescription>
+                How are the chairs/tables/couches?
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="distractions"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Distractions</FormLabel>
+              <FormControl>
+                <Input placeholder="Constant loud coffee machines" {...field} />
+              </FormControl>
+              <FormDescription>Is it busy at certain times?</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="proximityToAmenities"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Proximity To Amenities</FormLabel>
+              <FormControl>
+                <Input placeholder="Many restaurants on street" {...field} />
+              </FormControl>
+              <FormDescription>
+                What's around, any restaurants or parks?
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="website"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Website</FormLabel>
+              <FormControl>
+                <Input placeholder="https://hello.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="views"
@@ -135,19 +170,7 @@ const StudySpotInputsMisc = ({ form }: Props) => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="distractions"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Distractions</FormLabel>
-              <FormControl>
-                <Input placeholder="Constant loud coffee machines" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <FormField
           control={form.control}
           name="crowdedness"
@@ -161,19 +184,7 @@ const StudySpotInputsMisc = ({ form }: Props) => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="proximityToAmenities"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Proximity To Amenities</FormLabel>
-              <FormControl>
-                <Input placeholder="Many restaurants on street" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <FormField
           control={form.control}
           name="studyBreakFacilities"
@@ -187,6 +198,7 @@ const StudySpotInputsMisc = ({ form }: Props) => {
             </FormItem>
           )}
         />
+        <div></div>
         <FormField
           control={form.control}
           name="canStudyForLong"

@@ -41,7 +41,7 @@ const StudySpotInputsImage = ({ form, existingImages = undefined }: Props) => {
   return (
     <div className="space-y-8">
       <FormSectionHeader
-        title="Image"
+        title="Image 🔥"
         description="Please add at least one image"
       />
 

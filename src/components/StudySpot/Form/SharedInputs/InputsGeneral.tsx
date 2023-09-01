@@ -22,7 +22,7 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
   return (
     <div className="space-y-8">
       <FormSectionHeader
-        title="General"
+        title="General 🔥"
         description="Please fill in this section"
       />
 
