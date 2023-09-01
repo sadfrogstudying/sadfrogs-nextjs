@@ -40,20 +40,25 @@ const EditStudySpotForm = ({
   onSuccess?: () => void;
   studySpot: GetOneOutput;
 }) => {
+  const returnUndefinedIfNull = (x: boolean | null) =>
+    x === null ? undefined : x;
+
   const form = useForm<StudySpotFormInputs>({
     resolver: zodResolver(createPendingEditFormInputSchema),
     defaultValues: {
       ...studySpot,
       // Remember that checkbox value cannot be null, but can be undefined
       // However, in the DB it can be null
-      canStudyForLong: studySpot.canStudyForLong === null && undefined,
-      sunlight: studySpot.sunlight === null && undefined,
-      drinks: studySpot.drinks === null && undefined,
-      food: studySpot.food === null && undefined,
+      canStudyForLong: returnUndefinedIfNull(studySpot.canStudyForLong),
+      sunlight: returnUndefinedIfNull(studySpot.sunlight),
+      drinks: returnUndefinedIfNull(studySpot.drinks),
+      food: returnUndefinedIfNull(studySpot.food),
       images: [],
       imagesToDelete: [],
     },
   });
+
+  console.log(studySpot);
 
   const getChangedFormValues = () => {
     const existingValues = studySpot; // 35
