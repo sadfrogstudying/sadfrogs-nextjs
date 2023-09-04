@@ -2,7 +2,7 @@ import StudySpotGridItem from "~/components/StudySpot/GridItem";
 import StatusHandler from "../StatusHandler";
 
 import { api } from "~/utils/api";
-import { Button } from "../UI/Button";
+import useLazyLoad from "~/hooks/useLazyLoad";
 
 const StudySpotGrid = () => {
   const { data, fetchNextPage, status, isLoading, isFetchingNextPage } =
@@ -13,6 +13,12 @@ const StudySpotGrid = () => {
         refetchOnWindowFocus: false,
       }
     );
+
+  const fetchMore = () => {
+    if (!isLoading || !isFetchingNextPage) void fetchNextPage();
+  };
+
+  const [loadMoreRef] = useLazyLoad({ fetchNextPage: fetchMore });
 
   return (
     <>
@@ -25,13 +31,7 @@ const StudySpotGrid = () => {
           )}
         </StatusHandler>
       </div>
-      <Button
-        className="font-mono"
-        onClick={() => void fetchNextPage()}
-        disabled={isLoading || isFetchingNextPage}
-      >
-        {isLoading || isFetchingNextPage ? "Loading..." : "Fetch More"}
-      </Button>
+      <div aria-hidden ref={loadMoreRef} />
     </>
   );
 };

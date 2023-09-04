@@ -98,7 +98,7 @@ const StudySpotInputsMisc = ({ form }: Props) => {
                 <Input placeholder="Many restaurants on street" {...field} />
               </FormControl>
               <FormDescription>
-                What's around, any restaurants or parks?
+                What&apos;s around, any restaurants or parks?
               </FormDescription>
               <FormMessage />
             </FormItem>

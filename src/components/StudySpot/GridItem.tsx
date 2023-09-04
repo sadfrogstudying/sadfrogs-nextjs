@@ -37,7 +37,7 @@ const StudySpotGridItem = ({
               key={studySpot.images[0].url}
               alt={`Image of ${name}`}
               objectFit="contain"
-              className="rounded-md overflow-hidden w-4/5"
+              className="rounded-md overflow-hidden w-full sm:w-4/5"
             />
           </Link>
         )}
@@ -69,7 +69,7 @@ export default StudySpotGridItem;
 const Row = ({ title, children }: { title: string; children: ReactNode }) => {
   return (
     <div className="flex gap-2 items-start">
-      <div className="w-32 shrink-0 min-w-max">{title}:</div>
+      <div className="w-32 shrink-0 min-w-max font-bold">{title}:</div>
       {children}
     </div>
   );
