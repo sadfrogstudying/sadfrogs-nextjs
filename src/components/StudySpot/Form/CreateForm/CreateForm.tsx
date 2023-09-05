@@ -19,6 +19,7 @@ import {
   type StudySpotFormInputs,
 } from "~/schemas/study-spots";
 import { FileListImagesSchema } from "~/schemas/utility";
+import { ErrorBoundary } from "react-error-boundary";
 
 const createOneFormInputSchema = createOneInputSchema.extend({
   images: FileListImagesSchema({ minFiles: 1 }),
@@ -131,38 +132,62 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     return "Submit";
   };
 
+  function fallbackRender({
+    resetErrorBoundary,
+  }: {
+    error: Error;
+    resetErrorBoundary: () => void;
+  }) {
+    return (
+      <div role="alert" className="font-mono space-y-4 text-red-600">
+        <p>
+          Something unexpected went wrong with the form, the error has been sent
+          to me 🥲...
+        </p>
+        <Button onClick={resetErrorBoundary}>Try again</Button>
+      </div>
+    );
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={submitHandler} className="space-y-16 m-auto font-mono">
-        <StudySpotInputsGeneral form={form} />
-        <StudySpotInputsImage form={form} />
-        <StudySpotInputsLocation form={form} />
-        <StudySpotInputsMisc form={form} />
-        <ul className="text-sm text-destructive">
-          {zodErrorMessages.length !== 0 ? (
-            <>
-              {zodErrorMessages.map((x) => (
-                <li key={x[0]}>
-                  <strong className="capitalize">{x[0]}</strong>: {x[1]}
-                </li>
-              ))}
-            </>
-          ) : (
-            <li>{createError?.message}</li>
-          )}
-          {nameExistsError?.message && <li>{nameExistsError?.message}</li>}
-          {getUrlsError?.message && <li>{getUrlsError?.message}</li>}
-        </ul>
-        <div className="space-y-4 pb-4">
-          <Button
-            type="submit"
-            disabled={submitDisabled}
-            className="disabled:cursor-not-allowed"
-          >
-            {getButtonText()}
-          </Button>
-        </div>
-      </form>
+      <ErrorBoundary
+        fallbackRender={fallbackRender}
+        onReset={() => {
+          form.reset();
+        }}
+      >
+        <form onSubmit={submitHandler} className="space-y-16 m-auto font-mono">
+          <StudySpotInputsGeneral form={form} />
+          <StudySpotInputsImage form={form} />
+          <StudySpotInputsLocation form={form} />
+          <StudySpotInputsMisc form={form} />
+          <ul className="text-sm text-destructive">
+            {zodErrorMessages.length !== 0 ? (
+              <>
+                {zodErrorMessages.map((x) => (
+                  <li key={x[0]}>
+                    <strong className="capitalize">{x[0]}</strong>: {x[1]}
+                  </li>
+                ))}
+              </>
+            ) : (
+              <li>{createError?.message}</li>
+            )}
+            {nameExistsError?.message && <li>{nameExistsError?.message}</li>}
+            {getUrlsError?.message && <li>{getUrlsError?.message}</li>}
+          </ul>
+          <div className="space-y-4 pb-4">
+            <Button
+              type="submit"
+              disabled={submitDisabled}
+              className="disabled:cursor-not-allowed"
+            >
+              {getButtonText()}
+            </Button>
+          </div>
+        </form>
+      </ErrorBoundary>
     </Form>
   );
 };
