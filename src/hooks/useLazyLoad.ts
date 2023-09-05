@@ -31,7 +31,7 @@ export default function useLazyLoad({
     return () => {
       if (observerRef.current) observerRef.current.disconnect();
     };
-  }, [fetchNextPage]);
+  }, [fetchNextPage, options]);
 
   return [loadMoreRef] as const;
 }
