@@ -45,13 +45,6 @@ const PendingEditsPage = () => {
           </>
         )}
       </div>
-      <video
-        className="rounded-md w-full object-cover h-full md:w-2/3 md:h-auto md:object-contain"
-        autoPlay
-        muted
-        loop
-        src="/videos/frog.mp4"
-      ></video>
     </main>
   );
 };
