@@ -21,6 +21,8 @@ import {
 import { differenceWith, isEqual, toPairs } from "lodash";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileListImagesSchema } from "~/schemas/utility";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorBoundaryFallbackRender from "../ErrorBoundaryFallbackRender";
 
 const createPendingEditFormInputSchema = creatependingEditInputSchema.extend({
   images: FileListImagesSchema(),
@@ -179,34 +181,41 @@ const EditStudySpotForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={submitHandler} className="space-y-16 m-auto font-mono">
-        <StudySpotInputsGeneral form={form} />
-        <StudySpotInputsImage form={form} existingImages={studySpot.images} />
-        <StudySpotInputsLocation form={form} />
-        <StudySpotInputsMisc form={form} />
-        <ul className="text-sm text-destructive">
-          {zodErrorMessages.length !== 0 ? (
-            <>
-              {zodErrorMessages.map((x) => (
-                <li key={x[0]}>
-                  <strong className="capitalize">{x[0]}</strong>: {x[1]}
-                </li>
-              ))}
-            </>
-          ) : (
-            <li>{createError?.message}</li>
-          )}
-          {nameExistsError?.message && <li>{nameExistsError?.message}</li>}
-          {getUrlsError?.message && <li>{getUrlsError?.message}</li>}
-        </ul>
-        <Button
-          type="submit"
-          disabled={submitDisabled}
-          className="disabled:cursor-not-allowed"
-        >
-          {getButtonText()}
-        </Button>
-      </form>
+      <ErrorBoundary
+        fallbackRender={ErrorBoundaryFallbackRender}
+        onReset={() => {
+          form.reset();
+        }}
+      >
+        <form onSubmit={submitHandler} className="space-y-16 m-auto font-mono">
+          <StudySpotInputsGeneral form={form} />
+          <StudySpotInputsImage form={form} existingImages={studySpot.images} />
+          <StudySpotInputsLocation form={form} />
+          <StudySpotInputsMisc form={form} />
+          <ul className="text-sm text-destructive">
+            {zodErrorMessages.length !== 0 ? (
+              <>
+                {zodErrorMessages.map((x) => (
+                  <li key={x[0]}>
+                    <strong className="capitalize">{x[0]}</strong>: {x[1]}
+                  </li>
+                ))}
+              </>
+            ) : (
+              <li>{createError?.message}</li>
+            )}
+            {nameExistsError?.message && <li>{nameExistsError?.message}</li>}
+            {getUrlsError?.message && <li>{getUrlsError?.message}</li>}
+          </ul>
+          <Button
+            type="submit"
+            disabled={submitDisabled}
+            className="disabled:cursor-not-allowed"
+          >
+            {getButtonText()}
+          </Button>
+        </form>
+      </ErrorBoundary>
     </Form>
   );
 };

@@ -20,6 +20,7 @@ import {
   CircleDashed,
   Upload,
 } from "lucide-react";
+import { useErrorBoundary } from "react-error-boundary";
 
 interface Props {
   setValue: (images: File[]) => void;
@@ -62,6 +63,8 @@ const FileInput = forwardRef<HTMLInputElement, InputProps>(
         },
       });
 
+    const { showBoundary } = useErrorBoundary();
+
     const compressImages = async (acceptedFiles: File[]) => {
       setCompressionProgress(Array(acceptedFiles.length).fill(0));
       setError(null);
@@ -73,6 +76,8 @@ const FileInput = forwardRef<HTMLInputElement, InputProps>(
         const compressedFiles = await Promise.all(compressedFilePromises);
         return compressedFiles;
       } catch (error) {
+        showBoundary(error);
+
         if (error instanceof Error) {
           void setError(error.message);
         }

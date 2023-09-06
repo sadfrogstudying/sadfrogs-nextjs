@@ -20,6 +20,7 @@ import {
 } from "~/schemas/study-spots";
 import { FileListImagesSchema } from "~/schemas/utility";
 import { ErrorBoundary } from "react-error-boundary";
+import ErrorBoundaryFallbackRender from "../ErrorBoundaryFallbackRender";
 
 const createOneFormInputSchema = createOneInputSchema.extend({
   images: FileListImagesSchema({ minFiles: 1 }),
@@ -132,27 +133,10 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     return "Submit";
   };
 
-  function fallbackRender({
-    resetErrorBoundary,
-  }: {
-    error: Error;
-    resetErrorBoundary: () => void;
-  }) {
-    return (
-      <div role="alert" className="font-mono space-y-4 text-red-600">
-        <p>
-          Something unexpected went wrong with the form, the error has been sent
-          to me 🥲...
-        </p>
-        <Button onClick={resetErrorBoundary}>Try again</Button>
-      </div>
-    );
-  }
-
   return (
     <Form {...form}>
       <ErrorBoundary
-        fallbackRender={fallbackRender}
+        fallbackRender={ErrorBoundaryFallbackRender}
         onReset={() => {
           form.reset();
         }}
