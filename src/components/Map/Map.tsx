@@ -19,18 +19,27 @@ export type MarkerData = {
   slug: string;
 };
 
-interface Props extends MapOptions {
+interface BaseProps extends MapOptions {
   className?: string;
-  infoPanel?: boolean;
   allMarkerData: MarkerData[];
+}
+
+interface Props extends BaseProps {
+  infoPanel?: false;
+  timeRefreshed: never;
+}
+interface PropsWithInfoPanel extends BaseProps {
+  infoPanel: true;
+  timeRefreshed: number;
 }
 
 const FinalDynamicMap = ({
   className,
   infoPanel = false,
   allMarkerData,
+  timeRefreshed,
   ...props
-}: Props) => {
+}: Props | PropsWithInfoPanel) => {
   const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
   const [userCoords, setUserCoords] = useState<LatLng | null>(null);
 
@@ -94,6 +103,7 @@ const FinalDynamicMap = ({
         {infoPanel && (
           <MapInfoPanel
             selectedMarker={selectedMarker}
+            timeRefreshed={timeRefreshed}
             clearSelectedMarker={clearSelectedMarker}
             setUserCoords={(latLng) => setUserCoords(latLng)}
           />

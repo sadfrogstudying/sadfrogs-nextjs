@@ -179,6 +179,9 @@ type GetNotValidatedOutput = z.infer<typeof getNotValidatedOutputSchema>;
 type GetNotValidatedElementOutput = z.infer<
   typeof getNotValidatedOutputSchema.element
 >;
+type GetNotValidatedForMapOutput = z.infer<
+  typeof getNotValidatedForMapOutputSchema
+>;
 type Image = z.infer<typeof imageSchema>;
 type PendingEditQueryOutput = z.infer<typeof pendingEditOutputSchema>;
 
@@ -199,6 +202,7 @@ export type {
   GetOneOutput,
   GetNotValidatedOutput,
   GetNotValidatedElementOutput,
+  GetNotValidatedForMapOutput,
   Image,
   PendingEditQueryOutput,
 };
