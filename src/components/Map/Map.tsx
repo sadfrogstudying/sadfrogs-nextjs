@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import L, { Icon } from "leaflet";
+import L from "leaflet";
 import type { LatLng, MapOptions } from "leaflet";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
@@ -44,21 +44,21 @@ const FinalDynamicMap = ({
   const [userCoords, setUserCoords] = useState<LatLng | null>(null);
 
   useEffect(() => {
-    (function init() {
-      Icon.Default.mergeOptions({
-        iconSize: [24, 24],
-        iconAnchor: [12, 12],
-        iconRetinaUrl: "leaflet/images/marker-icon-2x.png",
-        iconUrl: "leaflet/images/marker-icon.png",
-        shadowUrl: "leaflet/images/marker-shadow.png",
-      });
-    })();
+    // (function init() {
+    //   Icon.Default.mergeOptions({
+    //     iconSize: [24, 24],
+    //     iconAnchor: [12, 12],
+    //     iconRetinaUrl: "leaflet/images/marker-icon-2x.png",
+    //     iconUrl: "leaflet/images/marker-icon.png",
+    //     shadowUrl: "leaflet/images/marker-shadow.png",
+    //   });
+    // })();
   }, []);
 
   const clearSelectedMarker = () => setSelectedMarker(null);
 
   const defaultIcon = new L.Icon({
-    iconSize: [24, 24],
+    iconSize: [32, 32],
     iconAnchor: [12, 12],
     iconRetinaUrl: "leaflet/images/marker-icon-2x.png",
     iconUrl: "leaflet/images/marker-icon.png",
@@ -66,7 +66,7 @@ const FinalDynamicMap = ({
   });
 
   const selectedIcon = new L.Icon({
-    iconSize: [24, 24],
+    iconSize: [32, 32],
     iconAnchor: [12, 12],
     iconRetinaUrl: "leaflet/images/selected-marker-icon-2x.png",
     iconUrl: "leaflet/images/selected-marker-icon.png",
