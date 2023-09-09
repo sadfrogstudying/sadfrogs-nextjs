@@ -22,7 +22,7 @@ const InfoTable = ({ studySpot }: { studySpot: GetOneOutput }) => {
 
   return (
     <div className="flex w-full pt-12">
-      <div className="w-1/2 border-t border-gray-200">
+      <div className="w-full border-t border-gray-200">
         {propertyEntriesFiltered.map(([label, value]) => {
           return <Row label={label} value={value} key={label} />;
         })}
