@@ -32,7 +32,7 @@ model StudySpot {
     authorId             String?
     name                 String         @unique
     slug                 String         @unique
-    rating               Float          @default(0) // 1-5 slider
+    rating               Int            @default(0) // 1-5 slider
     website              String         @default("")
     wifi                 Boolean        @default(false)
     powerOutlets         Boolean        @default(false)
@@ -78,7 +78,7 @@ model PendingEdit {
     authorId             String
     name                 String?
     slug                 String?
-    rating               Float?
+    rating               Int?
     website              String?
     wifi                 Boolean?
     powerOutlets         Boolean?
