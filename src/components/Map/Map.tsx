@@ -106,6 +106,7 @@ const FinalDynamicMap = ({
             timeRefreshed={timeRefreshed}
             clearSelectedMarker={clearSelectedMarker}
             setUserCoords={(latLng) => setUserCoords(latLng)}
+            userCoords={userCoords}
           />
         )}
 

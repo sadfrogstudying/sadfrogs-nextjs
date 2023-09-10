@@ -3,18 +3,20 @@ import MapControls from "./MapControls";
 import type { MarkerData } from "./Map";
 import Image from "../UI/Image";
 import { useEffect, useRef } from "react";
-import L from "leaflet";
+import L, { type LatLng } from "leaflet";
 import { CopyIcon } from "lucide-react";
 
 const MapInfoPanel = ({
   selectedMarker,
   clearSelectedMarker,
   setUserCoords,
+  userCoords,
   timeRefreshed,
 }: {
   selectedMarker: MarkerData | null;
   clearSelectedMarker: () => void;
   setUserCoords: (latlng: L.LatLng) => void;
+  userCoords: LatLng | null;
   timeRefreshed: number;
 }) => {
   const copyToClipboard = async (text: string) =>
@@ -100,6 +102,7 @@ const MapInfoPanel = ({
           clearSelectedMarker={clearSelectedMarker}
           selectedMarker={!!selectedMarker}
           setUserCoords={setUserCoords}
+          userCoords={userCoords}
         />
       </div>
     </div>
