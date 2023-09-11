@@ -1,8 +1,10 @@
+import { useEffect, useRef } from "react";
+
 import StudySpotGridItem from "~/components/StudySpot/GridItem";
-import StatusHandler from "../StatusHandler";
+import StatusHandler from "~/components/StatusHandler";
 
 import { api } from "~/utils/api";
-import useLazyLoad from "~/hooks/useLazyLoad";
+import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
 
 const StudySpotGrid = () => {
   const { data, fetchNextPage, status, isLoading, isFetchingNextPage } =
@@ -14,11 +16,13 @@ const StudySpotGrid = () => {
       }
     );
 
-  const fetchMore = () => {
-    if (!isLoading || !isFetchingNextPage) void fetchNextPage();
-  };
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const entry = useIntersectionObserver(loadMoreRef, {});
+  const isVisible = !!entry?.isIntersecting;
 
-  const [loadMoreRef] = useLazyLoad({ fetchNextPage: fetchMore });
+  useEffect(() => {
+    if (isVisible && (!isLoading || !isFetchingNextPage)) void fetchNextPage();
+  }, [fetchNextPage, isVisible, isLoading, isFetchingNextPage]);
 
   return (
     <>
@@ -30,8 +34,8 @@ const StudySpotGrid = () => {
             ))
           )}
         </StatusHandler>
+        <div aria-hidden ref={loadMoreRef} />
       </div>
-      <div aria-hidden ref={loadMoreRef} />
     </>
   );
 };
