@@ -45,7 +45,6 @@ const readableKeys: Record<keyof GetOneOutput, string> = {
   country: "Country",
   city: "City",
   state: "State",
-  openingHours: "Opening Hours",
   canStudyForLong: "Can Study For Long",
   comfort: "Comfort",
   views: "Views",
