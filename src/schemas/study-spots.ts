@@ -12,7 +12,8 @@ const imageSchema = z.object({
     .object({
       username: z.string().max(100),
     })
-    .nullish(),
+    .nullish()
+    .optional(),
 });
 const openingHoursSchema = z.object({
   id: z.number(),
@@ -77,7 +78,6 @@ const studySpotSchema = z.object({
   country: z.string(),
   city: z.string(),
   state: z.string(),
-  openingHours: openingHoursSchema.array(),
   canStudyForLong: z.boolean().nullable(),
   comfort: z.string(),
   views: z.string(),

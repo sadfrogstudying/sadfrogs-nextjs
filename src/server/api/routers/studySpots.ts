@@ -273,14 +273,8 @@ export const studySpotsRouter = createTRPCRouter({
               name: true,
               dominantColour: true,
               url: true,
-              author: {
-                select: {
-                  username: true,
-                },
-              },
             },
           },
-          openingHours: true,
           author: {
             select: {
               profilePicture: true,
