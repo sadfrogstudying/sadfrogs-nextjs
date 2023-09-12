@@ -66,7 +66,6 @@ export const studySpotsRouter = createTRPCRouter({
           music: true,
           powerOutlets: true,
           images: true,
-          openingHours: true,
         },
       });
 
@@ -105,7 +104,6 @@ export const studySpotsRouter = createTRPCRouter({
           music: true,
           powerOutlets: true,
           images: true,
-          openingHours: true,
         },
       });
 
@@ -137,7 +135,6 @@ export const studySpotsRouter = createTRPCRouter({
           longitude: true,
           slug: true,
           images: { take: 1 },
-          openingHours: true,
         },
       });
 
