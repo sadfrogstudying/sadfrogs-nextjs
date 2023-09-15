@@ -1,29 +1,16 @@
-import { useEffect, useRef } from "react";
-
 import StudySpotGridItem from "~/components/StudySpot/GridItem";
 import StatusHandler from "~/components/StatusHandler";
 
-import { api } from "~/utils/api";
-import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
+import { type InfiniteData } from "@tanstack/react-query";
+import { type GetNotValidatedOutput } from "~/schemas/study-spots";
 
-const StudySpotGrid = () => {
-  const { data, fetchNextPage, status, isLoading, isFetchingNextPage } =
-    api.studySpots.getNotValidated.useInfiniteQuery(
-      {},
-      {
-        getNextPageParam: (lastQuery) => lastQuery[lastQuery.length - 1]?.id,
-        refetchOnWindowFocus: false,
-      }
-    );
-
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
-  const entry = useIntersectionObserver(loadMoreRef, {});
-  const isVisible = !!entry?.isIntersecting;
-
-  useEffect(() => {
-    if (isVisible && (!isLoading || !isFetchingNextPage)) void fetchNextPage();
-  }, [fetchNextPage, isVisible, isLoading, isFetchingNextPage]);
-
+const StudySpotGrid = ({
+  data,
+  status,
+}: {
+  data: InfiniteData<GetNotValidatedOutput> | undefined;
+  status: "error" | "loading" | "success";
+}) => {
   return (
     <>
       <div className="grid gap-8 relative grid-cols-fill-40">
@@ -34,7 +21,6 @@ const StudySpotGrid = () => {
             ))
           )}
         </StatusHandler>
-        <div aria-hidden ref={loadMoreRef} />
       </div>
     </>
   );
