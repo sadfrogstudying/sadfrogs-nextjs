@@ -20,7 +20,8 @@ import {
   CircleDashed,
   Upload,
 } from "lucide-react";
-import { useErrorBoundary } from "react-error-boundary";
+import { useErrorBoundary, withErrorBoundary } from "react-error-boundary";
+import ErrorBoundaryFallbackRender from "../StudySpot/Form/ErrorBoundaryFallbackRender";
 
 interface Props {
   setValue: (images: File[]) => void;
@@ -37,7 +38,7 @@ const CircleDashedIcon = () => (
   <CircleDashed className="flex-shrink-0 w-5 animate-ping" />
 );
 
-const FileInput = forwardRef<HTMLInputElement, InputProps>(
+const FileInputComponent = forwardRef<HTMLInputElement, InputProps>(
   ({ setValue, value, maxFiles = 8, ...props }, ref) => {
     const [error, setError] = React.useState<string | null>(null);
     const [compressionProgress, setCompressionProgress] = React.useState<
@@ -142,6 +143,7 @@ const FileInput = forwardRef<HTMLInputElement, InputProps>(
       if (isDragActive) return "bg-blue-200";
       return "bg-gray-100";
     };
+
     return (
       <div className="space-y-4">
         <div className="rounded-md bg-gray-50 border border-dashed border-gray-300">
@@ -167,8 +169,12 @@ const FileInput = forwardRef<HTMLInputElement, InputProps>(
   }
 );
 
+FileInputComponent.displayName = "FileInputComponent";
+const FileInput = withErrorBoundary(FileInputComponent, {
+  fallbackRender: ErrorBoundaryFallbackRender,
+});
+
 export default FileInput;
-FileInput.displayName = "FileInput";
 
 const ReactDropzoneFileRejectionErrors = ({
   fileRejections,
