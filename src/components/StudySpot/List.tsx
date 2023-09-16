@@ -41,7 +41,7 @@ const StudySpotList = ({
                       <Link
                         tabIndex={-1}
                         href={`/study-spot/${studySpot.slug}`}
-                        className="block border relative w-[100px] h-fit"
+                        className="block relative w-[100px] h-fit rounded-md"
                       >
                         <Image
                           image={{ ...studySpot.images[0] }}
