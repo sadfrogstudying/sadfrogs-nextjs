@@ -27,7 +27,7 @@ const Navigation = ({
 }: {
   forMobile?: boolean;
   onLinkClick?: () => void;
-  username?: string;
+  username: string;
 }) => {
   const { user, isLoading } = useUser();
   const apiUtils = api.useContext();
