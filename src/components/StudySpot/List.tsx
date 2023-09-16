@@ -41,6 +41,7 @@ const StudySpotList = ({
                       <Link
                         tabIndex={-1}
                         href={`/study-spot/${studySpot.slug}`}
+                        className="block border relative w-[100px] h-fit"
                       >
                         <Image
                           image={{ ...studySpot.images[0] }}
@@ -52,7 +53,9 @@ const StudySpotList = ({
                     )}
                   </TableCell>
                   <TableCell>{studySpot.name}</TableCell>
-                  <TableCell>{studySpot.address}</TableCell>
+                  <TableCell className="w-[250px]">
+                    {studySpot.address}
+                  </TableCell>
                   <TableCell>{studySpot.wifi ? "Yes" : "No"}</TableCell>
                   <TableCell>{studySpot.music ? "Yes" : "No"}</TableCell>
                   <TableCell>{studySpot.powerOutlets ? "Yes" : "No"}</TableCell>
