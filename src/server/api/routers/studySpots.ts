@@ -81,6 +81,8 @@ export const studySpotsRouter = createTRPCRouter({
     .input(
       z.object({
         cursor: z.number().optional(),
+        wifi: z.boolean().optional(),
+        powerOutlets: z.boolean().optional(),
       })
     )
     .output(getNotValidatedOutputSchema)
@@ -94,6 +96,8 @@ export const studySpotsRouter = createTRPCRouter({
         },
         where: {
           isValidated: false,
+          wifi: input.wifi,
+          powerOutlets: input.powerOutlets,
         },
         select: {
           name: true,

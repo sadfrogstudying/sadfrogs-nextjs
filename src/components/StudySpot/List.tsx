@@ -10,7 +10,6 @@ import {
 } from "~/components/UI/Table";
 import Link from "next/link";
 import Image from "../UI/Image";
-import StatusHandler from "../StatusHandler";
 
 const StudySpotList = ({
   data,
