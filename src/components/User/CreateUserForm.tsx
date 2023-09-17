@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import type { createUserInput } from "~/schemas/user-schemas";
+import { createUserInput } from "~/schemas/user-schemas";
 import { useForm } from "react-hook-form";
 
 import {
@@ -19,6 +19,9 @@ import {
   parseZodClientError,
   uploadImagesToS3UsingPresignedUrls,
 } from "~/utils/helpers";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FileListImagesSchema } from "~/schemas/utility";
+import { useRouter } from "next/router";
 
 const defaultValues = {
   username: "",
@@ -30,13 +33,18 @@ type CreateUserInput = z.infer<typeof createUserInput>;
 type FormInput = Omit<CreateUserInput, "image"> & {
   image: File[];
 };
+const createUserFormInputSchema = createUserInput.extend({
+  image: FileListImagesSchema({ maxFiles: 1 }),
+});
 
 const CreateUserForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const form = useForm<FormInput>({
+    resolver: zodResolver(createUserFormInputSchema),
     defaultValues,
   });
 
   const apiUtils = api.useContext();
+  const router = useRouter();
 
   const {
     mutate: createUser,
@@ -45,6 +53,7 @@ const CreateUserForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   } = api.user.createUser.useMutation({
     onSuccess: () => {
       void apiUtils.user.getCurrentUser.invalidate();
+      void router.push(`/user/${form.getValues("username")}`);
       onSuccess?.();
       form.reset();
     },
@@ -56,7 +65,6 @@ const CreateUserForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     isLoading: getUrlsIsLoading,
   } = api.s3.getPresignedUrls.useMutation({
     onSuccess: async (presignedUrls) => {
-      if (!presignedUrls.length) return;
       const formValues = form.getValues();
 
       const imageUrls = await uploadImagesToS3UsingPresignedUrls({
@@ -66,7 +74,7 @@ const CreateUserForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 
       createUser({
         ...formValues,
-        image: imageUrls[0],
+        image: imageUrls[0] || undefined,
       });
     },
   });
@@ -145,6 +153,7 @@ const CreateUserForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                     maxFiles={1}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />

@@ -95,7 +95,7 @@ const EditUserForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 
       updateUser({
         ...formValues,
-        image: imageUrls[0],
+        image: imageUrls[0] || undefined,
       });
     },
   });
@@ -112,7 +112,7 @@ const EditUserForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 
   const submitHandler = form.handleSubmit((data) => {
     if (usernameDifferent()) {
-      checkIfUsernameExists({ username: data.username });
+      return checkIfUsernameExists({ username: data.username });
     }
 
     getPresignedUrlsHandler();

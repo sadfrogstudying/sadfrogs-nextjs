@@ -24,7 +24,7 @@ const getCurrentUserOutput = z.object({
 const createUserInput = z.object({
   username: z.string().max(30).min(1, { message: "Username is required." }),
   image: z.string().optional(),
-  description: z.string().max(100),
+  description: z.string().max(100).optional(),
 });
 const getUserByUsernameOutput = z
   .object({
