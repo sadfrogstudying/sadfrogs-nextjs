@@ -31,7 +31,7 @@ const Header = () => {
       {user && !currentUser && isFetched && <CreateUserFormDialog />}
       <header className="pointer-events-none fixed flex justify-between z-20 w-full rounded top-0 left-0">
         <h1
-          className={`pointer-events-auto text-4xl font-serif tracking-tight flex justify-center items-center p-4 m-0 md:m-4 ${
+          className={`pointer-events-auto text-3xl font-serif tracking-tight flex justify-center items-center p-4 m-0 md:m-4 sm:text-4xl ${
             isMapPage ? "md:invisible" : "visible"
           }`}
         >

@@ -52,7 +52,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="p-4 pt-20 md:pt-24 md:px-8 space-y-4 font-mono">
-        <div className="font-mono flex items-center gap-4">
+        <div className="font-mono flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-2">
             <label htmlFor="poweroutlets">Power Outlets:</label>
             <Checkbox
@@ -81,32 +81,34 @@ export default function Home() {
             />
           </div>
 
-          <Button
-            onClick={() => setAppliedFilters(filters)}
-            disabled={isLoading}
-          >
-            <span className={`${isLoading ? "opacity-0" : ""}`}>Apply</span>
-            {isLoading && (
-              <Star className="absolute p-1 animate-spin" fill="#fff" />
-            )}
-          </Button>
+          <div className="flex gap-4">
+            <Button
+              onClick={() => setAppliedFilters(filters)}
+              disabled={isLoading}
+            >
+              <span className={`${isLoading ? "opacity-0" : ""}`}>Apply</span>
+              {isLoading && (
+                <Star className="absolute p-1 animate-spin" fill="#fff" />
+              )}
+            </Button>
 
-          <Button
-            onClick={() => setListView((prev) => !prev)}
-            className="bg-orange-500 hover:bg-orange-600"
-          >
-            {listView ? (
-              <>
-                <Grid className="p-0.5 mr-2" />
-                Grid
-              </>
-            ) : (
-              <>
-                <List className="p-0.5 mr-2" />
-                List
-              </>
-            )}
-          </Button>
+            <Button
+              onClick={() => setListView((prev) => !prev)}
+              className="bg-orange-500 hover:bg-orange-600"
+            >
+              {listView ? (
+                <>
+                  <Grid className="p-0.5 mr-2" />
+                  Grid
+                </>
+              ) : (
+                <>
+                  <List className="p-0.5 mr-2" />
+                  List
+                </>
+              )}
+            </Button>
+          </div>
         </div>
 
         {listView ? (
