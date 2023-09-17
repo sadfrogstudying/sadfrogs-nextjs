@@ -1,14 +1,15 @@
 import Head from "next/head";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import StudySpotGrid from "~/components/StudySpot/Grid";
 import { Button } from "~/components/UI/Button";
-import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
 import { api } from "~/utils/api";
 
 import dynamic from "next/dynamic";
 import { Checkbox } from "~/components/UI/Checkbox";
 import { Grid, List, Star } from "lucide-react";
+import useDebounce from "~/hooks/useDebounce";
+import { useInView } from "react-intersection-observer";
 const StudySpotList = dynamic(() => import("~/components/StudySpot/List"));
 
 export default function Home() {
@@ -19,7 +20,7 @@ export default function Home() {
 
   const [appliedFilters, setAppliedFilters] = useState(filters);
 
-  const { data, fetchNextPage, status, isLoading, isFetchingNextPage } =
+  const { data, fetchNextPage, status, isLoading } =
     api.studySpots.getNotValidated.useInfiniteQuery(
       {
         powerOutlets: appliedFilters.powerOutlets || undefined,
@@ -31,13 +32,15 @@ export default function Home() {
       }
     );
 
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
-  const entry = useIntersectionObserver(loadMoreRef, {});
-  const isVisible = !!entry?.isIntersecting;
+  const { ref, inView } = useInView();
+
+  const debouncedRequest = useDebounce(() => {
+    void fetchNextPage();
+  }, 250);
 
   useEffect(() => {
-    if (isVisible && (!isLoading || !isFetchingNextPage)) void fetchNextPage();
-  }, [fetchNextPage, isVisible, isLoading, isFetchingNextPage]);
+    if (inView && !isLoading) debouncedRequest();
+  }, [inView, isLoading, debouncedRequest]);
 
   const [listView, setListView] = useState(false);
 
@@ -116,7 +119,7 @@ export default function Home() {
         ) : (
           <StudySpotGrid data={data} status={status} />
         )}
-        <div aria-hidden ref={loadMoreRef} />
+        <div aria-hidden ref={ref} />
       </main>
     </>
   );

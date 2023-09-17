@@ -16,6 +16,10 @@ const StatusHandler = ({
           <SkeletonStudySpotGridItem />
           <SkeletonStudySpotGridItem />
           <SkeletonStudySpotGridItem />
+          <SkeletonStudySpotGridItem />
+          <SkeletonStudySpotGridItem />
+          <SkeletonStudySpotGridItem />
+          <SkeletonStudySpotGridItem />
         </>
       ) : (
         children

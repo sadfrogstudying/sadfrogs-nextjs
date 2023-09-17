@@ -12,7 +12,8 @@ import { useEffect, useMemo, useRef } from "react";
  *
  */
 const useDebounce = <T extends () => void>(
-  callback: T
+  callback: T,
+  timeOut: number = 1000
 ): DebouncedFunc<() => void> => {
   const ref = useRef<T>();
 
@@ -25,8 +26,8 @@ const useDebounce = <T extends () => void>(
       ref.current?.();
     };
 
-    return debounce(func, 1000);
-  }, []);
+    return debounce(func, timeOut);
+  }, [timeOut]);
 
   return debouncedCallback;
 };
