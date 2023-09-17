@@ -70,7 +70,7 @@ const FullWidthHeroCarousel: React.FC<PropType> = (props) => {
                 objectFit="cover"
                 key={image.url}
                 className="rounded-md overflow-hidden"
-                sizes="(max-width: 639px) 50vw, (max-width: 1030px) 33vw, (max-width: 1500px) 24vw, 20vw"
+                sizes="300px"
               />
             </div>
           ))}

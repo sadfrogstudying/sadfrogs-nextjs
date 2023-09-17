@@ -48,7 +48,7 @@ const StudySpotList = ({
                           key={studySpot.images[0].url}
                           alt={`Image of ${studySpot.name}`}
                           className="rounded-md overflow-hidden"
-                          sizes="(max-width: 839px) 33vw, (max-width: 1400px) 20vw, 17vw"
+                          sizes="100px"
                         />
                       </Link>
                     )}
