@@ -26,7 +26,10 @@ export const userRouter = createTRPCRouter({
     .input(createUserInput)
     .output(getCurrentUserOutput)
     .mutation(async ({ ctx, input }) => {
-      const newImage = (await getImagesMeta([input.image || ""]))[0];
+      let newImage;
+      if (input.image) {
+        newImage = (await getImagesMeta([input.image || ""]))[0];
+      }
 
       const user = await ctx.prisma.user.create({
         data: {
