@@ -34,6 +34,7 @@ export const FullWidthCarouselThumb: React.FC<PropType> = (props) => {
         objectFit="cover"
         key={image.url}
         className="rounded overflow-hidden"
+        sizes="(max-width: 639px) 16vw, (max-width: 1030px) 10vw, (max-width: 1500px) 8vw, 6vw"
       />
     </button>
   );

@@ -38,6 +38,7 @@ const StudySpotGridItem = ({
               alt={`Image of ${name}`}
               objectFit="contain"
               className="rounded-md overflow-hidden w-full sm:w-4/5"
+              sizes="(max-width: 639px) 100vw, (max-width: 1011px) 47vw, (max-width: 1340px) 30vw, (max-width: 1668px) 20vw, 17vw"
             />
           </Link>
         )}

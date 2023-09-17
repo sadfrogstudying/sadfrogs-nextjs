@@ -12,6 +12,7 @@ interface Props {
   objectFit?: "contain" | "cover";
   onClick?: () => void;
   className?: string;
+  sizes?: HTMLImageElement["sizes"];
 }
 
 /*
@@ -27,6 +28,7 @@ const Image = ({
   objectFit = "contain",
   onClick,
   className,
+  sizes,
 }: Props) => {
   const {
     aspectRatio,
@@ -79,6 +81,7 @@ const Image = ({
         placeholder={placeholder}
         quality={quality || undefined}
         className={`w-full h-full ${objectFitOptions[objectFit]} ease-out duration-500`}
+        sizes={sizes}
       />
     </div>
   );

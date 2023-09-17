@@ -68,6 +68,7 @@ const MapInfoPanel = ({
                     image={selectedMarker.image}
                     alt={`Photo of ${selectedMarker.name}`}
                     className="rounded overflow-hidden"
+                    sizes="(max-width: 500px) 25vw, (max-width: 767px) 16vw, (max-width: 1500px) 20vw, 16vw"
                   />
                 )}
               </div>
