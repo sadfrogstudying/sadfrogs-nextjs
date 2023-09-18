@@ -94,7 +94,7 @@ const FileInputComponent = forwardRef<HTMLInputElement, InputProps>(
     };
 
     const getDropzoneText = (): ReactNode => {
-      if (fileRejections.length) return "Only images are allowed";
+      if (fileRejections.length) return "Error...";
       if (
         compressionProgress.length > 0 &&
         compressionProgress.some((x) => x < 100)

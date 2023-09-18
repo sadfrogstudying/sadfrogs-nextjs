@@ -28,6 +28,7 @@ type FormInput = Omit<CreateUserInput, "image"> & {
 
 import { FileListImagesSchema } from "~/schemas/utility";
 import { useRouter } from "next/router";
+import Image from "~/components/UI/Image";
 
 const editUserInput = createUserInput.extend({
   image: FileListImagesSchema(),
@@ -155,12 +156,24 @@ const EditUserForm = ({ onSuccess }: { onSuccess?: () => void }) => {
               </FormItem>
             )}
           />
+
+          {!!loggedInUser?.profilePicture && (
+            <div className="space-y-2">
+              <h3 className="text-sm">Current profile picture</h3>
+              <Image
+                image={loggedInUser.profilePicture}
+                alt="Your profile picture"
+                className="w-min h-32"
+              />
+            </div>
+          )}
+
           <FormField
             control={form.control}
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Images</FormLabel>
+                <FormLabel>New Profile Picture</FormLabel>
                 <FormControl>
                   <FileInput
                     setValue={(files) => form.setValue("image", files)}

@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogTrigger,
-} from "~/components/UI/Dialog";
+import { Dialog, DialogContent, DialogTrigger } from "~/components/UI/Dialog";
 import EditUserForm from "~/components/User/EditUserForm";
 import { Button } from "../UI/Button";
 
@@ -16,9 +11,8 @@ const CreateUserFormDialog = () => {
       <DialogTrigger asChild>
         <Button>Edit Account</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[525px] font-mono">
+      <DialogContent className="sm:max-w-[525px] sm:max-h-[700px] font-mono h-full sm:h-auto overflow-x-auto">
         <EditUserForm onSuccess={() => setOpen(false)} />
-        <DialogFooter></DialogFooter>
       </DialogContent>
     </Dialog>
   );
