@@ -3,15 +3,6 @@ import Image from "next/image";
 import imageCompression from "browser-image-compression";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { Input } from "~/components/UI/Input";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/UI/Table";
 import { Button } from "./Button";
 import {
   CheckCircle,
@@ -252,56 +243,44 @@ const RenderedFiles = memo(
     if (!values.length) return null;
 
     return (
-      <Table>
-        <TableCaption className="p-2">
-          List of images pending to upload, order them here
-        </TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[50px]">Order</TableHead>
-            <TableHead className="w-full text-center">Image</TableHead>
-            <TableHead className="w-2">Control</TableHead>
-            <TableHead className="w-2 sr-only">Control</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {values.map((file, i) => (
-            <TableRow key={file.name} className="h-28">
-              <TableCell className="font-medium">{i + 1}</TableCell>
-              <TableCell className="relative">
-                <div className="relative w-24 h-24 mx-auto">
-                  <Image
-                    src={URL.createObjectURL(file)}
-                    alt="Photos waiting to be uploaded"
-                    fill
-                    className="object-contain w-auto"
-                  />
-                </div>
-              </TableCell>
-              <TableCell className="h-full text-center m-auto">
-                <div className="flex gap-4">
-                  <Button
-                    type="button"
-                    onClick={() => moveItemHandler(1, i)}
-                    variant="ghost"
-                    className="text-gray-500 p-0 w-6 md:w-4"
-                  >
-                    <ChevronDown />
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={() => moveItemHandler(-1, i)}
-                    variant="ghost"
-                    className="text-gray-500 p-0 w-6 md:w-4"
-                  >
-                    <ChevronUp />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <div className="overflow-x-auto grid grid-cols-[1fr_2fr_1fr] justify-items-center items-center">
+        <div className="p-4 font-bold text-center">Order</div>
+        <div className="p-4 font-bold w-full text-center">Image</div>
+        <div className="p-4 font-bold text-center">Control</div>
+        {values.map((file, i) => (
+          <>
+            <div className="p-4 font-medium">{i + 1}</div>
+            <div className="p-4">
+              <div className="relative w-24 h-24">
+                <Image
+                  src={URL.createObjectURL(file)}
+                  alt="Photos waiting to be uploaded"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </div>
+            <div className="p-4 flex gap-4">
+              <Button
+                type="button"
+                onClick={() => moveItemHandler(1, i)}
+                variant="ghost"
+                className="text-gray-500 p-0 w-6 md:w-4"
+              >
+                <ChevronDown />
+              </Button>
+              <Button
+                type="button"
+                onClick={() => moveItemHandler(-1, i)}
+                variant="ghost"
+                className="text-gray-500 p-0 w-6 md:w-4"
+              >
+                <ChevronUp />
+              </Button>
+            </div>
+          </>
+        ))}
+      </div>
     );
   }
 );
