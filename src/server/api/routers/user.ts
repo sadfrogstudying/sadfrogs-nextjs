@@ -137,7 +137,7 @@ export const userRouter = createTRPCRouter({
 
           await ctx.prisma.image.delete({
             where: {
-              id: user?.profilePicture?.id,
+              id: user.profilePicture.id,
             },
           });
         }
@@ -162,5 +162,39 @@ export const userRouter = createTRPCRouter({
       });
 
       return updatedUser;
+    }),
+  deleteCurrentUser: privateProcedure
+    .meta({
+      openapi: { method: "POST", path: "/user.deleteCurrentUser" },
+    })
+    .input(z.void())
+    .output(z.void())
+    .mutation(async ({ ctx }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: {
+          email: ctx.currentUser.email,
+        },
+        include: {
+          profilePicture: true,
+        },
+      });
+
+      if (user?.profilePicture?.name) {
+        await deleteImagesFromBucket([user.profilePicture.name], ctx.s3);
+
+        await ctx.prisma.image.delete({
+          where: {
+            id: user.profilePicture.id,
+          },
+        });
+      }
+
+      await ctx.prisma.user.delete({
+        where: {
+          email: ctx.currentUser.email,
+        },
+      });
+
+      return;
     }),
 });

@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { Button } from "~/components/UI/Button";
 import Image from "~/components/UI/Image";
+import DeleteUserAlertDialog from "~/components/User/DeleteUserAlertDialog";
 import { api } from "~/utils/api";
 
 const EditUserUserFormDialog = dynamic(
@@ -36,7 +37,7 @@ const UserPage = () => {
   const isCurrentUserAccount = loggedInUser?.username === usernameFromParams;
 
   return (
-    <main className="p-4 pt-20 md:pt-24 h-full font-mono w-full max-w-xl">
+    <main className="p-8 pt-20 md:pt-24 h-full font-mono w-full max-w-xl">
       {isLoading && <div>Loading...</div>}
       {data && (
         <div className="space-y-4">
@@ -58,15 +59,7 @@ const UserPage = () => {
             </div>
           </div>
 
-          {isCurrentUserAccount && (
-            <div className="flex gap-2">
-              <EditUserUserFormDialog />
-              <Button asChild>
-                {/* eslint-disable */}
-                <a href="/api/auth/logout">Logout</a>
-              </Button>
-            </div>
-          )}
+          {isCurrentUserAccount && <CurrentUserControls />}
         </div>
       )}
     </main>
@@ -74,3 +67,16 @@ const UserPage = () => {
 };
 
 export default UserPage;
+
+const CurrentUserControls = () => {
+  return (
+    <div className="flex gap-2">
+      <EditUserUserFormDialog />
+      <Button asChild>
+        {/* eslint-disable */}
+        <a href="/api/auth/logout">Logout</a>
+      </Button>
+      <DeleteUserAlertDialog />
+    </div>
+  );
+};
