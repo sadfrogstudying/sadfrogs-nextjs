@@ -3,11 +3,11 @@ import { usePathname } from "next/navigation";
 
 import MobileMenuSheet from "./MobileMenuSheet";
 
-import { useUser } from "@auth0/nextjs-auth0/client";
+import Navigation from "./Navigation";
 import { api } from "~/utils/api";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 import dynamic from "next/dynamic";
-import Navigation from "./Navigation";
 const CreateUserFormDialog = dynamic(
   () => import("~/components/User/CreateUserFormDialog")
 );
@@ -15,20 +15,20 @@ const CreateUserFormDialog = dynamic(
 const Header = () => {
   const pathname = usePathname();
   const isMapPage = pathname === "/map";
-
-  const { user } = useUser();
-
-  const { data: currentUser, isFetched } = api.user.getCurrentUser.useQuery(
+  const { user: auth0User } = useUser();
+  const { data: currentUser, isLoading } = api.user.getCurrentUser.useQuery(
     undefined,
     {
       staleTime: 1 * 1000 * 60 * 60, // 1 hour
-      enabled: !!user,
+      enabled: !!auth0User,
+      refetchOnMount: false,
     }
   );
 
   return (
     <>
-      {user && !currentUser && isFetched && <CreateUserFormDialog />}
+      {!!auth0User && !currentUser && !isLoading && <CreateUserFormDialog />}
+
       <header className="pointer-events-none fixed flex justify-between z-20 w-full rounded top-0 left-0">
         <h1
           className={`pointer-events-auto text-3xl font-serif tracking-tight flex justify-center items-center p-4 m-0 md:m-4 sm:text-4xl ${
@@ -39,13 +39,13 @@ const Header = () => {
         </h1>
         <div
           role="menubar"
-          className="p-4 z-20 gap-4 justify-center items-center font-mono md:m-4 rounded-md hidden md:flex"
+          className="p-4 z-20 gap-4 justify-center items-center font-mono md:m-4 rounded-md hidden md:flex pointer-events-auto"
         >
-          <Navigation username={currentUser?.username || ""} />
+          <Navigation />
         </div>
 
-        <div className="font-mono m-4 block md:hidden">
-          <MobileMenuSheet username={currentUser?.username || ""} />
+        <div className="font-mono m-4 block md:hidden pointer-events-auto">
+          <MobileMenuSheet />
         </div>
       </header>
     </>

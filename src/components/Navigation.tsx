@@ -5,6 +5,17 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { api } from "~/utils/api";
 
 import dynamic from "next/dynamic";
+import { Avatar, AvatarFallback, AvatarImage } from "./UI/Avatar";
+
+const UserMenu = dynamic(() => import("~/components/UserMenu"), {
+  loading: () => (
+    <Avatar>
+      <AvatarImage />
+      <AvatarFallback></AvatarFallback>
+    </Avatar>
+  ),
+  ssr: false,
+});
 
 const CreateStudySpotFormSheet = dynamic(
   () => import("~/components/StudySpot/Form/CreateForm/CreateFormSheet"),
@@ -23,70 +34,61 @@ const Loading = () => (
 const Navigation = ({
   forMobile = false,
   onLinkClick,
-  username,
 }: {
   forMobile?: boolean;
   onLinkClick?: () => void;
-  username: string;
 }) => {
-  const { user, isLoading } = useUser();
-  const apiUtils = api.useContext();
-  const currentUser = apiUtils.user.getCurrentUser.getData();
+  const { user: auth0User, isLoading: auth0UserLoading } = useUser();
+  const { data: currentUser } = api.user.getCurrentUser.useQuery(undefined, {
+    staleTime: 1 * 1000 * 60 * 60, // 1 hour
+    enabled: !!auth0User,
+    refetchOnMount: false,
+  });
 
   return (
     <>
-      {!isLoading && (
+      {!auth0User && !auth0UserLoading && (
         <>
-          <Link
+          <a
             onClick={onLinkClick}
-            href="/about"
-            className="pointer-events-auto h-fit"
+            href="/api/auth/login"
+            className={`h-fit ${
+              auth0UserLoading
+                ? "pointer-events-none opacity-70"
+                : "pointer-events-auto"
+            }`}
           >
-            About
-          </Link>
-          {!forMobile && <span> | </span>}
-          <Link
-            onClick={onLinkClick}
-            href="/map"
-            className="pointer-events-auto h-fit"
-          >
-            Map
-          </Link>
-          {!forMobile && <span> | </span>}
-          {!user ? (
-            /* eslint-disable */
-            <a
-              onClick={onLinkClick}
-              href="/api/auth/login"
-              className={`h-fit ${
-                isLoading
-                  ? "pointer-events-none opacity-70"
-                  : "pointer-events-auto"
-              }`}
-            >
-              Login / Register
-            </a>
-          ) : (
-            <Link
-              onClick={onLinkClick}
-              href={`/user/${username}`}
-              aria-disabled={!username}
-              className={`${
-                username ? "pointer-events-auto" : "opacity-50 line-through"
-              } h-fit`}
-            >
-              Account
-            </Link>
-          )}
+            Login / Register
+          </a>
+
           {!forMobile && <span> | </span>}
         </>
       )}
+
+      <Link
+        onClick={onLinkClick}
+        href="/about"
+        className="pointer-events-auto h-fit"
+      >
+        About
+      </Link>
+      {!forMobile && <span> | </span>}
+      <Link
+        onClick={onLinkClick}
+        href="/map"
+        className="pointer-events-auto h-fit"
+      >
+        Map
+      </Link>
+      {!forMobile && <span> | </span>}
 
       {currentUser ? (
         <CreateStudySpotFormSheet disabled={!currentUser} />
       ) : (
         <Loading />
       )}
+
+      <UserMenu onLinkClick={onLinkClick} />
     </>
   );
 };

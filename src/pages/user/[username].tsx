@@ -1,20 +1,30 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { Trash2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { Button } from "~/components/UI/Button";
 import Image from "~/components/UI/Image";
-import DeleteUserAlertDialog from "~/components/User/DeleteUserAlertDialog";
 import { api } from "~/utils/api";
 
-const EditUserUserFormDialog = dynamic(
-  () => import("~/components/User/EditUserFormDialog"),
+const DeleteUserAlertDialog = dynamic(
+  () => import("~/components/User/DeleteUserAlertDialog"),
   {
-    loading: () => <Loading />,
+    loading: () => (
+      <Button disabled>
+        Delete <Trash2 className="h-4 ml-1" />
+      </Button>
+    ),
     ssr: false,
   }
 );
 
-const Loading = () => <Button disabled>Edit Account</Button>;
+const EditUserUserFormDialog = dynamic(
+  () => import("~/components/User/EditUserFormDialog"),
+  {
+    loading: () => <Button disabled>Edit Account</Button>,
+    ssr: false,
+  }
+);
 
 const UserPage = () => {
   const router = useRouter();

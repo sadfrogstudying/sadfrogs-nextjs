@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogTrigger } from "~/components/UI/Dialog";
 import EditUserForm from "~/components/User/EditUserForm";
 import { Button } from "../UI/Button";
 
-const CreateUserFormDialog = () => {
+const EditUserFormDialog = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -18,4 +18,4 @@ const CreateUserFormDialog = () => {
   );
 };
 
-export default CreateUserFormDialog;
+export default EditUserFormDialog;

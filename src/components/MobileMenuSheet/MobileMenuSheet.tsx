@@ -11,13 +11,7 @@ import Link from "next/link";
 import { cn } from "~/lib/utils";
 import Navigation from "../Navigation";
 
-function MobileMenuSheet({
-  className,
-  username,
-}: {
-  className?: string;
-  username: string;
-}) {
+function MobileMenuSheet({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
 
@@ -42,11 +36,7 @@ function MobileMenuSheet({
           >
             <Link href="/">Sad Frogs Studying</Link>
           </h1>
-          <Navigation
-            forMobile
-            onLinkClick={() => setOpen(false)}
-            username={username}
-          />
+          <Navigation forMobile onLinkClick={close} />
         </nav>
       </SheetContent>
     </Sheet>

@@ -112,7 +112,7 @@ const CreateUserForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         <div className="space-y-4">
           <FormSectionHeader
             title="Create an account"
-            description="Use this form to create an account"
+            description="You need to create an account to add new spots and edit existing ones"
           />
           <FormField
             control={form.control}
@@ -172,13 +172,19 @@ const CreateUserForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             {nameExistsError?.message && <li>{nameExistsError?.message}</li>}
             {getUrlsError?.message && <li>{getUrlsError?.message}</li>}
           </ul>
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="disabled:cursor-not-allowed"
-          >
-            {isLoading ? "Creating..." : "Submit"}
-          </Button>
+          <div className="flex justify-between items-center pt-4">
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="disabled:cursor-not-allowed"
+            >
+              {isLoading ? "Creating..." : "Submit"}
+            </Button>
+
+            <a className="pointer-events-auto" href="/api/auth/logout">
+              Logout
+            </a>
+          </div>
         </div>
       </form>
     </Form>
