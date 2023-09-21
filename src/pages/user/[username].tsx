@@ -37,7 +37,7 @@ const UserPage = () => {
   const isCurrentUserAccount = loggedInUser?.username === usernameFromParams;
 
   return (
-    <main className="p-8 pt-20 md:pt-24 h-full font-mono w-full max-w-xl">
+    <main className="p-4 md:p-8 pt-20 md:pt-24 h-full font-mono w-full max-w-xl">
       {isLoading && <div>Loading...</div>}
       {data && (
         <div className="space-y-4">

@@ -20,7 +20,7 @@ const DeleteUserAlertDialog = () => {
   const { mutate: deleteUser, isLoading } =
     api.user.deleteCurrentUser.useMutation({
       onSuccess: () => {
-        apiUtils.user.getCurrentUser.invalidate();
+        void apiUtils.user.getCurrentUser.invalidate();
         void router.push(`/`);
       },
     });

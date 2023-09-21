@@ -22,6 +22,7 @@ const config = {
   plugins: ["@typescript-eslint"],
   extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   rules: {
+    "@next/next/no-html-link-for-pages": "off",
     "@typescript-eslint/consistent-type-imports": [
       "warn",
       {
