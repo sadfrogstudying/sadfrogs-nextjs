@@ -21,8 +21,16 @@ const getCurrentUserOutput = z.object({
   description: z.string(),
   email: z.string(),
 });
+const usernameRegex = /^[a-zA-Z0-9._-]+$/;
 const createUserInput = z.object({
-  username: z.string().max(30).min(1, { message: "Username is required." }),
+  username: z
+    .string()
+    .max(30)
+    .regex(usernameRegex, {
+      message:
+        "Invalid username.  Can only contain letters, numbers, periods (.), underscores (_), and hyphens (-)",
+    })
+    .min(1, { message: "Username is required." }),
   image: z.string().optional(),
   description: z.string().max(100).optional(),
 });

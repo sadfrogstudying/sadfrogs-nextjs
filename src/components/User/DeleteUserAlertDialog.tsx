@@ -39,7 +39,7 @@ const DeleteUserAlertDialog = () => {
             )}
           </Button>
         </AlertDialogTrigger>
-        <AlertDialogContent className="font-mono">
+        <AlertDialogContent className="font-mono h-full sm:h-auto flex sm:block items-center flex-col justify-center space-y-4">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -49,7 +49,10 @@ const DeleteUserAlertDialog = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => deleteUser()}>
+            <AlertDialogAction
+              onClick={() => deleteUser()}
+              className="bg-red-500"
+            >
               Delete Permanently
             </AlertDialogAction>
           </AlertDialogFooter>
