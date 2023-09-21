@@ -38,7 +38,7 @@ const DeleteAlertDialog = ({ id }: { id: number }) => {
             )}
           </Button>
         </AlertDialogTrigger>
-        <AlertDialogContent>
+        <AlertDialogContent className="font-mono">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
