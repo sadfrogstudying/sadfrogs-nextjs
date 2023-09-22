@@ -36,6 +36,7 @@ model StudySpot {
     website              String   @default("")
     wifi                 Boolean  @default(false)
     powerOutlets         Boolean  @default(false)
+    description          String   @default("") @db.VarChar(2500)
     noiseLevel           String   @default("") // placeholder: quiet, normal, noisy
     venueType            String   @default("") // placeholder: cafe, library, etc.
     placeId              String   @default("")
@@ -81,6 +82,7 @@ model PendingEdit {
     website              String?
     wifi                 Boolean?
     powerOutlets         Boolean?
+    description          String?  @db.VarChar(2500)
     noiseLevel           String?
     venueType            String?
     placeId              String?

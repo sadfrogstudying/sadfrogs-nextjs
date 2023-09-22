@@ -187,6 +187,7 @@ export const studySpotsRouter = createTRPCRouter({
             rating: input.rating,
             website: input.website,
             powerOutlets: input.powerOutlets,
+            description: input.description,
             noiseLevel: input.noiseLevel,
             venueType: input.venueType,
             images: {
@@ -439,6 +440,7 @@ export const studySpotsRouter = createTRPCRouter({
               },
             },
             powerOutlets: input.powerOutlets,
+            description: input.description,
             noiseLevel: input.noiseLevel,
             venueType: input.venueType,
 
@@ -589,6 +591,7 @@ export const studySpotsRouter = createTRPCRouter({
           wifi: pendingEdit.wifi || undefined,
           rating: pendingEdit.rating || undefined,
           powerOutlets: pendingEdit.powerOutlets || undefined,
+          description: pendingEdit.description || undefined,
           noiseLevel: pendingEdit.noiseLevel || undefined,
           venueType: pendingEdit.venueType || undefined,
           images: {

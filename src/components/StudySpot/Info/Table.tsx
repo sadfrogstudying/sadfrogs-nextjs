@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ScrollArea } from "~/components/UI/ScrollArea";
 import type { GetOneOutput } from "~/schemas/study-spots";
 import { typeSafeObjectEntries } from "~/types/util-types";
 
@@ -39,6 +40,7 @@ const readableKeys: Record<keyof GetOneOutput, string> = {
   website: "Website",
   wifi: "Wifi",
   powerOutlets: "Power Outlets",
+  description: "Description",
   noiseLevel: "Noise Level",
   venueType: "Venue Type",
   address: "Address",
@@ -92,9 +94,11 @@ const Row = ({
 
   const getRandomInt = (max: number) => Math.floor(Math.random() * max);
   const [int, setInt] = useState(0);
+
   useEffect(() => {
     setInt(getRandomInt(shadesOfOj.length));
   }, [shadesOfOj.length]);
+
   const color = shadesOfOj[int] || "";
   const parseBoolean = (value: boolean) => {
     if (!!value) return "Yes";
@@ -104,15 +108,32 @@ const Row = ({
   if (value == null || value === "") return null;
   if (typeof value === "object") return null;
 
+  const isDescriptionAndLong =
+    label === "description" && value?.toString().length > 800;
+
   return (
     <div className="flex border-b border-gray-200 w-full text-sm">
-      <div className={`w-2 mr-2 ${color}`} />
+      <div className={`w-2 mr-2 flex-shrink-0 ${color}`} />
       <div className="flex flex-wrap items-start justify-start py-1">
         <strong className="font-mono break-normal w-80">
           {readableKeys[label]}:{" "}
         </strong>{" "}
-        <div className="font-mono break-normal w-96">
-          {typeof value === "boolean" ? parseBoolean(value) : value?.toString()}
+        <div
+          className={`font-mono break-normal w-full sm:w-96 whitespace-pre-line`}
+        >
+          {isDescriptionAndLong ? (
+            <>
+              <ScrollArea className="h-96 rounded-md" type="always">
+                {value?.toString()}
+              </ScrollArea>
+            </>
+          ) : (
+            <>
+              {typeof value === "boolean"
+                ? parseBoolean(value)
+                : value?.toString()}
+            </>
+          )}
         </div>
       </div>
     </div>

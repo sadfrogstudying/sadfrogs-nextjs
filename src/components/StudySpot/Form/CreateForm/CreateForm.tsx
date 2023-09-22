@@ -42,6 +42,7 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       website: "",
       wifi: false,
       powerOutlets: false,
+      description: "",
       noiseLevel: "",
       venueType: "",
       images: [],
@@ -118,6 +119,9 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   });
 
   const submitHandler = form.handleSubmit((data) => {
+    // console.log("------------");
+    // console.log(data.description);
+    // return;
     checkIfNameExists({ name: data.name });
   });
 

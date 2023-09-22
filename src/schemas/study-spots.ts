@@ -21,6 +21,7 @@ const createOneInputSchema = z.object({
   website: z.string().max(100).optional(),
   wifi: z.boolean(),
   powerOutlets: z.boolean(),
+  description: z.string().max(2000),
   noiseLevel: z.string().max(100),
   venueType: z.string().max(100).min(1, { message: "Required" }),
   /** URLs in array */
@@ -61,6 +62,7 @@ const studySpotSchema = z.object({
   website: z.string(),
   wifi: z.boolean(),
   powerOutlets: z.boolean(),
+  description: z.string().max(2000),
   noiseLevel: z.string(),
   venueType: z.string(),
   images: imageSchema.array(),
@@ -132,6 +134,7 @@ const pendingEditOutputSchema = studySpotSchema.partial().extend({
   website: z.string().max(100).nullable(),
   wifi: z.boolean().nullable(),
   powerOutlets: z.boolean().nullable(),
+  description: z.string().max(2000).nullable(),
   noiseLevel: z.string().max(100).nullable(),
   venueType: z.string().max(100).nullable(),
   placeId: z.string().max(100).nullable(),

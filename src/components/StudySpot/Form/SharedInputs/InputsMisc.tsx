@@ -20,6 +20,7 @@ import {
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Separator } from "~/components/UI/Seperator";
+import { Textarea } from "~/components/UI/TextArea";
 
 interface Props {
   form: UseFormReturn<StudySpotFormInputs>;
@@ -43,266 +44,295 @@ const StudySpotInputsMisc = ({ form }: Props) => {
         </div>
       </CollapsibleTrigger>
 
-      <CollapsibleContent className="grid grid-cols-2 gap-4">
+      <CollapsibleContent className="flex flex-col gap-4">
         <FormField
           control={form.control}
-          name="noiseLevel"
+          name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Noise Level</FormLabel>
+              <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input placeholder="Loud at peak hours" {...field} />
-              </FormControl>
-              <FormDescription>Is it louder at certain times?</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="comfort"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Comfort</FormLabel>
-              <FormControl>
-                <Input placeholder="Comfy chairs" {...field} />
+                <Textarea
+                  placeholder="Describe the study spot"
+                  className=""
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
-                How are the chairs/tables/couches?
+                Any extra information that you may want to add
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="distractions"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Distractions</FormLabel>
-              <FormControl>
-                <Input placeholder="Constant loud coffee machines" {...field} />
-              </FormControl>
-              <FormDescription>Is it busy at certain times?</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="proximityToAmenities"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Proximity To Amenities</FormLabel>
-              <FormControl>
-                <Input placeholder="Many restaurants on street" {...field} />
-              </FormControl>
-              <FormDescription>
-                What&apos;s around, any restaurants or parks?
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="website"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Website</FormLabel>
-              <FormControl>
-                <Input placeholder="https://hello.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="noiseLevel"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Noise Level</FormLabel>
+                <FormControl>
+                  <Input placeholder="Loud at peak hours" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Is it louder at certain times?
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="comfort"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Comfort</FormLabel>
+                <FormControl>
+                  <Input placeholder="Comfy chairs" {...field} />
+                </FormControl>
+                <FormDescription>
+                  How are the chairs/tables/couches?
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="distractions"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Distractions</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Constant loud coffee machines"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>Is it busy at certain times?</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="proximityToAmenities"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Proximity To Amenities</FormLabel>
+                <FormControl>
+                  <Input placeholder="Many restaurants on street" {...field} />
+                </FormControl>
+                <FormDescription>
+                  What&apos;s around, any restaurants or parks?
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="website"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Website</FormLabel>
+                <FormControl>
+                  <Input placeholder="https://hello.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="views"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Views</FormLabel>
-              <FormControl>
-                <Input placeholder="City streets" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="temperature"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Temperature</FormLabel>
-              <FormControl>
-                <Input placeholder="Really cold" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="music"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Music</FormLabel>
-              <FormControl>
-                <Input placeholder="Soft Jazz" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="lighting"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Lighting</FormLabel>
-              <FormControl>
-                <Input placeholder="Well lit" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="views"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Views</FormLabel>
+                <FormControl>
+                  <Input placeholder="City streets" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="temperature"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Temperature</FormLabel>
+                <FormControl>
+                  <Input placeholder="Really cold" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="music"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Music</FormLabel>
+                <FormControl>
+                  <Input placeholder="Soft Jazz" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lighting"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Lighting</FormLabel>
+                <FormControl>
+                  <Input placeholder="Well lit" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="crowdedness"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Crowdedness</FormLabel>
-              <FormControl>
-                <Input placeholder="Very crowded after work" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="crowdedness"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Crowdedness</FormLabel>
+                <FormControl>
+                  <Input placeholder="Very crowded after work" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="studyBreakFacilities"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Study Break Facilities</FormLabel>
-              <FormControl>
-                <Input placeholder="Smoking Area" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div></div>
-        <FormField
-          control={form.control}
-          name="canStudyForLong"
-          render={({ field }) => (
-            <FormItem
-              className={`flex flex-row space-x-3 space-y-0 rounded-md ${
-                field.value == undefined ? "opacity-40" : ""
-              }`}
-            >
-              <FormControl>
-                <Checkbox
-                  checked={field.value || undefined}
-                  onCheckedChange={(v) => form.setValue("canStudyForLong", !!v)}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Can study for long?
-                  <FormDescription>
-                    Can you study for long here?
-                  </FormDescription>
-                </FormLabel>
-              </div>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="drinks"
-          render={({ field }) => (
-            <FormItem
-              className={`flex flex-row space-x-3 space-y-0 rounded-md ${
-                field.value == undefined ? "opacity-40" : ""
-              }`}
-            >
-              <FormControl>
-                <Checkbox
-                  checked={field.value || undefined}
-                  onCheckedChange={(v) => form.setValue("drinks", !!v)}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Drinks
-                  <FormDescription>
-                    Does the spot have/sell drinks?
-                  </FormDescription>
-                </FormLabel>
-              </div>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="sunlight"
-          render={({ field }) => (
-            <FormItem
-              className={`flex flex-row space-x-3 space-y-0 rounded-md ${
-                field.value == undefined ? "opacity-40" : ""
-              }`}
-            >
-              <FormControl>
-                <Checkbox
-                  checked={field.value || undefined}
-                  onCheckedChange={(v) => form.setValue("sunlight", !!v)}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Sunlight
-                  <FormDescription>
-                    Does the spot have sunlight?
-                  </FormDescription>
-                </FormLabel>
-              </div>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="food"
-          render={({ field }) => (
-            <FormItem
-              className={`flex flex-row space-x-3 space-y-0 rounded-md ${
-                field.value == undefined ? "opacity-40" : ""
-              }`}
-            >
-              <FormControl>
-                <Checkbox
-                  checked={field.value || undefined}
-                  onCheckedChange={(v) => form.setValue("food", !!v)}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Food
-                  <FormDescription>
-                    Does the spot have/sell food?
-                  </FormDescription>
-                </FormLabel>
-              </div>
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="studyBreakFacilities"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Study Break Facilities</FormLabel>
+                <FormControl>
+                  <Input placeholder="Smoking Area" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div></div>
+          <FormField
+            control={form.control}
+            name="canStudyForLong"
+            render={({ field }) => (
+              <FormItem
+                className={`flex flex-row space-x-3 space-y-0 rounded-md ${
+                  field.value == undefined ? "opacity-40" : ""
+                }`}
+              >
+                <FormControl>
+                  <Checkbox
+                    checked={field.value || undefined}
+                    onCheckedChange={(v) =>
+                      form.setValue("canStudyForLong", !!v)
+                    }
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>
+                    Can study for long?
+                    <FormDescription>
+                      Can you study for long here?
+                    </FormDescription>
+                  </FormLabel>
+                </div>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="drinks"
+            render={({ field }) => (
+              <FormItem
+                className={`flex flex-row space-x-3 space-y-0 rounded-md ${
+                  field.value == undefined ? "opacity-40" : ""
+                }`}
+              >
+                <FormControl>
+                  <Checkbox
+                    checked={field.value || undefined}
+                    onCheckedChange={(v) => form.setValue("drinks", !!v)}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>
+                    Drinks
+                    <FormDescription>
+                      Does the spot have/sell drinks?
+                    </FormDescription>
+                  </FormLabel>
+                </div>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="sunlight"
+            render={({ field }) => (
+              <FormItem
+                className={`flex flex-row space-x-3 space-y-0 rounded-md ${
+                  field.value == undefined ? "opacity-40" : ""
+                }`}
+              >
+                <FormControl>
+                  <Checkbox
+                    checked={field.value || undefined}
+                    onCheckedChange={(v) => form.setValue("sunlight", !!v)}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>
+                    Sunlight
+                    <FormDescription>
+                      Does the spot have sunlight?
+                    </FormDescription>
+                  </FormLabel>
+                </div>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="food"
+            render={({ field }) => (
+              <FormItem
+                className={`flex flex-row space-x-3 space-y-0 rounded-md ${
+                  field.value == undefined ? "opacity-40" : ""
+                }`}
+              >
+                <FormControl>
+                  <Checkbox
+                    checked={field.value || undefined}
+                    onCheckedChange={(v) => form.setValue("food", !!v)}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>
+                    Food
+                    <FormDescription>
+                      Does the spot have/sell food?
+                    </FormDescription>
+                  </FormLabel>
+                </div>
+              </FormItem>
+            )}
+          />
+        </div>
       </CollapsibleContent>
     </Collapsible>
   );
