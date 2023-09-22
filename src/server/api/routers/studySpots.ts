@@ -660,7 +660,6 @@ export const studySpotsRouter = createTRPCRouter({
               image: true,
             },
           },
-          openingHours: true,
           studySpot: {
             select: {
               id: true,
