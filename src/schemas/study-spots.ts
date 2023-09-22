@@ -15,12 +15,6 @@ const imageSchema = z.object({
     .nullish()
     .optional(),
 });
-const openingHoursSchema = z.object({
-  id: z.number(),
-  day: z.number(),
-  openingTime: z.string().max(100),
-  closingTime: z.string().max(100),
-});
 const createOneInputSchema = z.object({
   name: z.string().max(100).min(1, { message: "Required" }),
   rating: z.number().max(5).min(1),
@@ -41,7 +35,6 @@ const createOneInputSchema = z.object({
   country: z.string().max(100).optional(),
   city: z.string().max(100).optional(),
   state: z.string().max(100).optional(),
-  openingHours: openingHoursSchema.array().optional(),
   canStudyForLong: z.boolean().optional(),
   comfort: z.string().max(100).optional(),
   views: z.string().max(100).optional(),
@@ -112,7 +105,6 @@ const getValidatedOutputSchema = studySpotSchema
     music: true,
     powerOutlets: true,
     images: true,
-    openingHours: true,
   })
   .array();
 const getNotValidatedOutputSchema = getValidatedOutputSchema;
@@ -124,7 +116,6 @@ const getNotValidatedForMapOutputSchema = studySpotSchema
     longitude: true,
     slug: true,
     images: true,
-    openingHours: true,
   })
   .array();
 const creatependingEditInputSchema = createOneInputSchema.partial().extend({
@@ -150,7 +141,6 @@ const pendingEditOutputSchema = studySpotSchema.partial().extend({
   country: z.string().max(100).nullable(),
   city: z.string().max(100).nullable(),
   state: z.string().max(100).nullable(),
-  openingHours: openingHoursSchema.array(),
   canStudyForLong: z.boolean().nullable(),
   comfort: z.string().max(100).nullable(),
   views: z.string().max(100).nullable(),

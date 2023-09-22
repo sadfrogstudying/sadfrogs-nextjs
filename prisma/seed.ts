@@ -6,7 +6,6 @@ async function main() {
    await prisma.user.deleteMany();
    await prisma.studySpot.deleteMany();
    await prisma.pendingEdit.deleteMany();
-   await prisma.openingHours.deleteMany();
    await prisma.image.deleteMany();
    await prisma.pendingImageToDelete.deleteMany();
   Comment this out to wipe database

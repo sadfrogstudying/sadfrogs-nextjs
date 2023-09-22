@@ -52,7 +52,6 @@ const CreateStudySpotForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       country: "",
       city: "",
       state: "",
-      openingHours: [],
       canStudyForLong: undefined,
       comfort: "",
       views: "",

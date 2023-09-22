@@ -23,42 +23,41 @@ model User {
 }
 
 model StudySpot {
-    id                   Int            @id @default(autoincrement())
-    createdAt            DateTime       @default(now())
-    updatedAt            DateTime       @updatedAt
-    isValidated          Boolean        @default(false)
+    id                   Int      @id @default(autoincrement())
+    createdAt            DateTime @default(now())
+    updatedAt            DateTime @updatedAt
+    isValidated          Boolean  @default(false)
     images               Image[]
-    author               User?          @relation(fields: [authorId], references: [id], onDelete: SetNull)
+    author               User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
     authorId             String?
-    name                 String         @unique
-    slug                 String         @unique
-    rating               Int            @default(0) // 1-5 slider
-    website              String         @default("")
-    wifi                 Boolean        @default(false)
-    powerOutlets         Boolean        @default(false)
-    noiseLevel           String         @default("") // placeholder: quiet, normal, noisy
-    venueType            String         @default("") // placeholder: cafe, library, etc.
-    placeId              String         @default("")
-    latitude             Float          @default(0)
-    longitude            Float          @default(0)
-    address              String         @default("")
-    country              String         @default("")
-    city                 String         @default("")
-    state                String         @default("")
-    openingHours         OpeningHours[]
+    name                 String   @unique
+    slug                 String   @unique
+    rating               Int      @default(0) // 1-5 slider
+    website              String   @default("")
+    wifi                 Boolean  @default(false)
+    powerOutlets         Boolean  @default(false)
+    noiseLevel           String   @default("") // placeholder: quiet, normal, noisy
+    venueType            String   @default("") // placeholder: cafe, library, etc.
+    placeId              String   @default("")
+    latitude             Float    @default(0)
+    longitude            Float    @default(0)
+    address              String   @default("")
+    country              String   @default("")
+    city                 String   @default("")
+    state                String   @default("")
     canStudyForLong      Boolean?
-    comfort              String         @default("") // placeholder: soft chairs, small tables, etc.
-    views                String         @default("") // placeholder: trees, buildings, etc.
+    comfort              String   @default("") // placeholder: soft chairs, small tables, etc.
+    views                String   @default("") // placeholder: trees, buildings, etc.
     sunlight             Boolean?
-    temperature          String         @default("") // placeholder: cold, chilly, perfect, warm, hot
-    music                String         @default("") // placeholder: jazz, classical, none, etc.
-    lighting             String         @default("") // placeholder: normal, dim, bright, etc.
-    distractions         String         @default("") // placeholder: none, some, many
-    crowdedness          String         @default("") // placeholder: empty, some, crowded
-    proximityToAmenities String         @default("") // change to amenitiesNearby - restaurants, grocery stores, etc.
+    temperature          String   @default("") // placeholder: cold, chilly, perfect, warm, hot
+    music                String   @default("") // placeholder: jazz, classical, none, etc.
+    lighting             String   @default("") // placeholder: normal, dim, bright, etc.
+    distractions         String   @default("") // placeholder: none, some, many
+    crowdedness          String   @default("") // placeholder: empty, some, crowded
+    proximityToAmenities String   @default("") // change to amenitiesNearby - restaurants, grocery stores, etc.
     drinks               Boolean?
     food                 Boolean?
-    studyBreakFacilities String         @default("") // placeholder: smoking area, lounge, etc.
+    studyBreakFacilities String   @default("") // placeholder: smoking area, lounge, etc.
 
     pendingEditStudySpot PendingEdit[]
 
@@ -71,10 +70,10 @@ model StudySpot {
 }
 
 model PendingEdit {
-    id                   Int            @id @default(autoincrement())
-    createdAt            DateTime       @default(now())
-    updatedAt            DateTime       @updatedAt
-    author               User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    id                   Int      @id @default(autoincrement())
+    createdAt            DateTime @default(now())
+    updatedAt            DateTime @updatedAt
+    author               User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
     authorId             String
     name                 String?
     slug                 String?
@@ -91,7 +90,6 @@ model PendingEdit {
     country              String?
     city                 String?
     state                String?
-    openingHours         OpeningHours[]
     canStudyForLong      Boolean?
     comfort              String?
     views                String?
@@ -114,18 +112,6 @@ model PendingEdit {
 
     @@index([studySpotId])
     @@index([authorId])
-}
-
-model OpeningHours {
-    id          Int    @id @default(autoincrement())
-    day         Int
-    openingTime String
-    closingTime String
-
-    StudySpot     StudySpot?   @relation(fields: [studySpotId], references: [id], onDelete: Cascade)
-    studySpotId   Int?         @unique
-    pendingEdit   PendingEdit? @relation(fields: [pendingEditId], references: [id])
-    pendingEditId Int?         @unique
 }
 
 model Image {

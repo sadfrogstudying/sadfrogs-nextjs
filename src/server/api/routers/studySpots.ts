@@ -206,14 +206,6 @@ export const studySpotsRouter = createTRPCRouter({
             city: input.city,
             state: input.state,
 
-            ...(input.openingHours && {
-              openingHours: {
-                createMany: {
-                  data: input.openingHours,
-                },
-              },
-            }),
-
             canStudyForLong: input.canStudyForLong,
 
             comfort: input.comfort,
@@ -367,13 +359,6 @@ export const studySpotsRouter = createTRPCRouter({
         },
       });
 
-      // Delete associated opening hours
-      await ctx.prisma.openingHours.deleteMany({
-        where: {
-          studySpotId: deletedStudySpot.id,
-        },
-      });
-
       return true;
     }),
   /**
@@ -395,7 +380,6 @@ export const studySpotsRouter = createTRPCRouter({
 
       const allPendingEdits = await ctx.prisma.pendingEdit.findMany({
         include: {
-          openingHours: true,
           pendingImagesToAdd: true,
           pendingImagesToDelete: {
             select: {
@@ -465,12 +449,6 @@ export const studySpotsRouter = createTRPCRouter({
             country: input.country,
             city: input.city,
             state: input.state,
-
-            openingHours: {
-              createMany: input.openingHours && {
-                data: input.openingHours,
-              },
-            },
 
             canStudyForLong: input.canStudyForLong,
 
@@ -555,7 +533,6 @@ export const studySpotsRouter = createTRPCRouter({
               },
             },
           },
-          openingHours: true,
           studySpot: {
             select: {
               id: true,
@@ -628,14 +605,6 @@ export const studySpotsRouter = createTRPCRouter({
           country: pendingEdit.country || undefined,
           city: pendingEdit.city || undefined,
           state: pendingEdit.state || undefined,
-
-          ...(pendingEdit.openingHours && {
-            openingHours: {
-              createMany: {
-                data: pendingEdit.openingHours || undefined,
-              },
-            },
-          }),
 
           canStudyForLong: pendingEdit.canStudyForLong || undefined,
 
