@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, type ReactNode } from "react";
+import React, { forwardRef, Fragment, memo, type ReactNode } from "react";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
 import { type FileRejection, useDropzone } from "react-dropzone";
@@ -248,7 +248,7 @@ const RenderedFiles = memo(
         <div className="p-4 font-bold w-full text-center">Image</div>
         <div className="p-4 font-bold text-center">Control</div>
         {values.map((file, i) => (
-          <>
+          <Fragment key={URL.createObjectURL(file)}>
             <div className="p-4 font-medium">{i + 1}</div>
             <div className="p-4">
               <div className="relative w-24 h-24">
@@ -278,7 +278,7 @@ const RenderedFiles = memo(
                 <ChevronUp />
               </Button>
             </div>
-          </>
+          </Fragment>
         ))}
       </div>
     );
