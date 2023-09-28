@@ -4,6 +4,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
+// TO BE UPDATED: This is totally not secure, but it's just quick implementation for POC
 const USER = ["charlie", "insub"];
 const PASSWORD =
   "qZuhH8wdm3r3mbCVZuoSY5Iq8+9Tnwthw7yUqQwEU9AUDZRh2vdw9qHM4VloNZBb8Mn+cZEqBlSIggD2ZaWSnxWJUQAooZpZEfjU8QMQaVDrsVNZEgwdTqLbQlH/WJaFjqNXSwkVMuw216XIZJw1rd3xLZgEG0kwwXhlGHJ0bqTuWyVIBMpncsTMhNwnyHy/4pCH3wh0xthaMR54vYs0a/mu4uxF11BGoP9mgA==%";
