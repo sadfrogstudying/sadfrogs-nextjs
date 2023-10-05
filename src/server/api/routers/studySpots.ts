@@ -715,4 +715,28 @@ export const studySpotsRouter = createTRPCRouter({
 
       return true;
     }),
+  getHeroImages: publicProcedure
+    .meta({
+      openapi: { method: "GET", path: "/studyspots.getHeroImages" },
+    })
+    .input(z.void())
+    .output(getNotValidatedOutputSchema)
+    .query(async ({ ctx }) => {
+      const studySpots = await ctx.prisma.studySpot.findMany({
+        take: 4,
+        include: {
+          images: true,
+        },
+        where: {
+          OR: [
+            { slug: "gan-dan-cafe" },
+            { slug: "leible-coffee-north-sydney" },
+            { slug: "darling-square-library" },
+            { slug: "the-calyx" },
+          ],
+        },
+      });
+
+      return studySpots;
+    }),
 });
