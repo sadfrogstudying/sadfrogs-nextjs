@@ -13,6 +13,7 @@ interface Props {
   onClick?: () => void;
   className?: string;
   sizes?: HTMLImageElement["sizes"];
+  priority?: boolean;
 }
 
 /*
@@ -29,6 +30,7 @@ const Image = ({
   onClick,
   className,
   sizes,
+  priority = false,
 }: Props) => {
   const {
     aspectRatio,
@@ -73,6 +75,7 @@ const Image = ({
       )}
 
       <FutureImage
+        priority={priority}
         src={url}
         alt={alt}
         width={width}

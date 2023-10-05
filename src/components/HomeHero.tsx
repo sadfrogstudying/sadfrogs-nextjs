@@ -17,6 +17,7 @@ export default function HomeHero({ studySpots }: Props) {
                   <Image
                     image={studySpot.images[0]}
                     alt={`Image of ${studySpot.name}`}
+                    priority={true}
                     sizes="(max-width: 768px) 50vw, 25vw"
                   />
                 )}
