@@ -7,6 +7,10 @@ import { api } from "~/utils/api";
 import dynamic from "next/dynamic";
 import useDebounce from "~/hooks/useDebounce";
 import { useInView } from "react-intersection-observer";
+import HomeHero from "~/components/HomeHero";
+import { env } from "~/env.mjs";
+import { type GetStaticProps } from "next";
+import { type GetNotValidatedOutput } from "~/schemas/study-spots";
 
 const StudySpotList = dynamic(() => import("~/components/StudySpot/List"));
 
@@ -14,12 +18,16 @@ const Controls = dynamic(() => import("~/components/StudySpot/Controls"), {
   loading: () => <div></div>,
 });
 
+interface Props {
+  studyspotsForHero: GetNotValidatedOutput;
+}
+
 interface Filters {
   powerOutlets: boolean;
   wifi: boolean;
 }
 
-export default function Home() {
+export default function Home({ studyspotsForHero }: Props) {
   const [filters, setFilters] = useState<Filters>({
     powerOutlets: false,
     wifi: false,
@@ -61,23 +69,45 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="p-4 pt-20 md:pt-24 md:px-8 space-y-4 font-mono">
-        <Controls
-          filters={filters}
-          setFilters={setFilters}
-          setAppliedFilters={setAppliedFilters}
-          listView={listView}
-          setListView={setListView}
-          isLoading={isLoading}
-        />
+      <main className="space-y-4 font-mono">
+        <HomeHero studySpots={studyspotsForHero} />
+        <section className="p-4 md:px-8">
+          <Controls
+            filters={filters}
+            setFilters={setFilters}
+            setAppliedFilters={setAppliedFilters}
+            listView={listView}
+            setListView={setListView}
+            isLoading={isLoading}
+          />
 
-        {listView ? (
-          <StudySpotList data={data} status={status} />
-        ) : (
-          <StudySpotGrid data={data} status={status} />
-        )}
-        <div aria-hidden ref={ref} />
+          {listView ? (
+            <StudySpotList data={data} status={status} />
+          ) : (
+            <StudySpotGrid data={data} status={status} />
+          )}
+          <div aria-hidden ref={ref} />
+        </section>
       </main>
     </>
   );
 }
+
+// This function gets called at build time on server-side.
+// It may be called again, on a serverless function, if
+// revalidation is enabled and a new request comes in
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const siteUrl =
+    env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : "https://sadfrogs-nextjs.vercel.app";
+  const res = await fetch(`${siteUrl}/api/studyspots.getHeroImages`);
+  const data = (await res.json()) as GetNotValidatedOutput;
+
+  return {
+    props: {
+      studyspotsForHero: data,
+    },
+    revalidate: 60, // In seconds
+  };
+};

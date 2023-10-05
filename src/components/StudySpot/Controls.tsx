@@ -26,7 +26,7 @@ const Controls = ({
   isLoading: boolean;
 }) => {
   return (
-    <div className="font-mono flex items-center gap-4 flex-wrap">
+    <div className="font-mono flex items-center justify-end gap-4 flex-wrap bg-gray-50 border p-2 rounded-md mb-8">
       <div className="flex items-center gap-2">
         <label htmlFor="poweroutlets">Power Outlets:</label>
         <Checkbox
