@@ -13,7 +13,7 @@ const StudySpotGrid = ({
 }) => {
   return (
     <>
-      <div className="grid gap-8 relative grid-cols-fill-40">
+      <div className="grid gap-8 relative sm:grid-cols-2 lg:grid-cols-4 w-full">
         <StatusHandler status={status}>
           {data?.pages.map((page) =>
             page.map((studySpot) => (

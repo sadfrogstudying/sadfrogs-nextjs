@@ -26,46 +26,12 @@ const Controls = ({
   isLoading: boolean;
 }) => {
   return (
-    <div className="font-mono flex items-center justify-end gap-4 flex-wrap bg-gray-50 border p-2 rounded-md mb-8">
-      <div className="flex items-center gap-2">
-        <label htmlFor="poweroutlets">Power Outlets:</label>
-        <Checkbox
-          id="poweroutlets"
-          checked={filters.powerOutlets}
-          onCheckedChange={(x) =>
-            setFilters({
-              ...filters,
-              powerOutlets: x === "indeterminate" ? true : x,
-            })
-          }
-        />
-      </div>
-
-      <div className="flex items-center gap-2">
-        <label htmlFor="wifi">Wifi:</label>
-        <Checkbox
-          id="wifi"
-          checked={filters.wifi}
-          onCheckedChange={(x) =>
-            setFilters({
-              ...filters,
-              wifi: x === "indeterminate" ? true : x,
-            })
-          }
-        />
-      </div>
-
-      <div className="flex gap-4">
-        <Button onClick={() => setAppliedFilters(filters)} disabled={isLoading}>
-          <span className={`${isLoading ? "opacity-0" : ""}`}>Apply</span>
-          {isLoading && (
-            <Star className="absolute p-1 animate-spin" fill="#fff" />
-          )}
-        </Button>
-
+    <div className="md:sticky top-0 py-8 w-full md:w-60 md:h-screen z-10 font-mono flex flex-col items-start justify-start gap-4 flex-wrap rounded-md flex-shrink-0 text-sm">
+      <div className="space-y-2 w-full">
+        <h3 className="text-base font-bold">Display View:</h3>
         <Button
           onClick={() => setListView((prev) => !prev)}
-          className="bg-orange-500 hover:bg-orange-600"
+          className="bg-orange-500 hover:bg-orange-600 w-full"
         >
           {listView ? (
             <>
@@ -77,6 +43,48 @@ const Controls = ({
               <List className="p-0.5 mr-2" />
               List
             </>
+          )}
+        </Button>
+      </div>
+
+      <div className="space-y-2 w-full">
+        <h3 className="text-base font-bold">Filters:</h3>
+        <div className="flex items-center gap-8 bg-gray-100 p-2 justify-between">
+          <label htmlFor="poweroutlets">Power Outlets:</label>
+          <Checkbox
+            id="poweroutlets"
+            checked={filters.powerOutlets}
+            onCheckedChange={(x) =>
+              setFilters({
+                ...filters,
+                powerOutlets: x === "indeterminate" ? true : x,
+              })
+            }
+          />
+        </div>
+
+        <div className="flex items-center gap-8 bg-gray-100 p-2 justify-between">
+          <label htmlFor="wifi">Wifi:</label>
+          <Checkbox
+            id="wifi"
+            checked={filters.wifi}
+            onCheckedChange={(x) =>
+              setFilters({
+                ...filters,
+                wifi: x === "indeterminate" ? true : x,
+              })
+            }
+          />
+        </div>
+
+        <Button
+          onClick={() => setAppliedFilters(filters)}
+          disabled={isLoading}
+          className="w-full"
+        >
+          <span className={`${isLoading ? "opacity-0" : ""}`}>Apply</span>
+          {isLoading && (
+            <Star className="absolute p-1 animate-spin" fill="#fff" />
           )}
         </Button>
       </div>

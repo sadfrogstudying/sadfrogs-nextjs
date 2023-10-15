@@ -24,7 +24,7 @@ const StudySpotGridItem = ({
   studySpot: GetNotValidatedElementOutput;
 }) => {
   const { name, slug, id, address, wifi, music, powerOutlets } = studySpot;
-  const properties = Object.entries({ address, wifi, music, powerOutlets });
+  const properties = Object.entries({ wifi, music, powerOutlets });
   const [token] = useState(sessionStorage.getItem("sadfrogs_admin") || "");
 
   return (
@@ -36,14 +36,14 @@ const StudySpotGridItem = ({
               image={{ ...studySpot.images[0] }}
               key={studySpot.images[0].url}
               alt={`Image of ${name}`}
-              objectFit="contain"
-              className="rounded-md overflow-hidden w-full sm:w-4/5"
+              objectFit="cover"
+              className="rounded-md overflow-hidden w-full aspect-[3/4]"
               sizes="(max-width: 400px) 300px, (max-width: 640px) 600px, 320px"
             />
           </Link>
         )}
       </CardHeader>
-      <CardContent className="space-y-4 p-0 w-29 border-y border-gray-400 py-4 flex flex-col">
+      <CardContent className="space-y-4 p-0 border-gray-400 py-4 flex flex-col">
         <Link
           className="font-bold hover:underline"
           href={`/study-spot/${slug}`}
@@ -52,6 +52,7 @@ const StudySpotGridItem = ({
         </Link>
 
         <div className="text-gray-500">
+          <div className="mb-2">{address}</div>
           {properties.map(([key, value]) => (
             <Row key={key.toString()} title={key.toString()}>
               {value.toString()}

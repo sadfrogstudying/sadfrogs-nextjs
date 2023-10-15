@@ -47,7 +47,9 @@ export default function Home({ studyspotsForHero }: Props) {
       }
     );
 
-  const { ref, inView } = useInView();
+  const { ref, inView } = useInView({
+    rootMargin: "200px",
+  });
 
   const debouncedRequest = useDebounce(() => {
     void fetchNextPage();
@@ -71,21 +73,23 @@ export default function Home({ studyspotsForHero }: Props) {
       </Head>
       <main className="space-y-4 font-mono">
         <HomeHero studySpots={studyspotsForHero} />
-        <section className="p-4 md:px-8">
-          <Controls
-            filters={filters}
-            setFilters={setFilters}
-            setAppliedFilters={setAppliedFilters}
-            listView={listView}
-            setListView={setListView}
-            isLoading={isLoading}
-          />
+        <section className="px-4 md:px-8">
+          <div className="md:flex gap-16">
+            <Controls
+              filters={filters}
+              setFilters={setFilters}
+              setAppliedFilters={setAppliedFilters}
+              listView={listView}
+              setListView={setListView}
+              isLoading={isLoading}
+            />
 
-          {listView ? (
-            <StudySpotList data={data} status={status} />
-          ) : (
-            <StudySpotGrid data={data} status={status} />
-          )}
+            {listView ? (
+              <StudySpotList data={data} status={status} />
+            ) : (
+              <StudySpotGrid data={data} status={status} />
+            )}
+          </div>
           <div aria-hidden ref={ref} />
         </section>
       </main>
