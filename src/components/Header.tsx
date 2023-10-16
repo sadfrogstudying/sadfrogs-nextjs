@@ -29,9 +29,9 @@ const Header = () => {
     <>
       {!!auth0User && !currentUser && !isLoading && <CreateUserFormDialog />}
 
-      <header className="pointer-events-none fixed flex justify-between z-20 w-full rounded top-0 left-0">
+      <header className="pointer-events-none flex justify-between z-20 w-full rounded top-0 left-0">
         <h1
-          className={`pointer-events-auto text-3xl font-serif tracking-tight flex justify-center items-center p-4 m-0 lg:m-4 sm:text-4xl ${
+          className={`pointer-events-auto text-3xl font-serif tracking-tight flex justify-center items-center p-4 m-0 lg:m-4 sm:text-4xl relative z-10 ${
             isMapPage ? "md:invisible" : "visible"
           }`}
         >
@@ -39,12 +39,12 @@ const Header = () => {
         </h1>
         <div
           role="menubar"
-          className="p-4 z-20 gap-4 justify-center items-center font-mono md:m-4 rounded-md hidden lg:flex pointer-events-auto"
+          className="p-4 z-20 gap-4 justify-center items-center font-mono md:m-4 rounded-md hidden lg:flex pointer-events-auto fixed right-0 bg-white"
         >
           <Navigation />
         </div>
 
-        <div className="font-mono m-4 block lg:hidden pointer-events-auto">
+        <div className="font-mono m-4 block lg:hidden pointer-events-auto fixed right-0 z-20">
           <MobileMenuSheet />
         </div>
       </header>

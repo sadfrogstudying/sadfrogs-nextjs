@@ -31,7 +31,7 @@ const MapPage = ({ data, refreshedAt }: Props) => {
   return (
     <Map
       allMarkerData={markerData}
-      className="h-screen"
+      className="h-screen absolute top-0"
       infoPanel
       timeRefreshed={timeRefreshed}
     />
