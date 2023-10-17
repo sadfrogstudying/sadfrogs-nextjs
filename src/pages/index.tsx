@@ -73,7 +73,7 @@ export default function Home({ studyspotsForHero }: Props) {
       </Head>
       <main className="space-y-4 font-mono">
         <HomeHero studySpots={studyspotsForHero} />
-        <section className="px-4 md:px-8">
+        <section className="px-8 md:px-8">
           <div className="md:flex gap-16">
             <Controls
               filters={filters}

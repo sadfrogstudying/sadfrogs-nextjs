@@ -57,13 +57,7 @@ const Image = ({
   };
 
   return (
-    <div
-      className={cn("relative h-full w-full", className)}
-      onClick={onClick}
-      style={{
-        aspectRatio: aspectRatio,
-      }}
-    >
+    <div className={cn("relative h-full w-full", className)} onClick={onClick}>
       {placeholder === "empty" && (
         <div
           className={`${placeholderOpacity} absolute inset-0 z-10 ease-in duration-500 w-full h-full bg-gray-100`}

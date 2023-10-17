@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "~/components/UI/Card";
 import Image from "~/components/UI/Image";
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 
 import dynamic from "next/dynamic";
 import { Button } from "../UI/Button";
@@ -23,12 +23,12 @@ const StudySpotGridItem = ({
 }: {
   studySpot: GetNotValidatedElementOutput;
 }) => {
-  const { name, slug, id, address, wifi, music, powerOutlets } = studySpot;
-  const properties = Object.entries({ wifi, music, powerOutlets });
+  const { name, slug, id, country, state, venueType, wifi, powerOutlets } =
+    studySpot;
   const [token] = useState(sessionStorage.getItem("sadfrogs_admin") || "");
 
   return (
-    <Card className="flex flex-col gap-4 border-0 shadow-none w-full font-mono text-sm justify-end">
+    <Card className="flex flex-col gap-4 border-0 shadow-none w-full font-mono md:text-sm justify-end">
       <CardHeader className="p-0 w-full">
         {studySpot.images[0] && (
           <Link tabIndex={-1} href={`/study-spot/${slug}`}>
@@ -43,22 +43,16 @@ const StudySpotGridItem = ({
           </Link>
         )}
       </CardHeader>
-      <CardContent className="space-y-4 p-0 border-gray-400 py-4 flex flex-col">
-        <Link
-          className="font-bold hover:underline"
-          href={`/study-spot/${slug}`}
-        >
+      <CardContent className="p-0 border-gray-400 py-2 flex flex-col">
+        <div className="truncate font-bold">
+          {state}, {country}
+        </div>
+        <Link className="truncate hover:underline" href={`/study-spot/${slug}`}>
           {name}
         </Link>
-
-        <div className="text-gray-500">
-          <div className="mb-2">{address}</div>
-          {properties.map(([key, value]) => (
-            <Row key={key.toString()} title={key.toString()}>
-              {value.toString()}
-            </Row>
-          ))}
-        </div>
+        <div className="truncate">{venueType}</div>
+        <div>Wifi: {wifi ? "Yes" : "No"}</div>
+        <div>Power Outlets: {powerOutlets ? "Yes" : "No"}</div>
 
         {!!token && <DeleteAlertDialog id={id} />}
       </CardContent>
@@ -67,12 +61,3 @@ const StudySpotGridItem = ({
 };
 
 export default StudySpotGridItem;
-
-const Row = ({ title, children }: { title: string; children: ReactNode }) => {
-  return (
-    <div className="flex gap-2 items-start">
-      <div className="w-32 shrink-0 min-w-max font-bold">{title}:</div>
-      {children}
-    </div>
-  );
-};
