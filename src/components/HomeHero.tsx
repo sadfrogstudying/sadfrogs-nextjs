@@ -7,7 +7,7 @@ interface Props {
 
 export default function HomeHero({ studySpots }: Props) {
   return (
-    <div className="md:min-h-screen pt-0 md:pt-20">
+    <div className="md:min-h-screen pt-24 md:pt-32">
       <div className="flex flex-wrap">
         {studySpots &&
           studySpots.map((studySpot) => {

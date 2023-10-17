@@ -21,6 +21,9 @@ const config = {
    *
    * @see https://github.com/vercel/next.js/issues/41980
    */
+  experimental: {
+    scrollRestoration: true,
+  },
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
