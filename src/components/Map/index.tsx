@@ -7,7 +7,7 @@ import { Skeleton } from "../UI/Skeleton";
  */
 const Map = dynamic(() => import("~/components/Map/Map"), {
   loading: () => (
-    <Skeleton className="w-full h-full mb-4 rounded-md overflow-hidden border border-gray-200 flex justify-center items-center font-mono bg-gray-300">
+    <Skeleton className="w-full h-full mb-4 rounded-md overflow-hidden border border-gray-200 flex justify-center items-center font-mono bg-gray-300 h-screen absolute top-0">
       Loading Map...
     </Skeleton>
   ),

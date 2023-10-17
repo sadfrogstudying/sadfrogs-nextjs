@@ -65,6 +65,7 @@ const FullWidthHeroCarousel: React.FC<PropType> = (props) => {
             >
               <AuthorTooltip username={image.author?.username} />
               <Image
+                useAspectRatio
                 image={{ ...image }}
                 alt={`Image of ${name}`}
                 objectFit="cover"

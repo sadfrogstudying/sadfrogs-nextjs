@@ -14,6 +14,7 @@ interface Props {
   className?: string;
   sizes?: HTMLImageElement["sizes"];
   priority?: boolean;
+  useAspectRatio?: boolean;
 }
 
 /*
@@ -31,14 +32,9 @@ const Image = ({
   className,
   sizes,
   priority = false,
+  useAspectRatio = false,
 }: Props) => {
-  const {
-    aspectRatio,
-    // dominantColour,
-    height,
-    url,
-    width,
-  } = image;
+  const { aspectRatio, height, url, width } = image;
   const [imageLoaded, setImageLoaded] = useState(false);
   const doFadeIn = () => setImageLoaded(true);
 
@@ -57,7 +53,13 @@ const Image = ({
   };
 
   return (
-    <div className={cn("relative h-full w-full", className)} onClick={onClick}>
+    <div
+      className={cn("relative h-full w-full", className)}
+      onClick={onClick}
+      style={{
+        aspectRatio: useAspectRatio ? aspectRatio : undefined,
+      }}
+    >
       {placeholder === "empty" && (
         <div
           className={`${placeholderOpacity} absolute inset-0 z-10 ease-in duration-500 w-full h-full bg-gray-100`}
