@@ -31,20 +31,22 @@ const Header = () => {
 
       <header className="pointer-events-none flex justify-between z-20 w-full rounded top-0 left-0">
         <h1
-          className={`pointer-events-auto text-3xl font-serif tracking-tight flex justify-center items-center p-4 m-0 lg:m-4 sm:text-4xl relative z-10 ml-4 ${
+          className={`font-mono text-lg pointer-events-auto flex justify-center items-center p-4 m-4 relative z-10 ml-4 ${
             isMapPage ? "md:invisible" : "visible"
           }`}
         >
-          <Link href="/">Sad Frogs Studying</Link>
+          <Link href="/">
+            International<strong>StudySpots</strong>
+          </Link>
         </h1>
         <div
           role="menubar"
-          className="p-4 z-20 gap-4 justify-center items-center font-mono md:m-4 rounded-md hidden lg:flex pointer-events-auto fixed right-0 bg-white"
+          className="p-4 z-20 gap-4 justify-center items-center font-mono m-4 rounded-md hidden lg:flex pointer-events-auto fixed right-0 bg-white"
         >
           <Navigation />
         </div>
 
-        <div className="font-mono m-4 block lg:hidden pointer-events-auto fixed right-0 z-20 mr-8">
+        <div className="font-mono m-8 block lg:hidden pointer-events-auto fixed right-0 z-20 mr-8">
           <MobileMenuSheet />
         </div>
       </header>

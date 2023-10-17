@@ -43,9 +43,9 @@ const MapInfoPanel = ({
         className="pointer-events-auto max-w-md w-full bg bg-white p-4 rounded-md font-mono mx-4 md:mx-0 flex flex-col gap-6"
         ref={panelRef}
       >
-        <h2 className="text-2xl font-serif tracking-tight md:text-4xl hidden md:block">
+        <h2 className="text-xl text-bold tracking-tight md:block">
           <Link style={{ color: `#000` }} href="/">
-            Sad Frogs Studying
+            International<strong>StudySpots</strong>
           </Link>
         </h2>
 
