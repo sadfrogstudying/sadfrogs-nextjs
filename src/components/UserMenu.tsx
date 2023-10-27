@@ -100,7 +100,10 @@ const UserMenu = ({ onLinkClick }: { onLinkClick?: () => void }) => {
         <PopoverTrigger asChild>
           <button aria-label="User controls" className="rounded-full font-mono">
             <Avatar>
-              <AvatarImage src={currentUser?.profilePicture?.url} />
+              <AvatarImage
+                src={currentUser?.profilePicture?.url}
+                className="object-cover"
+              />
               <AvatarFallback></AvatarFallback>
             </Avatar>
           </button>
@@ -114,7 +117,10 @@ const UserMenu = ({ onLinkClick }: { onLinkClick?: () => void }) => {
               className="flex gap-4 items-center border-b pb-4"
             >
               <Avatar className="font-mono">
-                <AvatarImage src={currentUser?.profilePicture?.url} />
+                <AvatarImage
+                  src={currentUser?.profilePicture?.url}
+                  className="object-cover"
+                />
                 <AvatarFallback></AvatarFallback>
               </Avatar>
 
