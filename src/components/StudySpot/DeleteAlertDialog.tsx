@@ -28,7 +28,11 @@ const DeleteAlertDialog = ({ id }: { id: number }) => {
     <>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button className="h-7" disabled={isDeleting} variant="secondary">
+          <Button
+            className="mt-2 h-7"
+            disabled={isDeleting}
+            variant="secondary"
+          >
             {isDeleting ? (
               "Deleting..."
             ) : (

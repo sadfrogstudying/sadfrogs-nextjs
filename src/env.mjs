@@ -21,6 +21,8 @@ export const env = createEnv({
     BUCKET_NAME: z.string(),
     CLOUDFRONT_URL: z.string(),
     REGION: z.string(),
+    ADMIN_TOKEN: z.string(),
+    ADMIN_PASSWORD: z.string(),
   },
 
   /**
@@ -54,6 +56,8 @@ export const env = createEnv({
     REGION: process.env.REGION,
     NEXT_PUBLIC_GOOGLE_MAPS_API_KEY:
       process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    ADMIN_TOKEN: process.env.ADMIN_TOKEN,
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

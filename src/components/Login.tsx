@@ -11,18 +11,13 @@ const Login = () => {
     },
   });
 
-  const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const submit = (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    const username = usernameRef.current?.value;
     const password = passwordRef.current?.value;
-
-    if (!username || !password) return;
-
-    mutate({ username, password });
+    if (!password) return;
+    mutate({ password });
   };
 
   const errorColor = error ? "bg-red-500" : "bg-gray-200";
@@ -32,13 +27,6 @@ const Login = () => {
     <div className="font-mono ">
       <form className={`${errorColor} p-4 rounded-md flex flex-col gap-4 w-64`}>
         <div>sadfrog</div>
-        <input
-          className={`px-2 ${errorColorInput}`}
-          type="text"
-          ref={usernameRef}
-          placeholder="user"
-          autoComplete="username"
-        />
         <input
           className={`px-2 ${errorColorInput}`}
           type="password"
@@ -53,6 +41,7 @@ const Login = () => {
         >
           login
         </Button>
+        {error && <div>{error?.message ?? "Error"}</div>}
       </form>
     </div>
   );

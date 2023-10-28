@@ -23,15 +23,13 @@ import {
   getOneSchema,
 } from "~/schemas/study-spots";
 import { returnValueIfNotUndefined } from "~/utils/helpers";
+import { env } from "~/env.mjs";
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
   limiter: Ratelimit.slidingWindow(6, "1 m"),
   analytics: true,
 });
-
-const LOCAL_TOKEN =
-  "MfMIbnUFvj0b4E+tK8TEi5LIU7eXSpV/4V3glScQ/Y5S1HVaJ3dR4XriSRvWH59dybAKMROQ9WdLO0gVJR/s3/fUqzHNzLezcDPUO5/cZeOffb0rJyAy2iXn5NZ4A3nT74OiNNxqDhyBWInrP5y6FV/LsRqdqA5LthcMCywtsp8ogz4vR9y4V2I3duG4H8/4s+JYosWofSt7VH1J1PM7JuP5k4sZMWt9qr3ExQ==%";
 
 export const studySpotsRouter = createTRPCRouter({
   /**
@@ -330,7 +328,7 @@ export const studySpotsRouter = createTRPCRouter({
     .input(z.object({ id: z.number(), token: z.string() }))
     .output(z.boolean())
     .mutation(async ({ ctx, input }) => {
-      if (input.token !== LOCAL_TOKEN)
+      if (input.token !== env.ADMIN_TOKEN)
         throw new TRPCError({
           code: "UNAUTHORIZED",
         });
@@ -381,7 +379,7 @@ export const studySpotsRouter = createTRPCRouter({
     .input(z.object({ token: z.string() }))
     .output(pendingEditOutputSchema.array())
     .query(async ({ ctx, input }) => {
-      if (input.token !== LOCAL_TOKEN)
+      if (input.token !== env.ADMIN_TOKEN)
         throw new TRPCError({
           code: "UNAUTHORIZED",
         });
