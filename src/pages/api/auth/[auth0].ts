@@ -1,5 +1,5 @@
 import { handleAuth, handleCallback } from "@auth0/nextjs-auth0";
-import { NextApiRequest, NextApiResponse } from "next";
+import { type NextApiRequest, type NextApiResponse } from "next";
 
 const authOptions = {
   async callback(req: NextApiRequest, res: NextApiResponse) {
