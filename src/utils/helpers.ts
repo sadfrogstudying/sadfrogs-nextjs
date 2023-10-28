@@ -63,3 +63,8 @@ export const parseZodClientError = (
 export const transientOptions = {
   shouldForwardProp: (propName: string) => !propName.startsWith("$"),
 };
+
+export function returnValueIfNotUndefined<T>(x: T): T | undefined {
+  if (x === undefined) return undefined;
+  return x;
+}

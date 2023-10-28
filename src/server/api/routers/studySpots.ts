@@ -22,6 +22,7 @@ import {
   createOneInputSchema,
   getOneSchema,
 } from "~/schemas/study-spots";
+import { returnValueIfNotUndefined } from "~/utils/helpers";
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -404,6 +405,161 @@ export const studySpotsRouter = createTRPCRouter({
 
       return allPendingEdits;
     }),
+  updateOne: privateProcedure
+    .meta({
+      openapi: { method: "POST", path: "/studyspots.updateOne" },
+    })
+    .input(creatependingEditInputSchema)
+    .output(
+      z.object({
+        success: z.boolean(),
+        newSlug: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { success } = await ratelimit.limit(ctx.ip);
+
+      if (!success)
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Too many requests",
+        });
+
+      const studySpot = await ctx.prisma.studySpot.findUnique({
+        where: {
+          id: input.studySpotId,
+        },
+        include: {
+          images: true,
+        },
+      });
+
+      // Prevent removing all images
+      if (
+        input.imagesToDelete?.length === studySpot?.images?.length &&
+        input.images?.length === 0
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Cannot remove all images",
+        });
+      }
+
+      const slug =
+        input.name &&
+        slugify(input.name, {
+          remove: /[*+~.()'"!:@]/g,
+          lower: true,
+          strict: true,
+        });
+
+      try {
+        const newImages =
+          input.images?.length && (await getImagesMeta(input.images));
+
+        await ctx.prisma.studySpot.update({
+          where: {
+            id: input.studySpotId,
+          },
+          data: {
+            name: input.name || undefined,
+            slug: slug || undefined,
+            rating: input.rating || undefined,
+            description: input.description || undefined,
+            noiseLevel: input.noiseLevel || undefined,
+            venueType: input.venueType || undefined,
+
+            images: {
+              ...(newImages && {
+                createMany: {
+                  data: newImages,
+                },
+              }),
+              ...(input.imagesToDelete?.length !== 0 &&
+                input.imagesToDelete && {
+                  disconnect: input.imagesToDelete.map((id) => ({
+                    id,
+                  })),
+                }),
+            },
+
+            placeId: input.placeId || undefined,
+            latitude: input.latitude || undefined,
+            longitude: input.longitude || undefined,
+            address: input.address || undefined,
+            country: input.country || undefined,
+            city: input.city || undefined,
+            state: input.state || undefined,
+
+            wifi: returnValueIfNotUndefined(input.wifi),
+            powerOutlets: returnValueIfNotUndefined(input.powerOutlets),
+            canStudyForLong: returnValueIfNotUndefined(input.canStudyForLong),
+            sunlight: returnValueIfNotUndefined(input.sunlight),
+            drinks: returnValueIfNotUndefined(input.drinks),
+            food: returnValueIfNotUndefined(input.food),
+
+            comfort: input.comfort || undefined,
+            views: input.views || undefined,
+            temperature: input.temperature || undefined,
+            music: input.music || undefined,
+            lighting: input.lighting || undefined,
+
+            distractions: input.distractions || undefined,
+            crowdedness: input.crowdedness || undefined,
+
+            proximityToAmenities: input.proximityToAmenities || undefined,
+
+            studyBreakFacilities: input.studyBreakFacilities || undefined,
+          },
+        });
+
+        if (input.imagesToDelete?.length !== 0 && input.imagesToDelete) {
+          const imageRowsToDelete = await ctx.prisma.image.findMany({
+            where: {
+              id: {
+                in: input.imagesToDelete.map((id) => id),
+              },
+            },
+          });
+
+          await ctx.prisma.image.deleteMany({
+            where: {
+              id: {
+                in: input.imagesToDelete.map((id) => id),
+              },
+            },
+          });
+
+          const { s3 } = ctx;
+
+          await deleteImagesFromBucket(
+            imageRowsToDelete.map(({ name }) => name),
+            s3
+          );
+        }
+      } catch (error: unknown) {
+        if (input.images) {
+          // Delete uploaded images in s3, this is unoptimal, but shouldn't happen often
+          await deleteImagesFromBucket(
+            input.images.map((url) => getBucketObjectNameFromUrl(url)),
+            ctx.s3
+          );
+        }
+
+        if (error instanceof TRPCError) throw error;
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong attempting to update a study spot.",
+        });
+      }
+
+      if (slug) {
+        return { success: true, newSlug: slug };
+      }
+
+      return { success: true };
+    }),
   /**
    *
    * Pending Edits: Create One
@@ -594,9 +750,7 @@ export const studySpotsRouter = createTRPCRouter({
         data: {
           name: pendingEdit.name || undefined,
           slug: pendingEdit.slug || undefined,
-          wifi: pendingEdit.wifi || undefined,
           rating: pendingEdit.rating || undefined,
-          powerOutlets: pendingEdit.powerOutlets || undefined,
           description: pendingEdit.description || undefined,
           noiseLevel: pendingEdit.noiseLevel || undefined,
           venueType: pendingEdit.venueType || undefined,
@@ -615,11 +769,18 @@ export const studySpotsRouter = createTRPCRouter({
           city: pendingEdit.city || undefined,
           state: pendingEdit.state || undefined,
 
-          canStudyForLong: pendingEdit.canStudyForLong || undefined,
+          wifi: returnValueIfNotUndefined(pendingEdit.wifi) || undefined,
+          powerOutlets:
+            returnValueIfNotUndefined(pendingEdit.powerOutlets) || undefined,
+          canStudyForLong:
+            returnValueIfNotUndefined(pendingEdit.canStudyForLong) || undefined,
+          sunlight:
+            returnValueIfNotUndefined(pendingEdit.sunlight) || undefined,
+          drinks: returnValueIfNotUndefined(pendingEdit.drinks) || undefined,
+          food: returnValueIfNotUndefined(pendingEdit.food) || undefined,
 
           comfort: pendingEdit.comfort || undefined,
           views: pendingEdit.views || undefined,
-          sunlight: pendingEdit.sunlight || undefined,
           temperature: pendingEdit.temperature || undefined,
           music: pendingEdit.music || undefined,
           lighting: pendingEdit.lighting || undefined,
@@ -629,8 +790,6 @@ export const studySpotsRouter = createTRPCRouter({
 
           proximityToAmenities: pendingEdit.proximityToAmenities || undefined,
 
-          drinks: pendingEdit.drinks || undefined,
-          food: pendingEdit.food || undefined,
           studyBreakFacilities: pendingEdit.studyBreakFacilities || undefined,
         },
       });

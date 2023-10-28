@@ -124,7 +124,7 @@ const getNotValidatedForMapOutputSchema = studySpotSchema
   })
   .array();
 const creatependingEditInputSchema = createOneInputSchema.partial().extend({
-  studySpotId: z.number().optional(),
+  studySpotId: z.number(),
   images: z.string().array().optional(),
 });
 const pendingEditOutputSchema = studySpotSchema.partial().extend({
@@ -169,6 +169,7 @@ const pendingEditOutputSchema = studySpotSchema.partial().extend({
 type StudySpotQueryInput = z.infer<typeof createOneInputSchema>;
 type StudySpotFormInputs = Omit<StudySpotQueryInput, "images"> & {
   images: File[];
+  studySpotId?: number;
 };
 type GetOneOutput = z.infer<typeof studySpotSchema>;
 type GetNotValidatedOutput = z.infer<typeof getNotValidatedOutputSchema>;

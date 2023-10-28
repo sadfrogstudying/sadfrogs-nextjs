@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import FullWidthCarouselSkeleton from "~/components/StudySpot/Hero/FullWidthCarouselSkeleton";
 import { Skeleton } from "~/components/UI/Skeleton";
-import EditFormSheet from "~/components/StudySpot/Form/EditForm";
+import DangerousEditFormSheet from "~/components/StudySpot/Form/DangerousEditForm";
 import Image from "~/components/UI/Image";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
@@ -68,7 +68,7 @@ const StudySpotPage = () => {
                   <div className="flex gap-4">
                     <h1 className="text-3xl font-serif">{name}</h1>
                     {studySpot.data && user && !isLoading ? (
-                      <EditFormSheet studySpot={studySpot.data} />
+                      <DangerousEditFormSheet studySpot={studySpot.data} />
                     ) : (
                       <Button
                         variant="secondary"
