@@ -10,6 +10,7 @@ import Image from "~/components/UI/Image";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Button } from "~/components/UI/Button";
+import Head from "next/head";
 
 const FullWidthHeroCarousel = dynamic(
   () => import("~/components/StudySpot/Hero/FullWidthCarousel"),
@@ -54,92 +55,104 @@ const StudySpotPage = () => {
   const { user, isLoading } = useUser();
 
   return (
-    <main className="h-full w-full">
-      {studySpot.isError ? (
-        <div className="pt-12 h-full w-full flex justify-center items-center font-mono text-2xl">
-          {studySpot.error?.message || "No Study Spot exists for this URL"}
-        </div>
-      ) : (
-        <>
-          <section className="flex flex-col-reverse pt-12 min-h-screen md:pt-0 mt-auto">
-            <div className="w-full h-fit p-4 space-y-4">
-              {name ? (
-                <>
-                  <div className="flex gap-4">
-                    <h1 className="text-3xl font-serif">{name}</h1>
-                    {studySpot.data && user && !isLoading ? (
-                      <DangerousEditFormSheet studySpot={studySpot.data} />
-                    ) : (
-                      <Button
-                        variant="secondary"
-                        disabled
-                        className="font-mono"
-                      >
-                        Edit
-                      </Button>
-                    )}
-                  </div>
-                  <div className="flex justify-between flex-wrap items-center gap-x-6">
-                    <div className="font-mono max-w-s">
-                      {address
-                        ? address
-                        : "No address yet, submit one to help others find this spot!"}
-                    </div>
-                    {!studySpot.isLoading ? (
-                      <div className={`${!author ? "cursor-not-allowed" : ""}`}>
-                        <Link
-                          className={`font-mono flex items-center gap-2 active:text-red-500 ${
-                            !author ? "pointer-events-none" : ""
-                          }`}
-                          href={`/user/${author?.username}`}
+    <>
+      <Head>
+        <title>Sad Frogs - THE_SPOT_NAME</title>
+        <meta
+          name="description"
+          content={`VENUE_TYPE in CITY, STATE, COUNTRY.  They have POWER_OUTLETS.  They have WIFI. DESCRIPTION`}
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main className="h-full w-full">
+        {studySpot.isError ? (
+          <div className="pt-12 h-full w-full flex justify-center items-center font-mono text-2xl">
+            {studySpot.error?.message || "No Study Spot exists for this URL"}
+          </div>
+        ) : (
+          <>
+            <section className="flex flex-col-reverse pt-12 min-h-screen md:pt-0 mt-auto">
+              <div className="w-full h-fit p-4 space-y-4">
+                {name ? (
+                  <>
+                    <div className="flex gap-4">
+                      <h1 className="text-3xl font-serif">{name}</h1>
+                      {studySpot.data && user && !isLoading ? (
+                        <DangerousEditFormSheet studySpot={studySpot.data} />
+                      ) : (
+                        <Button
+                          variant="secondary"
+                          disabled
+                          className="font-mono"
                         >
-                          <span className="h-fit">
-                            Found by {author?.username || "Anonymous"}
-                          </span>
-                          {author?.profilePicture && (
-                            <div className="aspect-square overflow-hidden rounded-full w-8 h-8 object-cover border">
-                              <Image
-                                alt={`Profile picture of ${author?.username}`}
-                                image={author?.profilePicture}
-                                className="w-full h-full object-cover"
-                                objectFit="cover"
-                              />
-                            </div>
-                          )}
-                        </Link>
+                          Edit
+                        </Button>
+                      )}
+                    </div>
+                    <div className="flex justify-between flex-wrap items-center gap-x-6">
+                      <div className="font-mono max-w-s">
+                        {address
+                          ? address
+                          : "No address yet, submit one to help others find this spot!"}
                       </div>
-                    ) : (
-                      <div>
-                        <div className="h-fit font-mono flex items-center gap-2">
-                          Loading Author...
-                          <Skeleton className="aspect-square overflow-hidden rounded-full w-8 h-8 object-cover border" />
+                      {!studySpot.isLoading ? (
+                        <div
+                          className={`${!author ? "cursor-not-allowed" : ""}`}
+                        >
+                          <Link
+                            className={`font-mono flex items-center gap-2 active:text-red-500 ${
+                              !author ? "pointer-events-none" : ""
+                            }`}
+                            href={`/user/${author?.username}`}
+                          >
+                            <span className="h-fit">
+                              Found by {author?.username || "Anonymous"}
+                            </span>
+                            {author?.profilePicture && (
+                              <div className="aspect-square overflow-hidden rounded-full w-8 h-8 object-cover border">
+                                <Image
+                                  alt={`Profile picture of ${author?.username}`}
+                                  image={author?.profilePicture}
+                                  className="w-full h-full object-cover"
+                                  objectFit="cover"
+                                />
+                              </div>
+                            )}
+                          </Link>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Skeleton className="h-9 w-4/5 mt-2" />
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-1/2" />
-                  </div>
-                </>
-              )}
-            </div>
-            <div>
-              <FullWidthHeroCarousel images={images} name={name} />
-            </div>
-          </section>
-          {studySpot.data && (
-            <section className="pb-4 flex flex-col align-start items-start min-h-screen w-full">
-              <InfoTable studySpot={studySpot.data} />
+                      ) : (
+                        <div>
+                          <div className="h-fit font-mono flex items-center gap-2">
+                            Loading Author...
+                            <Skeleton className="aspect-square overflow-hidden rounded-full w-8 h-8 object-cover border" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Skeleton className="h-9 w-4/5 mt-2" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-1/2" />
+                    </div>
+                  </>
+                )}
+              </div>
+              <div>
+                <FullWidthHeroCarousel images={images} name={name} />
+              </div>
             </section>
-          )}
-        </>
-      )}
-    </main>
+            {studySpot.data && (
+              <section className="pb-4 flex flex-col align-start items-start min-h-screen w-full">
+                <InfoTable studySpot={studySpot.data} />
+              </section>
+            )}
+          </>
+        )}
+      </main>
+    </>
   );
 };
 

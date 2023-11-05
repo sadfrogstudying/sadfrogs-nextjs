@@ -1,6 +1,7 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Trash2 } from "lucide-react";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { Button } from "~/components/UI/Button";
 import Image from "~/components/UI/Image";
@@ -47,32 +48,39 @@ const UserPage = () => {
   const isCurrentUserAccount = loggedInUser?.username === usernameFromParams;
 
   return (
-    <main className="p-4 md:p-8 pt-20 md:pt-24 h-full font-mono w-full max-w-xl">
-      {isLoading && <div>Loading...</div>}
-      {data && (
-        <div className="space-y-4">
-          {data.profilePicture && (
-            <div className="aspect-square overflow-hidden object-cover border mt-4 w-full h-full rounded-lg">
-              <Image
-                alt={`Profile picture of ${data.username}`}
-                image={data.profilePicture}
-                className="w-full h-full object-cover"
-                objectFit="cover"
-              />
-            </div>
-          )}
+    <>
+      <Head>
+        <title>Sad Frogs - USERNAME</title>
+        <meta name="description" content={`User page for USERNAME`} />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main className="p-4 md:p-8 pt-20 md:pt-24 h-full font-mono w-full max-w-xl">
+        {isLoading && <div>Loading...</div>}
+        {data && (
+          <div className="space-y-4">
+            {data.profilePicture && (
+              <div className="aspect-square overflow-hidden object-cover border mt-4 w-full h-full rounded-lg">
+                <Image
+                  alt={`Profile picture of ${data.username}`}
+                  image={data.profilePicture}
+                  className="w-full h-full object-cover"
+                  objectFit="cover"
+                />
+              </div>
+            )}
 
-          <div>
-            <div className="text-xl font-bold">Name: {data.username}</div>
-            <div className="text-muted-foreground">
-              Description: {data.description}
+            <div>
+              <div className="text-xl font-bold">Name: {data.username}</div>
+              <div className="text-muted-foreground">
+                Description: {data.description}
+              </div>
             </div>
+
+            {isCurrentUserAccount && <CurrentUserControls />}
           </div>
-
-          {isCurrentUserAccount && <CurrentUserControls />}
-        </div>
-      )}
-    </main>
+        )}
+      </main>
+    </>
   );
 };
 

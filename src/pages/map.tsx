@@ -1,4 +1,5 @@
 import { type GetStaticProps } from "next";
+import Head from "next/head";
 import { useEffect, useState } from "react";
 import Map from "~/components/Map";
 import { type MarkerData } from "~/components/Map/Map";
@@ -29,12 +30,22 @@ const MapPage = ({ data, refreshedAt }: Props) => {
     })) || [];
 
   return (
-    <Map
-      allMarkerData={markerData}
-      className="h-screen"
-      infoPanel
-      timeRefreshed={timeRefreshed}
-    />
+    <>
+      <Head>
+        <title>Sad Frogs - Map</title>
+        <meta
+          name="description"
+          content="Interactive map to find study spots"
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Map
+        allMarkerData={markerData}
+        className="h-screen"
+        infoPanel
+        timeRefreshed={timeRefreshed}
+      />
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
+import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Login from "~/components/Login";
@@ -26,26 +27,33 @@ const PendingEditsPage = () => {
   }, [status]);
 
   return (
-    <main className="pt-40 space-y-8 font-mono h-full">
-      <div className="p-8 space-y-4">
-        <div className="flex">{isLoading && <div>loading...</div>}</div>
+    <>
+      <Head>
+        <title>Sad Frogs - Admin</title>
+        <meta name="description" content="Super private" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main className="pt-40 space-y-8 font-mono h-full">
+        <div className="p-8 space-y-4">
+          <div className="flex">{isLoading && <div>loading...</div>}</div>
 
-        {!isSuccess && !isLoading ? (
-          <Login />
-        ) : (
-          <>
-            {data?.map((pendingEdit, i) => (
-              <PendingEdit
-                key={`${pendingEdit.studySpot.name}-${i}`}
-                pendingEdit={pendingEdit}
-              />
-            ))}
+          {!isSuccess && !isLoading ? (
+            <Login />
+          ) : (
+            <>
+              {data?.map((pendingEdit, i) => (
+                <PendingEdit
+                  key={`${pendingEdit.studySpot.name}-${i}`}
+                  pendingEdit={pendingEdit}
+                />
+              ))}
 
-            {!!data && data?.length === 0 && <div>no pending edits...</div>}
-          </>
-        )}
-      </div>
-    </main>
+              {!!data && data?.length === 0 && <div>no pending edits...</div>}
+            </>
+          )}
+        </div>
+      </main>
+    </>
   );
 };
 
