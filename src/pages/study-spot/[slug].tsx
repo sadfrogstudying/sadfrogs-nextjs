@@ -1,6 +1,19 @@
+/**
+ * This page statically generates (pre-renders) a page for each study spot, but only the metadata for the <Head>.
+ * There isn't any content.  The main content is loaded on the client side.
+ *    - This is because the main content is dynamic and fresh data is important.
+ *    - The metadata is static and can be pre-rendered, it'll be revalidated every 30 seconds.
+ *    - The metadata is important for SEO and social media sharing.
+ *
+ * If you're navigating to this page and `getNotValidated` has run, we'll try to use the cached data to show the user something,
+ * but we'll still fetch the data in the background to make sure it's fresh.
+ *   - The user is likely to be navigating to this page from the homepage, where we've already fetched SOME of the data.
+ *
+ * getServersideProps is too slow for my liking!
+ */
+
 import InfoTable from "~/components/StudySpot/Info/Table";
 import { api } from "~/utils/api";
-import { useRouter } from "next/router";
 
 import dynamic from "next/dynamic";
 import FullWidthCarouselSkeleton from "~/components/StudySpot/Hero/FullWidthCarouselSkeleton";
@@ -12,6 +25,17 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { Button } from "~/components/UI/Button";
 import Head from "next/head";
 
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import {
+  type GetStaticPaths,
+  type GetStaticPropsContext,
+  type InferGetStaticPropsType,
+} from "next";
+import superjson from "superjson";
+import { createInnerTRPCContext } from "~/server/api/trpc";
+import { appRouter } from "~/server/api/root";
+import { prisma } from "~/server/db";
+
 const FullWidthHeroCarousel = dynamic(
   () => import("~/components/StudySpot/Hero/FullWidthCarousel"),
   {
@@ -20,9 +44,106 @@ const FullWidthHeroCarousel = dynamic(
   }
 );
 
-const StudySpotPage = () => {
-  const router = useRouter();
-  const slug = typeof router.query.slug === "string" ? router.query.slug : "";
+export const getStaticPaths = (async () => {
+  const spots = await prisma.studySpot.findMany({
+    select: {
+      slug: true,
+    },
+  });
+
+  return {
+    paths: spots.map((spot) => ({
+      params: {
+        slug: spot.slug,
+      },
+    })),
+
+    /**
+     * Here we're using ISR (Incremental Static Regeneration)
+     *
+     * We'll pre-render only these paths at build time.
+     *
+     * If a new spot is created and that path hasn't been pre-rendered, it
+     * will be server-rendered on-demand due to { fallback: 'blocking' }.
+     * Future requests will serve the static file from the cache.
+     *
+     */
+    fallback: "blocking",
+  };
+}) satisfies GetStaticPaths;
+
+export async function getStaticProps(
+  context: GetStaticPropsContext<{ slug: string }>
+) {
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: createInnerTRPCContext({
+      ip: "",
+    }),
+    transformer: superjson,
+  });
+
+  const slug = context.params?.slug;
+
+  // Allows the page to return a 404 status
+  if (!slug) {
+    return {
+      notFound: true,
+    };
+  }
+
+  // can use `prefetch` but that does not return the result and never throws - since we need that behavior, using `fetch` instead.
+  const meta = await helpers.studySpots.metadataBySlug.fetch(slug);
+
+  const getMetaDescription = () => {
+    if (!meta) return "";
+
+    const getText = () => {
+      let string: string;
+
+      if (meta.powerOutlets && !meta.wifi) {
+        string = "Spot has power outlets; doesn't have wifi";
+      } else if (!meta.powerOutlets && meta.wifi) {
+        string = "Spot doesn't have power outlets; has wifi";
+      } else {
+        string = "Spot has power outlets; has wifi";
+      }
+
+      return string;
+    };
+
+    return `${meta.venueType} in ${meta.city}, ${meta.state}, ${
+      meta.country
+    }.  ${getText()}.${meta.description && `  ${meta.description}`}`;
+  };
+
+  const getMetaTitle = () => {
+    if (!meta) return "";
+
+    return `Sad Frogs - ${meta.name}`;
+  };
+
+  return {
+    props: {
+      trpcState: helpers.dehydrate(),
+      metaDescription: getMetaDescription(),
+      metaTitle: getMetaTitle(),
+      slug,
+    },
+    revalidate: 30,
+  };
+}
+
+const StudySpotPage = ({
+  slug,
+  metaTitle,
+  metaDescription,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const { user } = useUser();
+  const { data, isError, isLoading } = api.studySpots.getOne.useQuery({
+    slug,
+  });
+
   const apiUtils = api.useContext();
   const cachedGetAllQuery = apiUtils.studySpots.getNotValidated.getInfiniteData(
     {}
@@ -31,43 +152,25 @@ const StudySpotPage = () => {
     ?.flatMap((page) => page)
     .find((studySpot) => studySpot.slug === slug);
 
-  const studySpot = api.studySpots.getOne.useQuery(
-    {
-      slug,
-    },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!slug,
-      retry(failureCount, error) {
-        if (error.data?.code === "NOT_FOUND") return false;
-        return failureCount < 0;
-      },
-    }
-  );
-
   const {
     name = cachedStudySpot?.name || "",
     images = cachedStudySpot?.images || [],
     address = cachedStudySpot?.address || "",
     author,
-  } = studySpot.data || {};
-
-  const { user, isLoading } = useUser();
+  } = data || {};
 
   return (
     <>
       <Head>
-        <title>Sad Frogs - THE_SPOT_NAME</title>
-        <meta
-          name="description"
-          content={`VENUE_TYPE in CITY, STATE, COUNTRY.  They have POWER_OUTLETS.  They have WIFI. DESCRIPTION`}
-        />
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDescription} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <main className="h-full w-full">
-        {studySpot.isError ? (
+        {isError ? (
           <div className="pt-12 h-full w-full flex justify-center items-center font-mono text-2xl">
-            {studySpot.error?.message || "No Study Spot exists for this URL"}
+            No Study Spot exists for this URL
           </div>
         ) : (
           <>
@@ -77,8 +180,8 @@ const StudySpotPage = () => {
                   <>
                     <div className="flex gap-4">
                       <h1 className="text-3xl font-serif">{name}</h1>
-                      {studySpot.data && user && !isLoading ? (
-                        <DangerousEditFormSheet studySpot={studySpot.data} />
+                      {data && user && !isLoading ? (
+                        <DangerousEditFormSheet studySpot={data} />
                       ) : (
                         <Button
                           variant="secondary"
@@ -95,7 +198,7 @@ const StudySpotPage = () => {
                           ? address
                           : "No address yet, submit one to help others find this spot!"}
                       </div>
-                      {!studySpot.isLoading ? (
+                      {!isLoading ? (
                         <div
                           className={`${!author ? "cursor-not-allowed" : ""}`}
                         >
@@ -144,9 +247,9 @@ const StudySpotPage = () => {
                 <FullWidthHeroCarousel images={images} name={name} />
               </div>
             </section>
-            {studySpot.data && (
+            {data && (
               <section className="pb-4 flex flex-col align-start items-start min-h-screen w-full">
-                <InfoTable studySpot={studySpot.data} />
+                <InfoTable studySpot={data} />
               </section>
             )}
           </>

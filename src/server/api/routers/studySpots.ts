@@ -902,4 +902,57 @@ export const studySpotsRouter = createTRPCRouter({
 
       return studySpots;
     }),
+  getAllSlugs: publicProcedure
+    .meta({
+      openapi: { method: "GET", path: "/studyspots.getAllSlugs" },
+    })
+    .input(z.void())
+    .output(z.array(z.string()))
+    .query(async ({ ctx }) => {
+      const studySpots = await ctx.prisma.studySpot.findMany({
+        select: {
+          slug: true,
+        },
+      });
+
+      return studySpots.map(({ slug }) => slug);
+    }),
+  metadataBySlug: publicProcedure
+    .meta({
+      openapi: { method: "GET", path: "/studyspots.metaBySlug" },
+    })
+    .input(z.string())
+    .output(
+      z.object({
+        name: z.string(),
+        description: z.string(),
+        venueType: z.string(),
+        powerOutlets: z.boolean(),
+        wifi: z.boolean(),
+        city: z.string(),
+        state: z.string(),
+        country: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const studySpot = await ctx.prisma.studySpot.findUnique({
+        where: {
+          slug: input,
+        },
+        select: {
+          name: true,
+          description: true,
+          venueType: true,
+          powerOutlets: true,
+          wifi: true,
+          city: true,
+          state: true,
+          country: true,
+        },
+      });
+
+      if (!studySpot) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return studySpot;
+    }),
 });

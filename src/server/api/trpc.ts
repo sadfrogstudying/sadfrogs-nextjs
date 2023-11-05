@@ -43,20 +43,40 @@ async function authenticateRequest(token: string) {
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
 
+interface UserInfo {
+  sub: string;
+  email: string;
+  email_verified: boolean;
+}
+interface CreateContextOptions {
+  currentUser?: Claims | UserInfo;
+  ip: string;
+}
+
 /**
+ * Inner context. Will always be available in your procedures, in contrast to the outer context.
+ *
+ * Also useful for:
+ * - testing, so you don't have to mock Next.js' `req`/`res`
+ * - tRPC's `createServerSideHelpers` where we don't have `req`/`res`
+ *
+ * @see https://trpc.io/docs/context#inner-and-outer-context
+ */
+export const createInnerTRPCContext = (opts: CreateContextOptions) => {
+  return { s3, prisma, ...opts };
+};
+
+/**
+ * Outer context. Used in the routers and will e.g. bring `req` & `res` to the context as "not `undefined`".
  * This is the actual context you will use in your router. It will be used to process every request
  * that goes through your tRPC endpoint.
  *
  * @see https://trpc.io/docs/context
+ * @see https://trpc.io/docs/context#inner-and-outer-context
  */
+
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const { req, res } = opts;
-
-  interface UserInfo {
-    sub: string;
-    email: string;
-    email_verified: boolean;
-  }
 
   // ip address
   const header = req.headers["x-forwarded-for"];
@@ -84,12 +104,10 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const session = await getSession(req, res);
   user = session?.user;
 
-  return {
-    s3,
-    prisma,
+  return createInnerTRPCContext({
     currentUser: user,
     ip: ip || "",
-  };
+  });
 };
 
 /**

@@ -1,18 +1,17 @@
-import { type GetStaticProps } from "next";
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import { type InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import superjson from "superjson";
 import Map from "~/components/Map";
 import { type MarkerData } from "~/components/Map/Map";
-import { env } from "~/env.mjs";
-import { type GetNotValidatedForMapOutput } from "~/schemas/study-spots";
+import { appRouter } from "~/server/api/root";
+import { createInnerTRPCContext } from "~/server/api/trpc";
 
-interface Props {
-  data: GetNotValidatedForMapOutput;
-  /** unix timestamp in milliseconds */
-  refreshedAt: number;
-}
-
-const MapPage = ({ data, refreshedAt }: Props) => {
+const MapPage = ({
+  data,
+  refreshedAt,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [timeRefreshed, setTimeRefreshed] = useState(0);
 
   useEffect(() => {
@@ -51,16 +50,17 @@ const MapPage = ({ data, refreshedAt }: Props) => {
 
 export default MapPage;
 
-// This function gets called at build time on server-side.
-// It may be called again, on a serverless function, if
-// revalidation is enabled and a new request comes in
-export const getStaticProps: GetStaticProps<Props> = async () => {
-  const siteUrl =
-    env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : "https://sadfrogs-nextjs.vercel.app";
-  const res = await fetch(`${siteUrl}/api/studyspots.getNotValidatedForMap`);
-  const data = (await res.json()) as GetNotValidatedForMapOutput;
+export const getStaticProps = async () => {
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: createInnerTRPCContext({
+      ip: "",
+    }),
+    transformer: superjson,
+  });
+
+  const data = await helpers.studySpots.getNotValidatedForMap.fetch();
+  /** unix timestamp in ms */
   const refreshedAt = Date.now();
 
   return {

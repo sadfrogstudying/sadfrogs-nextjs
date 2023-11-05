@@ -7,10 +7,12 @@ import { api } from "~/utils/api";
 import dynamic from "next/dynamic";
 import useDebounce from "~/hooks/useDebounce";
 import { useInView } from "react-intersection-observer";
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import { appRouter } from "~/server/api/root";
+import { createInnerTRPCContext } from "~/server/api/trpc";
+import superjson from "superjson";
+import { type InferGetStaticPropsType } from "next";
 import HomeHero from "~/components/HomeHero";
-import { env } from "~/env.mjs";
-import { type GetStaticProps } from "next";
-import { type GetNotValidatedOutput } from "~/schemas/study-spots";
 
 const StudySpotList = dynamic(() => import("~/components/StudySpot/List"));
 
@@ -18,16 +20,14 @@ const Controls = dynamic(() => import("~/components/StudySpot/Controls"), {
   loading: () => <div></div>,
 });
 
-interface Props {
-  studyspotsForHero: GetNotValidatedOutput;
-}
-
 interface Filters {
   powerOutlets: boolean;
   wifi: boolean;
 }
 
-export default function Home({ studyspotsForHero }: Props) {
+export default function Home({
+  studyspotsForHero,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const [filters, setFilters] = useState<Filters>({
     powerOutlets: false,
     wifi: false,
@@ -100,17 +100,20 @@ export default function Home({ studyspotsForHero }: Props) {
 // This function gets called at build time on server-side.
 // It may be called again, on a serverless function, if
 // revalidation is enabled and a new request comes in
-export const getStaticProps: GetStaticProps<Props> = async () => {
-  const siteUrl =
-    env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : "https://sadfrogs-nextjs.vercel.app";
-  const res = await fetch(`${siteUrl}/api/studyspots.getHeroImages`);
-  const data = (await res.json()) as GetNotValidatedOutput;
+export const getStaticProps = async () => {
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: createInnerTRPCContext({
+      ip: "",
+    }),
+    transformer: superjson,
+  });
+
+  const studyspotsForHero = await helpers.studySpots.getHeroImages.fetch();
 
   return {
     props: {
-      studyspotsForHero: data,
+      studyspotsForHero,
     },
     revalidate: 60, // In seconds
   };
