@@ -50,6 +50,7 @@ const Navigation = ({
       {!auth0User && !auth0UserLoading && (
         <>
           <a
+            role="menuitem"
             onClick={onLinkClick}
             href="/api/auth/login"
             className={`h-fit ${
@@ -66,6 +67,7 @@ const Navigation = ({
       )}
 
       <Link
+        role="menuitem"
         onClick={onLinkClick}
         href="/about"
         className="pointer-events-auto h-fit"
@@ -74,6 +76,7 @@ const Navigation = ({
       </Link>
       {!forMobile && <span> | </span>}
       <Link
+        role="menuitem"
         onClick={onLinkClick}
         href="/map"
         className="pointer-events-auto h-fit"
