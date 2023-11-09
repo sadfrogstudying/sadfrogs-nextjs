@@ -29,10 +29,10 @@ const Controls = ({
     <div className="md:sticky md:pt-32 top-0 py-8 w-full md:w-60 md:h-screen z-10 font-mono flex-wrap rounded-md flex-shrink-0 text-sm">
       <div className="w-full p-4 rounded-md flex flex-col items-start justify-start gap-4 shadow-lg">
         <div className="space-y-2 w-full">
-          <h3 className="text-base font-bold">Display View:</h3>
+          <h2 className="text-base font-bold">Display View:</h2>
           <Button
             onClick={() => setListView((prev) => !prev)}
-            className="bg-orange-500 hover:bg-orange-600 w-full"
+            className="bg-gray-900 hover:bg-gray-700 w-full"
           >
             {listView ? (
               <>
@@ -53,6 +53,7 @@ const Controls = ({
           <div className="flex items-center gap-8 bg-gray-100 p-2 justify-between">
             <label htmlFor="poweroutlets">Power Outlets:</label>
             <Checkbox
+              name="poweroutlets"
               id="poweroutlets"
               checked={filters.powerOutlets}
               onCheckedChange={(x) =>
@@ -67,6 +68,7 @@ const Controls = ({
           <div className="flex items-center gap-8 bg-gray-100 p-2 justify-between">
             <label htmlFor="wifi">Wifi:</label>
             <Checkbox
+              name="wifi"
               id="wifi"
               checked={filters.wifi}
               onCheckedChange={(x) =>
