@@ -189,7 +189,6 @@ export const studySpotsRouter = createTRPCRouter({
               },
             },
             wifi: input.wifi,
-            rating: input.rating,
             website: input.website,
             powerOutlets: input.powerOutlets,
             description: input.description,
@@ -462,7 +461,6 @@ export const studySpotsRouter = createTRPCRouter({
           data: {
             name: input.name || undefined,
             slug: slug || undefined,
-            rating: input.rating || undefined,
             description: input.description || undefined,
             noiseLevel: input.noiseLevel || undefined,
             venueType: input.venueType || undefined,
@@ -593,7 +591,6 @@ export const studySpotsRouter = createTRPCRouter({
             name: input.name,
             slug: slug,
             wifi: input.wifi,
-            rating: input.rating,
             author: {
               connect: {
                 email: ctx.currentUser.email,
@@ -748,7 +745,6 @@ export const studySpotsRouter = createTRPCRouter({
         data: {
           name: pendingEdit.name || undefined,
           slug: pendingEdit.slug || undefined,
-          rating: pendingEdit.rating || undefined,
           description: pendingEdit.description || undefined,
           noiseLevel: pendingEdit.noiseLevel || undefined,
           venueType: pendingEdit.venueType || undefined,
