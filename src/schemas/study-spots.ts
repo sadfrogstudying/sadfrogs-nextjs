@@ -17,7 +17,6 @@ const imageSchema = z.object({
 });
 const createOneInputSchema = z.object({
   name: z.string().max(100).min(1, { message: "Required" }),
-  rating: z.number().max(5).min(1),
   website: z.string().max(100).optional(),
   wifi: z.boolean(),
   powerOutlets: z.boolean(),
@@ -58,7 +57,6 @@ const studySpotSchema = z.object({
   isValidated: z.boolean(),
   slug: z.string(),
   name: z.string(),
-  rating: z.number().max(5).min(1),
   website: z.string(),
   wifi: z.boolean(),
   powerOutlets: z.boolean(),
@@ -133,7 +131,6 @@ const pendingEditOutputSchema = studySpotSchema.partial().extend({
   updatedAt: z.date(),
   name: z.string().max(100).nullable(),
   slug: z.string().max(100).nullable(),
-  rating: z.number().max(5).min(1).nullable(),
   website: z.string().max(100).nullable(),
   wifi: z.boolean().nullable(),
   powerOutlets: z.boolean().nullable(),

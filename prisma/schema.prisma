@@ -32,7 +32,6 @@ model StudySpot {
     authorId             String?
     name                 String   @unique
     slug                 String   @unique
-    rating               Int      @default(0) // 1-5 slider
     website              String   @default("")
     wifi                 Boolean  @default(false)
     powerOutlets         Boolean  @default(false)
@@ -58,6 +57,7 @@ model StudySpot {
     proximityToAmenities String   @default("") // change to amenitiesNearby - restaurants, grocery stores, etc.
     drinks               Boolean?
     food                 Boolean?
+    naturalViews         Boolean  @default(false)
     studyBreakFacilities String   @default("") // placeholder: smoking area, lounge, etc.
 
     pendingEditStudySpot PendingEdit[]
