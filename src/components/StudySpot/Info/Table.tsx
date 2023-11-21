@@ -36,7 +36,6 @@ export default InfoTable;
 
 const readableKeys: Record<keyof GetOneOutput, string> = {
   name: "Name",
-  rating: "Rating",
   website: "Website",
   wifi: "Wifi",
   powerOutlets: "Power Outlets",

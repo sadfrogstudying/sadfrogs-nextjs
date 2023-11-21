@@ -42,24 +42,6 @@ const StudySpotInputsGeneral = ({ form }: Props) => {
         />
         <FormField
           control={form.control}
-          name="rating"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Rating</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="1"
-                  {...field}
-                  type="number"
-                  onChange={(event) => field.onChange(+event.target.value)}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="venueType"
           render={({ field }) => (
             <FormItem>
